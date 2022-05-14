@@ -21,21 +21,18 @@ Az ügyfelek lefoglalhatnak időpontokat.
 - **/api/servicebooker**
   - **/services**
   - **/services/{id}**
-  - **/services/{id}/periods?start=\<datetime\>&end=\<datetime\>**
-  - **/services/{id}/periods/defaults**
-  - **/services/{id}/periods/defaults/{id}**
-  - **/services/{id}/periods/additions**
-  - **/services/{id}/periods/additions/{id}**
-  - **/services/{id}/periods/exclusions**
-  - **/services/{id}/periods/exclusions/{id}**
+  - **/services/{id}/free-periods?start=\<datetime\>&end=\<datetime\>**
+  - **/services/{id}/weekly-periods**
+  - **/services/{id}/weekly-periods/{id}**
+  - **/services/{id}/additional-periods?start=\<datetime\>&end=\<datetime\>**
+  - **/services/{id}/additional-periods/{id}**
+  - **/services/{id}/excluded-periods?start=\<datetime\>&end=\<datetime\>**
+  - **/services/{id}/excluded-periods/{id}**
   - **/customers**
   - **/customers/{id}**
-  - **/bookings**
   - **/bookings?service=\<service-id\>**
   - **/bookings?customer=\<customer-id\>**
   - **/bookings/{id}**
-
-
 
 ## Szerző
 - Vandrus Zoltán
