@@ -24,10 +24,8 @@ Az ügyfelek lefoglalhatnak időpontokat.
   - **/services/{id}/free-periods?start=\<datetime\>&end=\<datetime\>**
   - **/services/{id}/weekly-periods**
   - **/services/{id}/weekly-periods/{id}**
-  - **/services/{id}/additional-periods?start=\<datetime\>&end=\<datetime\>**
-  - **/services/{id}/additional-periods/{id}**
-  - **/services/{id}/excluded-periods?start=\<datetime\>&end=\<datetime\>**
-  - **/services/{id}/excluded-periods/{id}**
+  - **/services/{id}/specific-periods?start=\<datetime\>&end=\<datetime\>&bookable=true**
+  - **/services/{id}/specific-periods/{id}**
   - **/customers**
   - **/customers/{id}**
   - **/bookings?service=\<service-id\>**
