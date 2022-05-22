@@ -4,10 +4,11 @@ import lombok.Data;
 
 @Data
 public class WeeklyPeriod {
-    private Boose boose;
+    private Integer id;
+    private boolean active;
 
+    private Boose boose;
     private DayOfWeekTime start;
     private DayOfWeekTime end;
-
     private String comment;
 }
