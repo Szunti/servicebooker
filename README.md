@@ -18,19 +18,18 @@ egy egyszeri új periódussal meg lehet jelölni új időpontokat amikben vendé
 Az ügyfelek lefoglalhatnak időpontokat.
 
 ### API végpontok
-- **/api/servicebooker**
-  - **/services**
-  - **/services/{id}**
-  - **/services/{id}/free-periods?start=\<datetime\>&end=\<datetime\>**
-  - **/services/{id}/weekly-periods**
-  - **/services/{id}/weekly-periods/{id}**
-  - **/services/{id}/specific-periods?start=\<datetime\>&end=\<datetime\>&bookable=true**
-  - **/services/{id}/specific-periods/{id}**
-  - **/customers**
-  - **/customers/{id}**
-  - **/bookings?service=\<service-id\>**
-  - **/bookings?customer=\<customer-id\>**
-  - **/bookings/{id}**
+- **/services**
+- **/services/{id}**
+- **/services/{id}/free-periods?start=\<datetime\>&end=\<datetime\>**
+- **/services/{id}/weekly-periods**
+- **/services/{id}/weekly-periods/{id}**
+- **/services/{id}/specific-periods?start=\<datetime\>&end=\<datetime\>&bookable=true**
+- **/services/{id}/specific-periods/{id}**
+- **/customers**
+- **/customers/{id}**
+- **/bookings?service=\<service-id\>**
+- **/bookings?customer=\<customer-id\>**
+- **/bookings/{id}**
 
 ## Szerző
 - Vandrus Zoltán
