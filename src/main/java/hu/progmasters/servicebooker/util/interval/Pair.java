@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.domain.interval;
+package hu.progmasters.servicebooker.util.interval;
 
 import java.util.Objects;
 

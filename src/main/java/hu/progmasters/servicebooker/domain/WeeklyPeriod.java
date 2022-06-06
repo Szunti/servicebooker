@@ -1,5 +1,6 @@
 package hu.progmasters.servicebooker.domain;
 
+import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import lombok.Data;
 
 @Data

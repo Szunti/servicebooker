@@ -1,8 +1,8 @@
-package hu.progmasters.servicebooker.domain.interval;
+package hu.progmasters.servicebooker.util.interval;
 
 import org.junit.jupiter.api.Test;
 
-import static hu.progmasters.servicebooker.domain.interval.Interval.interval;
+import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class IntervalSetTest {

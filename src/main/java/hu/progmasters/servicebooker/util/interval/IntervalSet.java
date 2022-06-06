@@ -1,8 +1,8 @@
-package hu.progmasters.servicebooker.domain.interval;
+package hu.progmasters.servicebooker.util.interval;
 
 import java.util.*;
 
-import static hu.progmasters.servicebooker.domain.interval.Interval.interval;
+import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 
 /**
  * A set of intervals with common set operations.

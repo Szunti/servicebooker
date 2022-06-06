@@ -1,8 +1,8 @@
-package hu.progmasters.servicebooker.domain.interval;
+package hu.progmasters.servicebooker.util.interval;
 
 import java.util.Objects;
 
-import static hu.progmasters.servicebooker.domain.interval.Pair.pair;
+import static hu.progmasters.servicebooker.util.interval.Pair.pair;
 
 /**
  * This class is value-based.

@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.domain;
+package hu.progmasters.servicebooker.util;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
