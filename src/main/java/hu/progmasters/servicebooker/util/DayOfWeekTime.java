@@ -9,13 +9,15 @@ import java.time.temporal.TemporalField;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.Objects;
 
-public class DayOfWeekTime implements TemporalAccessor {
+public final class DayOfWeekTime implements TemporalAccessor {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE HH:mm:ss");
 
     private final DayOfWeek dayOfWeek;
     private final LocalTime time;
 
     private DayOfWeekTime(DayOfWeek dayOfWeek, LocalTime time) {
+        Objects.requireNonNull(dayOfWeek);
+        Objects.requireNonNull(time);
         this.dayOfWeek = dayOfWeek;
         this.time = time;
     }
@@ -67,9 +69,9 @@ public class DayOfWeekTime implements TemporalAccessor {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DayOfWeekTime)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         DayOfWeekTime that = (DayOfWeekTime) o;
-        return dayOfWeek == that.dayOfWeek && time.equals(that.time);
+        return dayOfWeek == that.dayOfWeek && Objects.equals(time, that.time);
     }
 
     @Override
