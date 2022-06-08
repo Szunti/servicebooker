@@ -1,6 +1,7 @@
 package hu.progmasters.servicebooker.domain;
 
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -9,6 +10,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 @Embeddable
+@NoArgsConstructor
 public class EmbeddableDayOfWeekTime {
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;

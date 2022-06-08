@@ -1,11 +1,13 @@
 package hu.progmasters.servicebooker.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 @Entity
 public class SpecificPeriod {
     @Id
