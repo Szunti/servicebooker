@@ -11,7 +11,7 @@ Az időpontokat kétféleképpen lehet megadni:
 2. Egyszeri alkalmak, ezek felülírják a heti menetrendet 
 
 Pl, ha egy fodrászat hétfőnként 8-16-ig fogad vendégeket, de egyik nap délelőtt a fodrásznak más elfoglaltsága van,
-akkor a délelőtti órák egy egszeri pár órás szünettel felülírhatóak. Ha ezt a fodrász később pótolná akkor hasonlóan
+akkor a délelőtti órák egy egyszeri pár órás szünettel felülírhatóak. Ha ezt a fodrász később pótolná akkor hasonlóan
 egy egyszeri új periódussal meg lehet jelölni új időpontokat amikben vendégek fogadhatóak.
 
 ### Funkciók ügyfeleknek

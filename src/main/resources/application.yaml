@@ -1,0 +1,17 @@
+servicebooker:
+#  these are needed, because minimum and maximum values for date and time values
+#  are database specific, just make sure these values are within limits
+  min-bookable-date: 2000-01-01 00:00:00
+  max-bookable-date: 3000-01-01 00:00:00
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/servicebooker?createDatabaseIfNotExist=true
+    username: root
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
