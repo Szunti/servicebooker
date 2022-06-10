@@ -14,7 +14,16 @@ public class WeeklyPeriod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @AttributeOverrides({
+            @AttributeOverride(name = "dayOfWeek", column = @Column(name = "startDayOfWeek")),
+            @AttributeOverride(name = "time", column = @Column(name = "startTime"))
+    })
     private EmbeddableDayOfWeekTime start;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "dayOfWeek", column = @Column(name = "endDayOfWeek")),
+            @AttributeOverride(name = "time", column = @Column(name = "endTime"))
+    })
     private EmbeddableDayOfWeekTime end;
     private String comment;
 
@@ -26,7 +35,9 @@ public class WeeklyPeriod {
     }
 
     public void setStart(DayOfWeekTime start) {
-        this.start.setFromDayOfWeekTime(start);
+        EmbeddableDayOfWeekTime embeddedStart = new EmbeddableDayOfWeekTime();
+        embeddedStart.setFromDayOfWeekTime(start);
+        this.start = embeddedStart;
     }
 
     public DayOfWeekTime getEnd() {
@@ -34,6 +45,8 @@ public class WeeklyPeriod {
     }
 
     public void setEnd(DayOfWeekTime end) {
-        this.end.setFromDayOfWeekTime(end);
+        EmbeddableDayOfWeekTime embeddedEnd = new EmbeddableDayOfWeekTime();
+        embeddedEnd.setFromDayOfWeekTime(end);
+        this.end = embeddedEnd;
     }
 }
