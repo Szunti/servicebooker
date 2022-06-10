@@ -1,8 +1,8 @@
 servicebooker:
-#  these are needed, because minimum and maximum values for date and time values
+#  these are needed because minimum and maximum values for date and time values
 #  are database specific, just make sure these values are within limits
-  min-bookable-date: 2000-01-01 00:00:00
-  max-bookable-date: 3000-01-01 00:00:00
+  min-bookable-date: 2000-01-01T00:00:00
+  max-bookable-date: 3000-01-01T00:00:00
 
 spring:
   datasource:
