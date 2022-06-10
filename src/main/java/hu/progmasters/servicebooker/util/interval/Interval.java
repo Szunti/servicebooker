@@ -1,5 +1,8 @@
 package hu.progmasters.servicebooker.util.interval;
 
+import lombok.ToString;
+import lombok.Value;
+
 import java.util.Objects;
 
 import static hu.progmasters.servicebooker.util.interval.Pair.pair;
@@ -9,9 +12,11 @@ import static hu.progmasters.servicebooker.util.interval.Pair.pair;
  *
  * @param <T>
  */
+@Value
+@ToString(includeFieldNames = false)
 public class Interval<T extends Comparable<? super T>> {
-    private final T start;
-    private final T end;
+    T start;
+    T end;
 
     public static <T extends Comparable<? super T>> Interval<T> interval(T start, T end) {
         return new Interval<>(start, end);
@@ -85,30 +90,5 @@ public class Interval<T extends Comparable<? super T>> {
 
     public static <T extends Comparable<? super T>> boolean isInOrderAndNotEmpty(T start, T end) {
         return start.compareTo(end) < 0;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Interval)) return false;
-        Interval<?> interval = (Interval<?>) o;
-        return start.equals(interval.start) && end.equals(interval.end);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(start, end);
-    }
-
-    public String toString() {
-        return "Interval(" + start + ", " + end + ")";
-    }
-
-    public T getStart() {
-        return start;
-    }
-
-    public T getEnd() {
-        return end;
     }
 }
