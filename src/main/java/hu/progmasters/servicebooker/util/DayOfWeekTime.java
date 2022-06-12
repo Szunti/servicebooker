@@ -1,28 +1,47 @@
 package hu.progmasters.servicebooker.util;
 
+import lombok.Value;
+
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalField;
-import java.time.temporal.UnsupportedTemporalTypeException;
+import java.time.temporal.*;
 import java.util.Objects;
 
-public final class DayOfWeekTime implements TemporalAccessor {
+@Value
+public class DayOfWeekTime implements TemporalAccessor {
+    private static final int SECONDS_PER_DAY = 24 * 60 * 60;
+    private static final int SECONDS_PER_WEEK = 7 * SECONDS_PER_DAY;
+
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE HH:mm:ss");
 
-    private final DayOfWeek dayOfWeek;
-    private final LocalTime time;
+    DayOfWeek dayOfWeek;
+    LocalTime time;
 
     private DayOfWeekTime(DayOfWeek dayOfWeek, LocalTime time) {
-        Objects.requireNonNull(dayOfWeek);
-        Objects.requireNonNull(time);
         this.dayOfWeek = dayOfWeek;
         this.time = time;
     }
 
+    public static DayOfWeekTime of(int secondsFromWeekStart) {
+        checkValidValue(secondsFromWeekStart);
+
+        int daysBefore = secondsFromWeekStart / SECONDS_PER_DAY;
+        DayOfWeek dayOfWeek = DayOfWeek.of(daysBefore + 1);
+
+        int secondOfDay = secondsFromWeekStart % SECONDS_PER_DAY;
+        LocalTime time = LocalTime.ofSecondOfDay(secondOfDay);
+
+        return new DayOfWeekTime(dayOfWeek, time);
+    }
+
+    public static void checkValidValue(int secondsFromWeekStart) {
+        ValueRange.of(0, SECONDS_PER_WEEK - 1).checkValidValue(secondsFromWeekStart, null);
+    }
+
     public static DayOfWeekTime of(DayOfWeek dayOfWeek, LocalTime time) {
+        Objects.requireNonNull(dayOfWeek);
+        Objects.requireNonNull(time);
         return new DayOfWeekTime(dayOfWeek, time);
     }
 
@@ -34,12 +53,10 @@ public final class DayOfWeekTime implements TemporalAccessor {
         return of(dayOfWeek, LocalTime.of(hour, minute));
     }
 
-    public DayOfWeek getDayOfWeek() {
-        return dayOfWeek;
-    }
-
-    public LocalTime getTime() {
-        return time;
+    public int toSecondsFromWeekStart() {
+        int daysBefore = dayOfWeek.getValue() - 1;
+        int secondOfDay = time.toSecondOfDay();
+        return daysBefore * SECONDS_PER_DAY + secondOfDay;
     }
 
     @Override
@@ -64,19 +81,6 @@ public final class DayOfWeekTime implements TemporalAccessor {
         } else {
             return field.getFrom(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DayOfWeekTime that = (DayOfWeekTime) o;
-        return dayOfWeek == that.dayOfWeek && Objects.equals(time, that.time);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(dayOfWeek, time);
     }
 
     @Override

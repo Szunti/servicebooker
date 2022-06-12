@@ -12,11 +12,13 @@ import hu.progmasters.servicebooker.repository.SpecificPeriodRepository;
 import hu.progmasters.servicebooker.repository.WeeklyPeriodRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class BooseService {
 
     private final BooseRepository booseRepository;
@@ -52,9 +54,9 @@ public class BooseService {
     }
 
     public WeeklyPeriodInfo addWeeklyPeriodForBoose(WeeklyPeriodCreateCommand command) {
-        // TODO exception when overlapping
         Boose boose = getFromIdOrThrow(command.getBooseId());
         WeeklyPeriod toSave = modelMapper.map(command, WeeklyPeriod.class);
+        toSave.setBoose(boose);
         WeeklyPeriod saved = weeklyPeriodRepository.save(toSave);
         return modelMapper.map(saved, WeeklyPeriodInfo.class);
     }
@@ -66,7 +68,7 @@ public class BooseService {
                 .collect(Collectors.toList());
     }
 
-    private Boose getFromIdOrThrow(int id) {
+    Boose getFromIdOrThrow(int id) {
         return booseRepository.findById(id).orElseThrow(
                 () -> new BooseNotFoundException(id)
         );
