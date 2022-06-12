@@ -26,7 +26,6 @@ class BooseServiceIT {
     void testAddWeeklyPeriodForBoose() {
         BooseInfo boose = saveSampleBoose();
         Boose booseEntity = service.getFromIdOrThrow(boose.getId());
-        int initialVersion = booseEntity.getVersion();
 
         WeeklyPeriodCreateCommand command = new WeeklyPeriodCreateCommand();
         command.setBooseId(boose.getId());
@@ -45,9 +44,6 @@ class BooseServiceIT {
                 .containsExactly(command.getBooseId(), command.getStart(), command.getEnd(), command.getComment());
 
         Boose booseEntityAfterAddingPeriod = service.getFromIdOrThrow(boose.getId());
-        int newVersion = booseEntityAfterAddingPeriod.getVersion();
-        assertThat(newVersion).as("version was updated")
-                .isEqualTo(initialVersion + 1);
     }
 
     @Test

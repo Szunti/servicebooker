@@ -20,9 +20,6 @@ public class Boose {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Version
-    private Integer version;
-
     private String name;
 
     private String description;

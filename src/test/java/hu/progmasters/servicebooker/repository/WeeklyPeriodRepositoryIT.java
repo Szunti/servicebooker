@@ -6,13 +6,17 @@ import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Future;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @SpringBootTest
 class WeeklyPeriodRepositoryIT {
@@ -24,50 +28,46 @@ class WeeklyPeriodRepositoryIT {
     WeeklyPeriodRepository repository;
 
     @Test
-    void testConcurrentSave(@Autowired PlatformTransactionManager transactionManager) {
+    void testConcurrentSave(@Autowired PlatformTransactionManager transactionManager,
+                            @Autowired AsyncTaskExecutor executor) {
         TransactionTemplate txTemplate = new TransactionTemplate(transactionManager);
 
         Integer booseId = txTemplate.execute(status -> {
             return saveSampleBoose().getId();
         });
 
-        CyclicBarrier barrier = new CyclicBarrier(2);
+        CyclicBarrierWrapper barrier = new CyclicBarrierWrapper(2);
 
-        Thread thread1 = new Thread(() -> {
-            txTemplate.execute(status -> {
-                Boose boose = booseRepository.findById(booseId).orElseThrow();
-                WeeklyPeriod weeklyPeriod = saveSampleWeeklyPeriod(boose);
-                try {
+        List<Future<WeeklyPeriod>> threadFutures = new ArrayList<>();
+
+        threadFutures.add(executor.submit(() ->
+                txTemplate.execute(status -> {
+                    Boose boose = booseRepository.findById(booseId).orElseThrow();
+                    WeeklyPeriod weeklyPeriod = saveSampleWeeklyPeriod(boose);
                     barrier.await();
-                } catch (InterruptedException | BrokenBarrierException e) {
-                    throw new RuntimeException(e);
-                }
-                return weeklyPeriod;
-            });
-        });
+                    return weeklyPeriod;
+                })));
 
-        Thread thread2 = new Thread(() -> {
-            txTemplate.execute(status -> {
-                Boose boose = booseRepository.findById(booseId).orElseThrow();
-                WeeklyPeriod weeklyPeriod = saveOtherWeeklyPeriod(boose);
-                try {
+        threadFutures.add(executor.submit(() ->
+                txTemplate.execute(status -> {
+                    Boose boose = booseRepository.findById(booseId).orElseThrow();
                     barrier.await();
-                } catch (InterruptedException | BrokenBarrierException e) {
-                    throw new RuntimeException(e);
-                }
-                return weeklyPeriod;
-            });
-        });
+                    return saveOtherWeeklyPeriod(boose);
+                })));
 
-        List<Thread> threads = List.of(thread1, thread2);
-        threads.forEach(t -> t.start());
-        threads.forEach(t -> {
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        Boose boose = booseRepository.findById(booseId).orElseThrow();
+
+        assertThatNoException().isThrownBy(() -> {
+            for (Future<?> future : threadFutures) {
+                future.get();
             }
         });
+
+        List<WeeklyPeriod> weeklyPeriodsInDatabase = repository.findAllFor(boose);
+
+        assertThat(threadFutures)
+                .extracting(Future::get)
+                .containsExactlyInAnyOrderElementsOf(weeklyPeriodsInDatabase);
     }
 
     Boose saveSampleBoose() {

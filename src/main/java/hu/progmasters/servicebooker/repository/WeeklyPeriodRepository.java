@@ -20,7 +20,9 @@ public class WeeklyPeriodRepository {
 
     public WeeklyPeriod save(WeeklyPeriod weeklyPeriod) {
         Boose boose = weeklyPeriod.getBoose();
-        entityManager.lock(boose, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+        // Optimistic locking could work here, but MySQL locks rows referenced by foreign keys
+        // and that causes a deadlock
+        entityManager.lock(boose, LockModeType.PESSIMISTIC_WRITE);
         List<WeeklyPeriod> overlappingPeriods = overlappingPeriods(weeklyPeriod, boose);
         if (!overlappingPeriods.isEmpty()) {
             throw new OverlappingWeeklyPeriodException("Period to save overlaps already existing periods in database");
@@ -36,7 +38,7 @@ public class WeeklyPeriodRepository {
         // perfectly valid period, but we store the seconds since MONDAY 00:00:00 so in this case e will be a lower
         // integer in the database.
         // This is because weekday and time is not enough fields to have an order. But we can define an interval from s
-        // to the next occurence of e.
+        // to the next occurrence of e.
 
         // With those intervals, there is an intersection, when the start point of one period is in the other:
         // s1 is inside [s2, e2) OR s2 is inside [s1, e2)
