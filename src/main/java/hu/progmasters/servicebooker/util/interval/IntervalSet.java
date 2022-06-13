@@ -87,6 +87,14 @@ public class IntervalSet<T extends Comparable<? super T>> extends AbstractCollec
         return this;
     }
 
+    public IntervalSet<T> addAssumingNoOverlap(IntervalSet<T> intervalSet) {
+        Objects.requireNonNull(intervalSet);
+        for (Interval<T> interval : intervalSet) {
+            addAssumingNoOverlap(interval);
+        }
+        return this;
+    }
+
     /**
      * Adds intervals from another interval set narrowing existing regions when there is an overlap.
      *
