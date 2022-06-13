@@ -6,6 +6,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.*;
+import java.util.Comparator;
 import java.util.Objects;
 
 @Value
@@ -14,6 +15,9 @@ public class DayOfWeekTime implements TemporalAccessor {
     private static final int SECONDS_PER_WEEK = 7 * SECONDS_PER_DAY;
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE HH:mm:ss");
+
+    public static final Comparator<DayOfWeekTime> SAME_WEEK_COMPARATOR =
+            Comparator.comparing(DayOfWeekTime::toSecondsFromWeekStart);
 
     DayOfWeek dayOfWeek;
     LocalTime time;
@@ -51,6 +55,53 @@ public class DayOfWeekTime implements TemporalAccessor {
 
     public static DayOfWeekTime of(DayOfWeek dayOfWeek, int hour, int minute) {
         return of(dayOfWeek, LocalTime.of(hour, minute));
+    }
+
+    public static DayOfWeekTime from(Temporal temporal) {
+        Objects.requireNonNull(temporal);
+        DayOfWeek dayOfWeek = DayOfWeek.from(temporal);
+        LocalTime time = LocalTime.from(temporal);
+        return new DayOfWeekTime(dayOfWeek, time);
+    }
+
+    private static class NextAdjuster implements TemporalAdjuster {
+        private final int targetSecondsFromWeekStart;
+        private final boolean allowSame;
+
+
+        public NextAdjuster(DayOfWeekTime dayOfWeekTime, boolean allowSame) {
+            this.targetSecondsFromWeekStart = dayOfWeekTime.toSecondsFromWeekStart();
+            this.allowSame = allowSame;
+        }
+
+        @Override
+        public Temporal adjustInto(Temporal temporal) {
+            int sourceSecondsFromWeekStart = DayOfWeekTime.from(temporal).toSecondsFromWeekStart();
+            int differenceInSeconds = targetSecondsFromWeekStart - sourceSecondsFromWeekStart;
+            if (differenceInSeconds < 0) {
+                differenceInSeconds += SECONDS_PER_WEEK;
+            } else if (!allowSame && differenceInSeconds == 0) {
+                differenceInSeconds = SECONDS_PER_WEEK;
+            }
+            return temporal.plus(differenceInSeconds, ChronoUnit.SECONDS);
+        }
+
+    }
+
+    public static TemporalAdjuster next(DayOfWeekTime dayOfWeekTime) {
+        return new NextAdjuster(dayOfWeekTime, false);
+    }
+
+    public static TemporalAdjuster nextOrSame(DayOfWeekTime dayOfWeekTime) {
+        return new NextAdjuster(dayOfWeekTime, true);
+    }
+
+    public boolean sameWeekBefore(DayOfWeekTime dayOfWeekTime) {
+        return SAME_WEEK_COMPARATOR.compare(this, dayOfWeekTime) < 0;
+    }
+
+    public boolean sameWeekAfter(DayOfWeekTime dayOfWeekTime) {
+        return SAME_WEEK_COMPARATOR.compare(this, dayOfWeekTime) > 0;
     }
 
     public int toSecondsFromWeekStart() {

@@ -8,17 +8,23 @@ import hu.progmasters.servicebooker.exceptionhandling.BooseNotFoundException;
 import hu.progmasters.servicebooker.repository.BooseRepository;
 import hu.progmasters.servicebooker.repository.SpecificPeriodRepository;
 import hu.progmasters.servicebooker.repository.WeeklyPeriodRepository;
+import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import hu.progmasters.servicebooker.util.interval.Interval;
+import hu.progmasters.servicebooker.util.interval.IntervalSet;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
+import static hu.progmasters.servicebooker.util.interval.Interval.interval;
+
 @Service
-@Transactional
+@Transactional(isolation = Isolation.REPEATABLE_READ)
 public class BooseService {
 
     private final BooseRepository booseRepository;
@@ -63,7 +69,7 @@ public class BooseService {
 
     public List<WeeklyPeriodInfo> findAllWeeklyPeriodsForBoose(int booseId) {
         Boose boose = getFromIdOrThrow(booseId);
-        return weeklyPeriodRepository.findAllFor(boose).stream()
+        return weeklyPeriodRepository.findAllOrderedFor(boose).stream()
                 .map(weeklyPeriod -> modelMapper.map(weeklyPeriod, WeeklyPeriodInfo.class))
                 .collect(Collectors.toList());
     }
@@ -72,6 +78,10 @@ public class BooseService {
         Boose boose = getFromIdOrThrow(command.getBooseId());
         SpecificPeriod toSave = modelMapper.map(command, SpecificPeriod.class);
         toSave.setBoose(boose);
+
+        Interval<LocalDateTime> periodInterval = interval(command.getStart(), command.getEnd());
+        IntervalSet<LocalDateTime> expandedWeeklyPeriods = expandWeeklyPeriods(boose, periodInterval);
+
         SpecificPeriod saved = specificPeriodRepository.save(toSave);
         return modelMapper.map(saved, SpecificPeriodInfo.class);
     }
@@ -79,9 +89,65 @@ public class BooseService {
     public List<SpecificPeriodInfo> findAllSpecificPeriodsForBoose(int booseId, Interval<LocalDateTime> interval,
                                                                    Boolean bookable) {
         Boose boose = getFromIdOrThrow(booseId);
-        return specificPeriodRepository.findAllFor(boose, interval, bookable).stream()
+        return specificPeriodRepository.findAllOrderedFor(boose, interval, bookable).stream()
                 .map(specificPeriod -> modelMapper.map(specificPeriod, SpecificPeriodInfo.class))
                 .collect(Collectors.toList());
+    }
+
+    private IntervalSet<LocalDateTime> expandWeeklyPeriods(Boose boose, Interval<LocalDateTime> periodInterval) {
+        IntervalSet<LocalDateTime> result = new IntervalSet<>();
+
+        List<WeeklyPeriod> weeklyPeriods = weeklyPeriodRepository.findAllOrderedFor(boose);
+
+        if (weeklyPeriods.isEmpty()) {
+            return result;
+        }
+
+        LocalDateTime currentDateTime = periodInterval.getStart();
+        DayOfWeekTime currentWeekTime = DayOfWeekTime.from(currentDateTime);
+
+        // set firstToExpand
+        WeeklyPeriod lastWeeklyPeriod = weeklyPeriods.get(weeklyPeriods.size() - 1);
+        boolean lastPeriodCrossesWeekBoundary = lastWeeklyPeriod.crossesWeekBoundary();
+
+        ListIterator<WeeklyPeriod> firstToExpand = null;
+        if (lastPeriodCrossesWeekBoundary && currentWeekTime.sameWeekBefore(lastWeeklyPeriod.getEnd())) {
+            firstToExpand = weeklyPeriods.listIterator(weeklyPeriods.size() - 1);
+        } else {
+            ListIterator<WeeklyPeriod> iterator = weeklyPeriods.listIterator();
+            while (iterator.hasNext()) {
+                WeeklyPeriod firstToExpandCandidate = iterator.next();
+                if (currentWeekTime.sameWeekBefore(firstToExpandCandidate.getEnd())) {
+                    iterator.previous();
+                    firstToExpand = iterator;
+                    break;
+                }
+            }
+            if (firstToExpand == null) {
+                if (lastPeriodCrossesWeekBoundary) {
+                    iterator.previous();
+                    firstToExpand = iterator;
+                } else {
+                    firstToExpand = weeklyPeriods.listIterator();
+                }
+            }
+        }
+
+        ListIterator<WeeklyPeriod> expansionIterator = firstToExpand;
+        while (true) {
+            WeeklyPeriod toExpand = firstToExpand.next();
+            LocalDateTime start = currentDateTime.with(DayOfWeekTime.nextOrSame(toExpand.getStart()));
+            LocalDateTime end = currentDateTime.with(DayOfWeekTime.next(toExpand.getEnd()));
+            if (start.isBefore(periodInterval.getEnd())) {
+                break;
+            }
+            result.addAssumingNoOverlap(interval(start, end));
+            currentDateTime = end;
+            if (!expansionIterator.hasNext()) {
+                expansionIterator = weeklyPeriods.listIterator();
+            }
+        }
+        return result;
     }
 
     Boose getFromIdOrThrow(int id) {

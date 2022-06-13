@@ -37,4 +37,17 @@ public class WeeklyPeriod {
     public void setEnd(DayOfWeekTime end) {
         this.end = end.toSecondsFromWeekStart();
     }
+
+    public boolean crossesWeekBoundary() {
+        return end <= start;
+    }
+
+    public boolean contains(DayOfWeekTime dayOfWeekTime) {
+        int secondsFromWeekStart = dayOfWeekTime.toSecondsFromWeekStart();
+        if (crossesWeekBoundary()) {
+            return secondsFromWeekStart >= start || secondsFromWeekStart < end;
+        } else {
+            return secondsFromWeekStart >= start && secondsFromWeekStart < end;
+        }
+    }
 }
