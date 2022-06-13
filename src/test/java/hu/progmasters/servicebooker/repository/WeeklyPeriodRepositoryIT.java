@@ -63,7 +63,7 @@ class WeeklyPeriodRepositoryIT {
             }
         });
 
-        List<WeeklyPeriod> weeklyPeriodsInDatabase = repository.findAllFor(boose);
+        List<WeeklyPeriod> weeklyPeriodsInDatabase = repository.findAllOrderedFor(boose);
 
         assertThat(threadFutures)
                 .extracting(Future::get)

@@ -70,9 +70,10 @@ public class WeeklyPeriodRepository {
         return Optional.ofNullable(entityManager.find(WeeklyPeriod.class, id));
     }
 
-    public List<WeeklyPeriod> findAllFor(Boose boose) {
+    public List<WeeklyPeriod> findAllOrderedFor(Boose boose) {
         TypedQuery<WeeklyPeriod> query = entityManager.createQuery(
-                        "SELECT wp FROM WeeklyPeriod wp WHERE wp.boose = :boose",
+                        "SELECT wp FROM WeeklyPeriod wp WHERE wp.boose = :boose " +
+                                "ORDER BY wp.start",
                         WeeklyPeriod.class)
                 .setParameter("boose", boose);
         return query.getResultList();

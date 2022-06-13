@@ -49,11 +49,12 @@ public class SpecificPeriodRepository {
         return Optional.ofNullable(entityManager.find(SpecificPeriod.class, id));
     }
 
-    public List<SpecificPeriod> findAllFor(Boose boose, Interval<LocalDateTime> interval, Boolean bookable) {
+    public List<SpecificPeriod> findAllOrderedFor(Boose boose, Interval<LocalDateTime> interval, Boolean bookable) {
         TypedQuery<SpecificPeriod> query = entityManager.createQuery(
                         "SELECT sp FROM SpecificPeriod sp WHERE sp.boose = :boose " +
                                 "AND sp.start < :intervalEnd AND sp.end > :intervalStart " +
-                                "AND (:bookable IS NULL OR sp.bookable = :bookable)",
+                                "AND (:bookable IS NULL OR sp.bookable = :bookable) " +
+                                "ORDER BY sp.start",
                         SpecificPeriod.class)
                 .setParameter("boose", boose)
                 .setParameter("intervalStart", interval.getStart())
