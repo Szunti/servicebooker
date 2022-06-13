@@ -1,5 +1,6 @@
 package hu.progmasters.servicebooker.domain;
 
+import hu.progmasters.servicebooker.service.Period;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Entity
-public class SpecificPeriod {
+public class SpecificPeriod implements Period {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

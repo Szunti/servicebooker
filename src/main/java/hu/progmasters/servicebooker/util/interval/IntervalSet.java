@@ -2,7 +2,7 @@ package hu.progmasters.servicebooker.util.interval;
 
 import java.util.*;
 
-import static hu.progmasters.servicebooker.util.interval.Interval.interval;
+import static hu.progmasters.servicebooker.util.interval.SimpleInterval.interval;
 
 /**
  * A set of intervals with common set operations.

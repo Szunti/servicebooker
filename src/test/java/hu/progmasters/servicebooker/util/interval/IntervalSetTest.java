@@ -2,7 +2,7 @@ package hu.progmasters.servicebooker.util.interval;
 
 import org.junit.jupiter.api.Test;
 
-import static hu.progmasters.servicebooker.util.interval.Interval.interval;
+import static hu.progmasters.servicebooker.util.interval.SimpleInterval.interval;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class IntervalSetTest {
