@@ -4,6 +4,7 @@ import hu.progmasters.servicebooker.domain.Boose;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -29,5 +30,11 @@ public class BooseRepository {
                 "SELECT b FROM Boose b",
                 Boose.class);
         return query.getResultList();
+    }
+
+    public void lockForUpdate(Boose boose) {
+        // optimistic lock doesn't work, because inserting rows referencing the boose
+        // puts a read lock on the boose row in MySQL and the version update can deadlock
+        entityManager.lock(boose, LockModeType.PESSIMISTIC_WRITE);
     }
 }

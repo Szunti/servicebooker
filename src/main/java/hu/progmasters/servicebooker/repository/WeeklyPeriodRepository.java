@@ -2,11 +2,9 @@ package hu.progmasters.servicebooker.repository;
 
 import hu.progmasters.servicebooker.domain.Boose;
 import hu.progmasters.servicebooker.domain.WeeklyPeriod;
-import hu.progmasters.servicebooker.exceptionhandling.OverlappingWeeklyPeriodException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -19,19 +17,11 @@ public class WeeklyPeriodRepository {
     private EntityManager entityManager;
 
     public WeeklyPeriod save(WeeklyPeriod toSave) {
-        Boose boose = toSave.getBoose();
-        // Optimistic locking could work here, but MySQL locks rows referenced by foreign keys
-        // and that causes a deadlock
-        entityManager.lock(boose, LockModeType.PESSIMISTIC_WRITE);
-        List<WeeklyPeriod> overlappingPeriods = overlappingPeriods(toSave, boose);
-        if (!overlappingPeriods.isEmpty()) {
-            throw new OverlappingWeeklyPeriodException();
-        }
         entityManager.persist(toSave);
         return toSave;
     }
 
-    private List<WeeklyPeriod> overlappingPeriods(WeeklyPeriod weeklyPeriod, Boose boose) {
+    public List<WeeklyPeriod> findOverlappingPeriods(Boose boose, WeeklyPeriod weeklyPeriod) {
         // this one is a bit difficult because periods can cross week boundaries
 
         // Let the period be [s,e) (closed on s, open on e). When s is SUNDAY 20:00 and e is MONDAY 4:00 this is a

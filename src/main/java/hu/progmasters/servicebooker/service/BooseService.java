@@ -5,6 +5,8 @@ import hu.progmasters.servicebooker.domain.SpecificPeriod;
 import hu.progmasters.servicebooker.domain.WeeklyPeriod;
 import hu.progmasters.servicebooker.dto.*;
 import hu.progmasters.servicebooker.exceptionhandling.BooseNotFoundException;
+import hu.progmasters.servicebooker.exceptionhandling.OverlappingSpecificPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.OverlappingWeeklyPeriodException;
 import hu.progmasters.servicebooker.repository.BooseRepository;
 import hu.progmasters.servicebooker.repository.SpecificPeriodRepository;
 import hu.progmasters.servicebooker.repository.WeeklyPeriodRepository;
@@ -60,10 +62,17 @@ public class BooseService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public WeeklyPeriodInfo addWeeklyPeriodForBoose(WeeklyPeriodCreateCommand command) {
         Boose boose = getFromIdOrThrow(command.getBooseId());
         WeeklyPeriod toSave = modelMapper.map(command, WeeklyPeriod.class);
         toSave.setBoose(boose);
+
+        booseRepository.lockForUpdate(boose);
+        // this check needs to read already commited thats why the isolation level is set
+        if (!weeklyPeriodRepository.findOverlappingPeriods(boose, toSave).isEmpty()) {
+            throw new OverlappingWeeklyPeriodException();
+        }
         WeeklyPeriod saved = weeklyPeriodRepository.save(toSave);
         return modelMapper.map(saved, WeeklyPeriodInfo.class);
     }
@@ -75,11 +84,17 @@ public class BooseService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public SpecificPeriodInfo addSpecificPeriodForBoose(SpecificPeriodCreateCommand command) {
         Boose boose = getFromIdOrThrow(command.getBooseId());
         SpecificPeriod toSave = modelMapper.map(command, SpecificPeriod.class);
         toSave.setBoose(boose);
 
+        booseRepository.lockForUpdate(boose);
+        // this check needs to read already commited thats why the isolation level is set
+        if (!specificPeriodRepository.findOverlappingPeriods(boose, toSave).isEmpty()) {
+            throw new OverlappingSpecificPeriodException();
+        }
         Interval<LocalDateTime> periodInterval = interval(command.getStart(), command.getEnd());
         IntervalSet<LocalDateTime> expandedWeeklyPeriods = expandWeeklyPeriods(boose, periodInterval);
         // TODO return if weekly is replaced, partially covered or neither
@@ -113,7 +128,7 @@ public class BooseService {
             }
             specificPeriodsToRemove.addAssumingNoOverlap(periodInterval);
         }
-        
+
         weeklyPeriods.subtract(specificPeriodsToRemove);
         weeklyPeriods.addAssumingNoOverlap(specificPeriodsToAdd);
 

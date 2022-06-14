@@ -20,17 +20,11 @@ public class SpecificPeriodRepository {
     private EntityManager entityManager;
 
     public SpecificPeriod save(SpecificPeriod toSave) {
-        Boose boose = toSave.getBoose();
-        entityManager.lock(boose, LockModeType.PESSIMISTIC_WRITE);
-        List<SpecificPeriod> overlappingPeriods = overlappingPeriods(toSave, boose);
-        if (!overlappingPeriods.isEmpty()) {
-            throw new OverlappingSpecificPeriodException();
-        }
         entityManager.persist(toSave);
         return toSave;
     }
 
-    private List<SpecificPeriod> overlappingPeriods(SpecificPeriod specificPeriod, Boose boose) {
+    public List<SpecificPeriod> findOverlappingPeriods(Boose boose, SpecificPeriod specificPeriod) {
         // Let the period be [s,e) (closed on s, open on e).
         // [s1, e1) intersects [s2, e2) when:
         // s1 < e2 AND s2 < e1
