@@ -7,7 +7,11 @@ public class BooseNotFoundException extends RuntimeException {
     private final int id;
 
     public BooseNotFoundException(int id) {
-        super("Boose not found with id: " + id);
+        this.id = id;
+    }
+
+    public BooseNotFoundException(int id, Throwable cause) {
+        super(cause);
         this.id = id;
     }
 }

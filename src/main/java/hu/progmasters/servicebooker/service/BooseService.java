@@ -4,7 +4,7 @@ import hu.progmasters.servicebooker.domain.Boose;
 import hu.progmasters.servicebooker.domain.SpecificPeriod;
 import hu.progmasters.servicebooker.domain.WeeklyPeriod;
 import hu.progmasters.servicebooker.dto.*;
-import hu.progmasters.servicebooker.exceptionhandling.BooseNotFoundException;
+import hu.progmasters.servicebooker.exceptionhandling.NoSuchBooseException;
 import hu.progmasters.servicebooker.exceptionhandling.OverlappingSpecificPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.OverlappingWeeklyPeriodException;
 import hu.progmasters.servicebooker.repository.BooseRepository;
@@ -69,7 +69,7 @@ public class BooseService {
         toSave.setBoose(boose);
 
         booseRepository.lockForUpdate(boose);
-        // this check needs to read already commited thats why the isolation level is set
+        // this check needs to read already commited, that is why the isolation level is set
         if (!weeklyPeriodRepository.findOverlappingPeriods(boose, toSave).isEmpty()) {
             throw new OverlappingWeeklyPeriodException();
         }
@@ -196,7 +196,7 @@ public class BooseService {
 
     Boose getFromIdOrThrow(int id) {
         return booseRepository.findById(id).orElseThrow(
-                () -> new BooseNotFoundException(id)
+                () -> new NoSuchBooseException(id)
         );
     }
 }
