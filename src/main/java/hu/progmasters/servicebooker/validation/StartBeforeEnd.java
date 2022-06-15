@@ -12,6 +12,8 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = StartBeforeEndValidator.class)
 public @interface StartBeforeEnd {
     String message() default "start date must be before end date";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

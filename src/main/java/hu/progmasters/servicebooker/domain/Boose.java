@@ -3,11 +3,13 @@ package hu.progmasters.servicebooker.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Bookable Service, or boose in short
- *
  */
 
 @Data

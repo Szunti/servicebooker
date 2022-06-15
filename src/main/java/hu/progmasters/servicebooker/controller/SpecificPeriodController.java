@@ -6,7 +6,6 @@ import hu.progmasters.servicebooker.exceptionhandling.NoSuchSpecificPeriodExcept
 import hu.progmasters.servicebooker.exceptionhandling.SpecificPeriodNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.SpecificPeriodNotInBooseException;
 import hu.progmasters.servicebooker.service.BooseService;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

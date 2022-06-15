@@ -40,8 +40,8 @@ public class DateTimeBoundChecker {
         if (constrained == null) {
             throw new IntervalOutOfBookableBoundsException(
                     String.format("start(%s), end(%s) is completely outside global bounds [%s, %s)",
-                    interval.getStart(), interval.getEnd(),
-                    boundingInterval.getStart(), boundingInterval.getEnd()));
+                            interval.getStart(), interval.getEnd(),
+                            boundingInterval.getStart(), boundingInterval.getEnd()));
         }
         return constrained;
     }

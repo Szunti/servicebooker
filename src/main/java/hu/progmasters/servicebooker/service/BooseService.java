@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
 
-import static hu.progmasters.servicebooker.util.period.PeriodInterval.periodInterval;
 import static hu.progmasters.servicebooker.util.interval.SimpleInterval.interval;
+import static hu.progmasters.servicebooker.util.period.PeriodInterval.periodInterval;
 
 @Service
 @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -148,7 +148,7 @@ public class BooseService {
 
         return weeklyPeriods.stream()
                 .map(periodInterval ->
-                        modelMapper.map(((PeriodInterval)periodInterval).getPeriod(), FreePeriodInfo.class))
+                        modelMapper.map(((PeriodInterval) periodInterval).getPeriod(), FreePeriodInfo.class))
                 .collect(Collectors.toList());
     }
 

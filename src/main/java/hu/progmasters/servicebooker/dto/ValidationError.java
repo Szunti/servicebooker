@@ -1,6 +1,6 @@
 package hu.progmasters.servicebooker.dto;
 
-import lombok.*;
+import lombok.Getter;
 
 @Getter
 public class ValidationError extends SimpleError {

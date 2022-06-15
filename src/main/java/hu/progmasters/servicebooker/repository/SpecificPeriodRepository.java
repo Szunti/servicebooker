@@ -2,12 +2,10 @@ package hu.progmasters.servicebooker.repository;
 
 import hu.progmasters.servicebooker.domain.Boose;
 import hu.progmasters.servicebooker.domain.SpecificPeriod;
-import hu.progmasters.servicebooker.exceptionhandling.OverlappingSpecificPeriodException;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;

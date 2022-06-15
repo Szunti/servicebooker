@@ -39,17 +39,17 @@ public class WeeklyPeriodRepository {
         // e <= s AND (s <= x  OR  x < e)
 
         TypedQuery<WeeklyPeriod> query = entityManager.createQuery(
-                "SELECT wp FROM WeeklyPeriod wp " +
-                        "WHERE wp.boose = :boose " +
-                        "AND (" +
-                        "    (wp.start <= :start AND :start < wp.end) " +
-                        "           OR " +
-                        "    (wp.end <= wp.start AND (wp.start <= :start OR :start < wp.end))" +
-                        "           OR " +
-                        "    (:start <= wp.start AND wp.start < :end) " +
-                        "           OR " +
-                        "    (:end <= :start AND (:start <= wp.start OR wp.start < :end))" +
-                        ")", WeeklyPeriod.class)
+                        "SELECT wp FROM WeeklyPeriod wp " +
+                                "WHERE wp.boose = :boose " +
+                                "AND (" +
+                                "    (wp.start <= :start AND :start < wp.end) " +
+                                "           OR " +
+                                "    (wp.end <= wp.start AND (wp.start <= :start OR :start < wp.end))" +
+                                "           OR " +
+                                "    (:start <= wp.start AND wp.start < :end) " +
+                                "           OR " +
+                                "    (:end <= :start AND (:start <= wp.start OR wp.start < :end))" +
+                                ")", WeeklyPeriod.class)
                 .setParameter("boose", boose)
                 .setParameter("start", weeklyPeriod.getStart().toSecondsFromWeekStart())
                 .setParameter("end", weeklyPeriod.getEnd().toSecondsFromWeekStart());

@@ -2,6 +2,7 @@ package hu.progmasters.servicebooker.util.interval;
 
 public interface Interval<T extends Comparable<? super T>> {
     T getStart();
+
     T getEnd();
 
     default boolean isBefore(Interval<T> other) {

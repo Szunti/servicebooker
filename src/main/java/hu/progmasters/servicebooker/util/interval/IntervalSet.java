@@ -208,7 +208,7 @@ public class IntervalSet<T extends Comparable<? super T>> extends AbstractCollec
             }
         }
 
-        return  firstIntersecting == null ? Collections.emptyNavigableSet() :
+        return firstIntersecting == null ? Collections.emptyNavigableSet() :
                 intervalTree.subSet(firstIntersecting, true, lastCandidate, true);
     }
 }
