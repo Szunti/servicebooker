@@ -1,5 +1,7 @@
 package hu.progmasters.servicebooker.util;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Value;
 
 import java.time.DayOfWeek;
@@ -57,11 +59,17 @@ public class DayOfWeekTime implements TemporalAccessor {
         return of(dayOfWeek, LocalTime.of(hour, minute));
     }
 
-    public static DayOfWeekTime from(Temporal temporal) {
+    public static DayOfWeekTime from(TemporalAccessor temporal) {
         Objects.requireNonNull(temporal);
         DayOfWeek dayOfWeek = DayOfWeek.from(temporal);
         LocalTime time = LocalTime.from(temporal);
         return new DayOfWeekTime(dayOfWeek, time);
+    }
+
+    // TODO use StdSerializer, @JsonComponent
+    @JsonCreator
+    public static DayOfWeekTime parse(CharSequence text) {
+        return formatter.parse(text, DayOfWeekTime::from);
     }
 
     private static class NextAdjuster implements TemporalAdjuster {
@@ -134,8 +142,9 @@ public class DayOfWeekTime implements TemporalAccessor {
         }
     }
 
+    @JsonValue
     @Override
     public String toString() {
-        return "DayOfWeekTime(" + formatter.format(this) + ")";
+        return formatter.format(this);
     }
 }

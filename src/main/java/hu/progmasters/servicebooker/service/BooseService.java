@@ -4,15 +4,15 @@ import hu.progmasters.servicebooker.domain.Boose;
 import hu.progmasters.servicebooker.domain.SpecificPeriod;
 import hu.progmasters.servicebooker.domain.WeeklyPeriod;
 import hu.progmasters.servicebooker.dto.*;
-import hu.progmasters.servicebooker.exceptionhandling.NoSuchBooseException;
-import hu.progmasters.servicebooker.exceptionhandling.OverlappingSpecificPeriodException;
-import hu.progmasters.servicebooker.exceptionhandling.OverlappingWeeklyPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.*;
 import hu.progmasters.servicebooker.repository.BooseRepository;
 import hu.progmasters.servicebooker.repository.SpecificPeriodRepository;
 import hu.progmasters.servicebooker.repository.WeeklyPeriodRepository;
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import hu.progmasters.servicebooker.util.interval.IntervalSet;
+import hu.progmasters.servicebooker.util.period.PeriodInterval;
+import hu.progmasters.servicebooker.util.period.SimplePeriod;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
 
-import static hu.progmasters.servicebooker.service.PeriodInterval.periodInterval;
+import static hu.progmasters.servicebooker.util.period.PeriodInterval.periodInterval;
 import static hu.progmasters.servicebooker.util.interval.SimpleInterval.interval;
 
 @Service
@@ -33,15 +33,17 @@ public class BooseService {
     private final BooseRepository booseRepository;
     private final WeeklyPeriodRepository weeklyPeriodRepository;
     private final SpecificPeriodRepository specificPeriodRepository;
+    private final DateTimeBoundChecker dateTimeBoundChecker;
 
     private final ModelMapper modelMapper;
 
     public BooseService(BooseRepository booseRepository,
                         WeeklyPeriodRepository weeklyPeriodRepository,
-                        SpecificPeriodRepository specificPeriodRepository, ModelMapper modelMapper) {
+                        SpecificPeriodRepository specificPeriodRepository, DateTimeBoundChecker dateTimeBoundChecker, ModelMapper modelMapper) {
         this.booseRepository = booseRepository;
         this.weeklyPeriodRepository = weeklyPeriodRepository;
         this.specificPeriodRepository = specificPeriodRepository;
+        this.dateTimeBoundChecker = dateTimeBoundChecker;
         this.modelMapper = modelMapper;
     }
 
@@ -63,13 +65,13 @@ public class BooseService {
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public WeeklyPeriodInfo addWeeklyPeriodForBoose(WeeklyPeriodCreateCommand command) {
-        Boose boose = getFromIdOrThrow(command.getBooseId());
+    public WeeklyPeriodInfo addWeeklyPeriodForBoose(int booseId, WeeklyPeriodCreateCommand command) {
+        Boose boose = getFromIdOrThrow(booseId);
         WeeklyPeriod toSave = modelMapper.map(command, WeeklyPeriod.class);
         toSave.setBoose(boose);
 
         booseRepository.lockForUpdate(boose);
-        // this check needs to read already commited, that is why the isolation level is set
+        // this check needs to read already committed, that is why the isolation level is set
         if (!weeklyPeriodRepository.findOverlappingPeriods(boose, toSave).isEmpty()) {
             throw new OverlappingWeeklyPeriodException();
         }
@@ -84,39 +86,51 @@ public class BooseService {
                 .collect(Collectors.toList());
     }
 
+    public WeeklyPeriodInfo findWeeklyPeriodForBooseById(int booseId, int id) {
+        WeeklyPeriod weeklyPeriod = getWeeklyPeriodFromBooseAndIdOrThrow(booseId, id);
+        return modelMapper.map(weeklyPeriod, WeeklyPeriodInfo.class);
+    }
+
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public SpecificPeriodInfo addSpecificPeriodForBoose(SpecificPeriodCreateCommand command) {
-        Boose boose = getFromIdOrThrow(command.getBooseId());
+    public SpecificPeriodInfo addSpecificPeriodForBoose(int booseId, SpecificPeriodCreateCommand command) {
+        dateTimeBoundChecker.checkInBound(interval(command.getStart(), command.getEnd()));
+        Boose boose = getFromIdOrThrow(booseId);
         SpecificPeriod toSave = modelMapper.map(command, SpecificPeriod.class);
         toSave.setBoose(boose);
 
         booseRepository.lockForUpdate(boose);
-        // this check needs to read already commited thats why the isolation level is set
+        // this check needs to read already committed that is why the isolation level is set
         if (!specificPeriodRepository.findOverlappingPeriods(boose, toSave).isEmpty()) {
             throw new OverlappingSpecificPeriodException();
         }
         Interval<LocalDateTime> periodInterval = interval(command.getStart(), command.getEnd());
-        IntervalSet<LocalDateTime> expandedWeeklyPeriods = expandWeeklyPeriods(boose, periodInterval);
         // TODO return if weekly is replaced, partially covered or neither
+//        IntervalSet<LocalDateTime> expandedWeeklyPeriods = expandWeeklyPeriods(boose, periodInterval);
         SpecificPeriod saved = specificPeriodRepository.save(toSave);
         return modelMapper.map(saved, SpecificPeriodInfo.class);
     }
 
     public List<SpecificPeriodInfo> findAllSpecificPeriodsForBoose(int booseId, Interval<LocalDateTime> interval,
                                                                    Boolean bookable) {
+        Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = getFromIdOrThrow(booseId);
-        return specificPeriodRepository.findAllOrderedFor(boose, interval, bookable).stream()
+        return specificPeriodRepository.findAllOrderedFor(boose, constrainedInterval, bookable).stream()
                 .map(specificPeriod -> modelMapper.map(specificPeriod, SpecificPeriodInfo.class))
                 .collect(Collectors.toList());
     }
 
+    public SpecificPeriodInfo findSpecificPeriodForBooseById(int booseId, int id) {
+        SpecificPeriod specificPeriod = getSpecificPeriodFromBooseAndIdOrThrow(booseId, id);
+        return modelMapper.map(specificPeriod, SpecificPeriodInfo.class);
+    }
 
     public List<FreePeriodInfo> getFreePeriodsForBoose(int booseId, Interval<LocalDateTime> interval) {
+        Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = getFromIdOrThrow(booseId);
-        IntervalSet<LocalDateTime> weeklyPeriods = expandWeeklyPeriods(boose, interval);
+        IntervalSet<LocalDateTime> weeklyPeriods = expandWeeklyPeriods(boose, constrainedInterval);
 
         List<SpecificPeriod> specificPeriodList =
-                specificPeriodRepository.findAllOrderedFor(boose, interval, null);
+                specificPeriodRepository.findAllOrderedFor(boose, constrainedInterval, null);
 
         IntervalSet<LocalDateTime> specificPeriodsToRemove = new IntervalSet<>();
         IntervalSet<LocalDateTime> specificPeriodsToAdd = new IntervalSet<>();
@@ -194,9 +208,33 @@ public class BooseService {
         return result;
     }
 
-    Boose getFromIdOrThrow(int id) {
+    private Boose getFromIdOrThrow(int id) {
         return booseRepository.findById(id).orElseThrow(
                 () -> new NoSuchBooseException(id)
         );
+    }
+
+    private WeeklyPeriod getWeeklyPeriodFromBooseAndIdOrThrow(int booseId, int id) {
+        // TODO maybe getReference is enough
+        Boose boose = getFromIdOrThrow(booseId);
+        WeeklyPeriod weeklyPeriod = weeklyPeriodRepository.findById(id).orElseThrow(
+                () -> new NoSuchWeeklyPeriodException(id)
+        );
+        if (weeklyPeriod.getBoose() != boose) {
+            throw new WeeklyPeriodNotInBooseException(id, booseId);
+        }
+        return weeklyPeriod;
+    }
+
+    private SpecificPeriod getSpecificPeriodFromBooseAndIdOrThrow(int booseId, int id) {
+        // TODO maybe getReference is enough
+        Boose boose = getFromIdOrThrow(booseId);
+        SpecificPeriod specificPeriod = specificPeriodRepository.findById(id).orElseThrow(
+                () -> new NoSuchSpecificPeriodException(id)
+        );
+        if (specificPeriod.getBoose() != boose) {
+            throw new SpecificPeriodNotInBooseException(id, booseId);
+        }
+        return specificPeriod;
     }
 }

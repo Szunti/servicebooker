@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.service;
+package hu.progmasters.servicebooker.util.period;
 
 import java.time.LocalDateTime;
 

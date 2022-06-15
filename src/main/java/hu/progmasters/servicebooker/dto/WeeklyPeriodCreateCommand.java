@@ -4,7 +4,6 @@ import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Data
 public class WeeklyPeriodCreateCommand {
@@ -16,7 +15,4 @@ public class WeeklyPeriodCreateCommand {
 
     @NotNull
     private String comment;
-
-    @Positive
-    private int booseId;
 }

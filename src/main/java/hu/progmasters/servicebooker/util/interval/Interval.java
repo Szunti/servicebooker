@@ -20,6 +20,12 @@ public interface Interval<T extends Comparable<? super T>> {
         return !isBefore(other) && !isAfter(other);
     }
 
+    default boolean contains(T value) {
+        boolean atOrAfterStart = this.getStart().compareTo(value) <= 0;
+        boolean beforeEnd = this.getEnd().compareTo(value) > 0;
+        return atOrAfterStart && beforeEnd;
+    }
+
     Interval<T> intersect(Interval<T> other);
 
     Pair<Interval<T>> subtract(Interval<T> other);

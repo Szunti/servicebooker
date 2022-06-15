@@ -71,19 +71,17 @@ class ConcurrentBooseServiceIT {
 
     WeeklyPeriodInfo saveSampleWeeklyPeriod(BooseInfo boose) {
         WeeklyPeriodCreateCommand command = new WeeklyPeriodCreateCommand();
-        command.setBooseId(boose.getId());
         command.setStart(DayOfWeekTime.of(DayOfWeek.TUESDAY, 10, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.TUESDAY, 14, 0));
         command.setComment("test period");
-        return booseService.addWeeklyPeriodForBoose(command);
+        return booseService.addWeeklyPeriodForBoose(boose.getId(), command);
     }
 
     WeeklyPeriodInfo saveOtherWeeklyPeriod(BooseInfo boose) {
         WeeklyPeriodCreateCommand command = new WeeklyPeriodCreateCommand();
-        command.setBooseId(boose.getId());
         command.setStart(DayOfWeekTime.of(DayOfWeek.THURSDAY, 6, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.MONDAY, 14, 0));
         command.setComment("test period saved concurrently");
-        return booseService.addWeeklyPeriodForBoose(command);
+        return booseService.addWeeklyPeriodForBoose(boose.getId(), command);
     }
 }

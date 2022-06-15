@@ -1,9 +1,12 @@
 package hu.progmasters.servicebooker.exceptionhandling;
 
+import hu.progmasters.servicebooker.dto.SimpleError;
 import hu.progmasters.servicebooker.dto.ValidationError;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,11 +15,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
+    private static final String LOG_EXCEPTION = "Exception caught while handling request:";
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<ValidationError> handleValidationError(MethodArgumentNotValidException exception) {
+        log.info(LOG_EXCEPTION, exception);
         return exception.getFieldErrors().stream()
                 .map(fieldError -> {
                     String field = fieldError.getField();
@@ -28,31 +34,44 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<Error> handleMalformedRequestBody(HttpMessageNotReadableException exception) {
-        return List.of(new Error("malformed request body"));
+    public List<SimpleError> handleMalformedRequestBody(HttpMessageNotReadableException exception) {
+        log.info(LOG_EXCEPTION, exception);
+        return List.of(new SimpleError("malformed request body"));
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public List<SimpleError> handleMissingRequestParameter(MissingServletRequestParameterException exception) {
+        log.info(LOG_EXCEPTION, exception);
+        String message = String.format("required request parameter '%s' not present", exception.getParameterName());
+        return List.of(new SimpleError(message));
+    }
+
+    @ExceptionHandler({
+            BooseNotFoundException.class,
+            WeeklyPeriodNotFoundException.class,
+            SpecificPeriodNotFoundException.class
+    })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public List<Error> handleRequestedBooseNotFound(BooseNotFoundException exception) {
-        return List.of(new Error(String.format("boose with id %d not found", exception.getId())));
+    public List<SimpleError> handleNotFound(Exception exception) {
+        log.info(LOG_EXCEPTION, exception);
+        return List.of(SimpleError.from(exception));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler({
+            NoSuchBooseException.class,
+            NoSuchWeeklyPeriodException.class,
+            NoSuchSpecificPeriodException.class,
+            WeeklyPeriodNotInBooseException.class,
+            SpecificPeriodNotInBooseException.class,
+            OverlappingWeeklyPeriodException.class,
+            OverlappingSpecificPeriodException.class,
+            DateOutOfBookableBoundsException.class,
+            IntervalOutOfBookableBoundsException.class
+    })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<ValidationError> handleNoSuchBoose(NoSuchBooseException exception) {
-        return List.of(new ValidationError("booseId", String.format("boose with id %d not found", exception.getId())));
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<Error> handleOverlappingWeeklyPeriod(OverlappingSpecificPeriodException exception) {
-        return List.of(new Error("weekly period overlapping existing ones"));
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<Error> handleOverlappingSpecificPeriod(OverlappingSpecificPeriodException exception) {
-        return List.of(new Error("specific period overlapping existing ones"));
+    public List<SimpleError> handleCommonExceptions(Exception exception) {
+        log.info(LOG_EXCEPTION, exception);
+        return List.of(SimpleError.from(exception));
     }
 }

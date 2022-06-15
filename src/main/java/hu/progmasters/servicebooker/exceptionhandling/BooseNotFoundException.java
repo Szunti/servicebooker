@@ -3,15 +3,17 @@ package hu.progmasters.servicebooker.exceptionhandling;
 import lombok.Getter;
 
 @Getter
-public class BooseNotFoundException extends RuntimeException {
-    private final int id;
+public class BooseNotFoundException extends ControllerException {
 
     public BooseNotFoundException(int id) {
-        this.id = id;
+        super(defaultMessage(id));
     }
 
-    public BooseNotFoundException(int id, Throwable cause) {
+    public BooseNotFoundException(Throwable cause) {
         super(cause);
-        this.id = id;
+    }
+
+    private static String defaultMessage(int id) {
+        return String.format("service with id %d not found", id);
     }
 }

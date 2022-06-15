@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.service;
+package hu.progmasters.servicebooker.util.period;
 
 import lombok.Value;
 
@@ -11,7 +11,7 @@ public class SimplePeriod implements Period {
     LocalDateTime end;
     String comment;
 
-    static SimplePeriod of(LocalDateTime start, LocalDateTime end, String comment) {
+    public static SimplePeriod of(LocalDateTime start, LocalDateTime end, String comment) {
         Objects.requireNonNull(start);
         Objects.requireNonNull(end);
         if (!isInOrder(start, end)) {
