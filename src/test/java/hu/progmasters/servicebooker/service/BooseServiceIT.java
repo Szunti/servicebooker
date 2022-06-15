@@ -25,7 +25,6 @@ class BooseServiceIT {
     @Test
     void testAddWeeklyPeriodForBoose() {
         BooseInfo boose = saveSampleBoose();
-        Boose booseEntity = service.getFromIdOrThrow(boose.getId());
 
         WeeklyPeriodCreateCommand command = new WeeklyPeriodCreateCommand();
         command.setBooseId(boose.getId());
