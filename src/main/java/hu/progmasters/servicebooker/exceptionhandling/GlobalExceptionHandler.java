@@ -2,6 +2,16 @@ package hu.progmasters.servicebooker.exceptionhandling;
 
 import hu.progmasters.servicebooker.dto.error.SimpleError;
 import hu.progmasters.servicebooker.dto.error.ValidationError;
+import hu.progmasters.servicebooker.exceptionhandling.controller.BooseNotFoundException;
+import hu.progmasters.servicebooker.exceptionhandling.boose.NoSuchBooseException;
+import hu.progmasters.servicebooker.exceptionhandling.controller.SpecificPeriodNotFoundException;
+import hu.progmasters.servicebooker.exceptionhandling.controller.WeeklyPeriodNotFoundException;
+import hu.progmasters.servicebooker.exceptionhandling.specificperiod.NoSuchSpecificPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.specificperiod.OverlappingSpecificPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotInBooseException;
+import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.NoSuchWeeklyPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.OverlappingWeeklyPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.WeeklyPeriodNotInBooseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;

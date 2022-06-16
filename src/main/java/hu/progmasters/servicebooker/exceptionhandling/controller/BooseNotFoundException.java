@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.exceptionhandling;
+package hu.progmasters.servicebooker.exceptionhandling.controller;
 
 import lombok.Getter;
 

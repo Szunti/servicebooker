@@ -4,7 +4,7 @@ import hu.progmasters.servicebooker.dto.boose.BooseCreateCommand;
 import hu.progmasters.servicebooker.dto.boose.BooseInfo;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodInfo;
-import hu.progmasters.servicebooker.exceptionhandling.OverlappingWeeklyPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.OverlappingWeeklyPeriodException;
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

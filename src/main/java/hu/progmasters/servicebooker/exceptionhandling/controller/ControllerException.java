@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.exceptionhandling;
+package hu.progmasters.servicebooker.exceptionhandling.controller;
 
 public abstract class ControllerException extends RuntimeException {
 

@@ -2,9 +2,9 @@ package hu.progmasters.servicebooker.controller;
 
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodInfo;
-import hu.progmasters.servicebooker.exceptionhandling.NoSuchWeeklyPeriodException;
-import hu.progmasters.servicebooker.exceptionhandling.WeeklyPeriodNotFoundException;
-import hu.progmasters.servicebooker.exceptionhandling.WeeklyPeriodNotInBooseException;
+import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.NoSuchWeeklyPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.controller.WeeklyPeriodNotFoundException;
+import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.WeeklyPeriodNotInBooseException;
 import hu.progmasters.servicebooker.service.BooseService;
 import org.springframework.web.bind.annotation.*;
 

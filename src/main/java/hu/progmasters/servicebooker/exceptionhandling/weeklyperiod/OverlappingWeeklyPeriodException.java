@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.exceptionhandling;
+package hu.progmasters.servicebooker.exceptionhandling.weeklyperiod;
 
 public class OverlappingWeeklyPeriodException extends RuntimeException {
     public OverlappingWeeklyPeriodException() {

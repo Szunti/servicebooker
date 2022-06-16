@@ -1,5 +1,6 @@
-package hu.progmasters.servicebooker.exceptionhandling;
+package hu.progmasters.servicebooker.exceptionhandling.controller;
 
+import hu.progmasters.servicebooker.exceptionhandling.controller.ControllerException;
 import lombok.Getter;
 
 @Getter

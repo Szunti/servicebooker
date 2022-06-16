@@ -2,9 +2,9 @@ package hu.progmasters.servicebooker.controller;
 
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodInfo;
-import hu.progmasters.servicebooker.exceptionhandling.NoSuchSpecificPeriodException;
-import hu.progmasters.servicebooker.exceptionhandling.SpecificPeriodNotFoundException;
-import hu.progmasters.servicebooker.exceptionhandling.SpecificPeriodNotInBooseException;
+import hu.progmasters.servicebooker.exceptionhandling.specificperiod.NoSuchSpecificPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.controller.SpecificPeriodNotFoundException;
+import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotInBooseException;
 import hu.progmasters.servicebooker.service.BooseService;
 import org.springframework.web.bind.annotation.*;
 
