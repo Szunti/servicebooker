@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.dto;
+package hu.progmasters.servicebooker.dto.boose;
 
 import lombok.Data;
 

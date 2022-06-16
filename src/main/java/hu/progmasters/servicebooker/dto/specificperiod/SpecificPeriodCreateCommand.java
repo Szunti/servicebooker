@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.dto;
+package hu.progmasters.servicebooker.dto.specificperiod;
 
 import hu.progmasters.servicebooker.validation.StartBeforeEnd;
 import lombok.Data;

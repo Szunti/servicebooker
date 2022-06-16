@@ -1,7 +1,7 @@
 package hu.progmasters.servicebooker.exceptionhandling;
 
-import hu.progmasters.servicebooker.dto.SimpleError;
-import hu.progmasters.servicebooker.dto.ValidationError;
+import hu.progmasters.servicebooker.dto.error.SimpleError;
+import hu.progmasters.servicebooker.dto.error.ValidationError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;

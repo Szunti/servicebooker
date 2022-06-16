@@ -1,18 +1,12 @@
-package hu.progmasters.servicebooker.dto;
+package hu.progmasters.servicebooker.dto.weeklyperiod;
 
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-
 @Data
-public class WeeklyPeriodCreateCommand {
-    @NotNull
+public class WeeklyPeriodInfo {
+    private Integer id;
     private DayOfWeekTime start;
-
-    @NotNull
     private DayOfWeekTime end;
-
-    @NotNull
     private String comment;
 }

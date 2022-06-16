@@ -2,7 +2,7 @@ package hu.progmasters.servicebooker;
 
 import hu.progmasters.servicebooker.domain.Boose;
 import hu.progmasters.servicebooker.domain.WeeklyPeriod;
-import hu.progmasters.servicebooker.dto.WeeklyPeriodInfo;
+import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodInfo;
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -27,10 +27,6 @@ public class ModelMapperMappingTest {
         WeeklyPeriodInfo info = modelMapper.map(weeklyPeriod, WeeklyPeriodInfo.class);
 
         assertEquals(1, info.getId());
-
-        assertEquals(boose.getId(), info.getBoose().getId());
-        assertEquals(boose.getName(), info.getBoose().getName());
-        assertEquals(boose.getDescription(), info.getBoose().getDescription());
 
         assertEquals(weeklyPeriod.getStart(), info.getStart());
         assertEquals(weeklyPeriod.getEnd(), info.getEnd());

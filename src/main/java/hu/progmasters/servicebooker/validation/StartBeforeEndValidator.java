@@ -1,6 +1,6 @@
 package hu.progmasters.servicebooker.validation;
 
-import hu.progmasters.servicebooker.dto.SpecificPeriodCreateCommand;
+import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodCreateCommand;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

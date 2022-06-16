@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.dto;
+package hu.progmasters.servicebooker.dto.error;
 
 import lombok.Getter;
 

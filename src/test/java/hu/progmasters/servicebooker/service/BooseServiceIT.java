@@ -1,10 +1,9 @@
 package hu.progmasters.servicebooker.service;
 
-import hu.progmasters.servicebooker.domain.Boose;
-import hu.progmasters.servicebooker.dto.BooseCreateCommand;
-import hu.progmasters.servicebooker.dto.BooseInfo;
-import hu.progmasters.servicebooker.dto.WeeklyPeriodCreateCommand;
-import hu.progmasters.servicebooker.dto.WeeklyPeriodInfo;
+import hu.progmasters.servicebooker.dto.boose.BooseCreateCommand;
+import hu.progmasters.servicebooker.dto.boose.BooseInfo;
+import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodCreateCommand;
+import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodInfo;
 import hu.progmasters.servicebooker.exceptionhandling.OverlappingWeeklyPeriodException;
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,6 @@ class BooseServiceIT {
         assertThat(weeklyPeriod).as("weekly period saved as expected")
                 .isNotNull()
                 .extracting(
-                        wp -> wp.getBoose().getId(),
                         WeeklyPeriodInfo::getStart,
                         WeeklyPeriodInfo::getEnd,
                         WeeklyPeriodInfo::getComment)

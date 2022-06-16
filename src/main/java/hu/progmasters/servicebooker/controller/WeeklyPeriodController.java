@@ -1,7 +1,7 @@
 package hu.progmasters.servicebooker.controller;
 
-import hu.progmasters.servicebooker.dto.WeeklyPeriodCreateCommand;
-import hu.progmasters.servicebooker.dto.WeeklyPeriodInfo;
+import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodCreateCommand;
+import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodInfo;
 import hu.progmasters.servicebooker.exceptionhandling.NoSuchWeeklyPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.WeeklyPeriodNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.WeeklyPeriodNotInBooseException;

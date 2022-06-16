@@ -1,8 +1,8 @@
 package hu.progmasters.servicebooker.controller;
 
-import hu.progmasters.servicebooker.dto.BooseCreateCommand;
-import hu.progmasters.servicebooker.dto.BooseInfo;
-import hu.progmasters.servicebooker.dto.FreePeriodInfo;
+import hu.progmasters.servicebooker.dto.boose.BooseCreateCommand;
+import hu.progmasters.servicebooker.dto.boose.BooseInfo;
+import hu.progmasters.servicebooker.dto.boose.FreePeriodInfo;
 import hu.progmasters.servicebooker.exceptionhandling.BooseNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.NoSuchBooseException;
 import hu.progmasters.servicebooker.service.BooseService;
