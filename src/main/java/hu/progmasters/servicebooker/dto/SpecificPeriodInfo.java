@@ -11,5 +11,4 @@ public class SpecificPeriodInfo {
     private LocalDateTime end;
     private String comment;
     private boolean bookable;
-    private BooseInfo boose;
 }

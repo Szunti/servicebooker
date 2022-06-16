@@ -24,12 +24,12 @@ public class PeriodInterval implements Interval<LocalDateTime> {
 
     @Override
     public LocalDateTime getStart() {
-        return null;
+        return period.getStart();
     }
 
     @Override
     public LocalDateTime getEnd() {
-        return null;
+        return period.getEnd();
     }
 
     @Override

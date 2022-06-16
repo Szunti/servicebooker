@@ -38,7 +38,7 @@ public class SpecificPeriodController {
         return booseService.findAllSpecificPeriodsForBoose(booseId, interval(start, end), bookable);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public SpecificPeriodInfo findById(@PathVariable("booseId") int booseId,
                                        @PathVariable("id") int id) {
         try {

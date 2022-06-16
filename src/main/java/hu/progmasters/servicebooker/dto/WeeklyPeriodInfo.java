@@ -9,5 +9,4 @@ public class WeeklyPeriodInfo {
     private DayOfWeekTime start;
     private DayOfWeekTime end;
     private String comment;
-    private BooseInfo boose;
 }

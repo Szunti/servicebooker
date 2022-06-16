@@ -193,10 +193,10 @@ public class BooseService {
 
         ListIterator<WeeklyPeriod> expansionIterator = firstToExpand;
         while (true) {
-            WeeklyPeriod toExpand = firstToExpand.next();
+            WeeklyPeriod toExpand = expansionIterator.next();
             LocalDateTime start = currentDateTime.with(DayOfWeekTime.nextOrSame(toExpand.getStart()));
             LocalDateTime end = currentDateTime.with(DayOfWeekTime.next(toExpand.getEnd()));
-            if (start.isBefore(queriedInterval.getEnd())) {
+            if (!start.isBefore(queriedInterval.getEnd())) {
                 break;
             }
             result.addAssumingNoOverlap(periodInterval(SimplePeriod.of(start, end, toExpand.getComment())));

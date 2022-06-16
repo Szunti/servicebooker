@@ -32,7 +32,7 @@ public class WeeklyPeriodController {
         return booseService.findAllWeeklyPeriodsForBoose(booseId);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public WeeklyPeriodInfo findById(@PathVariable("booseId") int booseId,
                                      @PathVariable("id") int id) {
         try {
