@@ -10,7 +10,7 @@ import org.modelmapper.ModelMapper;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ModelMapperMappingTest {
 
@@ -26,18 +26,24 @@ public class ModelMapperMappingTest {
 
         WeeklyPeriodInfo info = modelMapper.map(weeklyPeriod, WeeklyPeriodInfo.class);
 
-        assertEquals(1, info.getId());
-
-        assertEquals(weeklyPeriod.getStart(), info.getStart());
-        assertEquals(weeklyPeriod.getEnd(), info.getEnd());
-        assertEquals(weeklyPeriod.getComment(), info.getComment());
+        assertThat(info).extracting(
+                WeeklyPeriodInfo::getId,
+                WeeklyPeriodInfo::getStart,
+                WeeklyPeriodInfo::getEnd,
+                WeeklyPeriodInfo::getComment
+        ).containsExactly(
+                weeklyPeriod.getId(),
+                weeklyPeriod.getStart(),
+                weeklyPeriod.getEnd(),
+                weeklyPeriod.getComment()
+        );
     }
 
     Boose createBoose(int id, String name) {
         Boose boose = new Boose();
         boose.setId(id);
         boose.setName(name);
-        boose.setDescription("description for" + name + "service");
+        boose.setDescription("description for " + name + "service");
         return boose;
     }
 
