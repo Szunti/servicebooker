@@ -12,7 +12,8 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static hu.progmasters.servicebooker.util.interval.SimpleInterval.interval;
+import static hu.progmasters.servicebooker.util.interval.Interval.interval;
+
 
 @RestController
 @RequestMapping("/api/services/{booseId}/specific-periods")

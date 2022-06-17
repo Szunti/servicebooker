@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
 
-import static hu.progmasters.servicebooker.util.interval.SimpleInterval.interval;
+import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 import static hu.progmasters.servicebooker.util.period.PeriodInterval.periodInterval;
 
 @Service
@@ -139,33 +139,34 @@ public class BooseService {
     public List<FreePeriodInfo> getFreePeriodsForBoose(int booseId, Interval<LocalDateTime> interval) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = getFromIdOrThrow(booseId);
-        IntervalSet<LocalDateTime> weeklyPeriods = expandWeeklyPeriods(boose, constrainedInterval);
+        IntervalSet<PeriodInterval, LocalDateTime> weeklyPeriods = expandWeeklyPeriods(boose, constrainedInterval);
 
         List<SpecificPeriod> specificPeriodList =
                 specificPeriodRepository.findAllOrderedFor(boose, constrainedInterval, null);
 
-        IntervalSet<LocalDateTime> specificPeriodsToRemove = new IntervalSet<>();
-        IntervalSet<LocalDateTime> specificPeriodsToAdd = new IntervalSet<>();
+        IntervalSet<PeriodInterval, LocalDateTime> specificPeriodsToRemove = new IntervalSet<>();
+        IntervalSet<PeriodInterval, LocalDateTime> specificPeriodsToAdd = new IntervalSet<>();
 
         for (SpecificPeriod specificPeriod : specificPeriodList) {
             PeriodInterval periodInterval = periodInterval(specificPeriod);
             if (specificPeriod.isBookable()) {
-                specificPeriodsToAdd.addAssumingNoOverlap(periodInterval);
+                specificPeriodsToAdd.addWithoutChecks(periodInterval);
             }
-            specificPeriodsToRemove.addAssumingNoOverlap(periodInterval);
+            specificPeriodsToRemove.addWithoutChecks(periodInterval);
         }
 
         weeklyPeriods.subtract(specificPeriodsToRemove);
-        weeklyPeriods.addAssumingNoOverlap(specificPeriodsToAdd);
+        weeklyPeriods.addAllWithoutChecks(specificPeriodsToAdd);
 
         return weeklyPeriods.stream()
                 .map(periodInterval ->
-                        modelMapper.map(((PeriodInterval) periodInterval).getPeriod(), FreePeriodInfo.class))
+                        modelMapper.map(periodInterval.getPeriod(), FreePeriodInfo.class))
                 .collect(Collectors.toList());
     }
 
-    private IntervalSet<LocalDateTime> expandWeeklyPeriods(Boose boose, Interval<LocalDateTime> queriedInterval) {
-        IntervalSet<LocalDateTime> result = new IntervalSet<>();
+    private IntervalSet<PeriodInterval, LocalDateTime> expandWeeklyPeriods(Boose boose,
+                                                                           Interval<LocalDateTime> queriedInterval) {
+        IntervalSet<PeriodInterval, LocalDateTime> result = new IntervalSet<>();
 
         List<WeeklyPeriod> weeklyPeriods = weeklyPeriodRepository.findAllOrderedFor(boose);
 
@@ -211,7 +212,7 @@ public class BooseService {
             if (!start.isBefore(queriedInterval.getEnd())) {
                 break;
             }
-            result.addAssumingNoOverlap(periodInterval(SimplePeriod.of(start, end, toExpand.getComment())));
+            result.addWithoutChecks(periodInterval(SimplePeriod.of(start, end, toExpand.getComment())));
             currentDateTime = end;
             if (!expansionIterator.hasNext()) {
                 expansionIterator = weeklyPeriods.listIterator();

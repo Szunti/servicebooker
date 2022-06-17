@@ -1,6 +1,5 @@
 package hu.progmasters.servicebooker.domain;
 
-import hu.progmasters.servicebooker.util.period.Period;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

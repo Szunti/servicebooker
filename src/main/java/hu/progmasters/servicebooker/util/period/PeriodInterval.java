@@ -1,6 +1,7 @@
 package hu.progmasters.servicebooker.util.period;
 
-import hu.progmasters.servicebooker.util.interval.Interval;
+import hu.progmasters.servicebooker.domain.Period;
+import hu.progmasters.servicebooker.util.interval.IntervalLike;
 import hu.progmasters.servicebooker.util.interval.Pair;
 import lombok.Value;
 
@@ -10,7 +11,7 @@ import java.util.Objects;
 import static hu.progmasters.servicebooker.util.interval.Pair.pair;
 
 @Value
-public class PeriodInterval implements Interval<LocalDateTime> {
+public class PeriodInterval implements IntervalLike<PeriodInterval, LocalDateTime> {
     public static PeriodInterval periodInterval(Period period) {
         return new PeriodInterval(period);
     }
@@ -33,13 +34,13 @@ public class PeriodInterval implements Interval<LocalDateTime> {
     }
 
     @Override
-    public Interval<LocalDateTime> intersect(Interval<LocalDateTime> other) {
+    public PeriodInterval intersect(PeriodInterval other) {
         // no idea how it should behave
         throw new UnsupportedOperationException("intersection of PeriodIntervals is not implemented");
     }
 
     @Override
-    public Pair<Interval<LocalDateTime>> subtract(Interval<LocalDateTime> other) {
+    public Pair<PeriodInterval> subtract(PeriodInterval other) {
         // remove whole interval, do not keep partial ones
         return pair(null, null);
     }

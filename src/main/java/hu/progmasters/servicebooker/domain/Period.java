@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.util.period;
+package hu.progmasters.servicebooker.domain;
 
 import java.time.LocalDateTime;
 

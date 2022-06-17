@@ -1,5 +1,6 @@
 package hu.progmasters.servicebooker.util.period;
 
+import hu.progmasters.servicebooker.domain.Period;
 import lombok.Value;
 
 import java.time.LocalDateTime;

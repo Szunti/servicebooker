@@ -2,12 +2,12 @@ package hu.progmasters.servicebooker.util.interval;
 
 import org.junit.jupiter.api.Test;
 
-import static hu.progmasters.servicebooker.util.interval.SimpleInterval.interval;
+import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class IntervalSetTest {
 
-    IntervalSet<Integer> intervalSet = new IntervalSet<>();
+    IntervalSet<Interval<Integer>, Integer> intervalSet = new IntervalSet<>();
 
     @Test
     void test_initial_empty() {
@@ -31,14 +31,6 @@ class IntervalSetTest {
                         interval(1, 2),
                         interval(3, 4)
                 );
-    }
-
-    @Test
-    void tesAdd_zeroLength_notAdded() {
-        addInterval(1, 2);
-        addInterval(0, 0);
-        assertThat(intervalSet)
-                .containsExactly(interval(1, 2));
     }
 
     @Test
@@ -148,32 +140,27 @@ class IntervalSetTest {
                 .containsExactly(interval(2, 4), interval(7, 8), interval(9, 10));
     }
 
-    @Test
-    void testAddWithOverwrite_addMultiple_changed() {
-        addInterval(1, 4);
-        addInterval(7, 10);
-        addWithOverWrite(interval(4, 8), interval(9, 10));
-        assertThat(intervalSet)
-                .containsExactly(interval(1, 4), interval(4, 8), interval(8, 9), interval(9, 10));
-    }
-
     void addInterval(Integer start, Integer end) {
         Interval<Integer> interval = interval(start, end);
-        intervalSet.addAssumingNoOverlap(interval);
+        intervalSet.addWithoutChecks(interval);
+    }
+
+    @SafeVarargs
+    private IntervalSet<Interval<Integer>, Integer> createIntervalSet(Interval<Integer>... intervals) {
+        IntervalSet<Interval<Integer>, Integer> intervalSetToCreate = new IntervalSet<>();
+        for (Interval<Integer> interval : intervals) {
+            intervalSetToCreate.addWithoutChecks(interval);
+        }
+        return intervalSetToCreate;
     }
 
     @SafeVarargs
     private void subtract(Interval<Integer>... intervals) {
-        intervalSet.subtract(new IntervalSet<>(intervals));
+        intervalSet.subtract(createIntervalSet(intervals));
     }
 
     @SafeVarargs
     private void intersect(Interval<Integer>... intervals) {
-        intervalSet.intersect(new IntervalSet<>(intervals));
-    }
-
-    @SafeVarargs
-    private void addWithOverWrite(Interval<Integer>... intervals) {
-        intervalSet.addWithOverwrite(new IntervalSet<>(intervals));
+        intervalSet.intersect(createIntervalSet(intervals));
     }
 }

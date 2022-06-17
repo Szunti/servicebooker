@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-import static hu.progmasters.servicebooker.util.interval.SimpleInterval.interval;
+import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 
 @Component
 public class DateTimeBoundChecker {
