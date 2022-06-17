@@ -13,7 +13,7 @@ public class LockingOrdererAspect {
     private static final CyclicBarrier barrier = new CyclicBarrier(2);
 
     @Around("execution(public void hu.progmasters.servicebooker.repository.BooseRepository." +
-            "lockForUpdate(hu.progmasters.servicebooker.domain.Boose))")
+            "lockForUpdate(hu.progmasters.servicebooker.domain.entity.Boose))")
     public Object orderLocking(ProceedingJoinPoint pjp) throws Throwable {
         if (ThreadOrder.getMyOrder() == ThreadOrder.SECOND) {
             barrier.await();

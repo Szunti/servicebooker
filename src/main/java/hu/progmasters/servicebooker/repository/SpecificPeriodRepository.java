@@ -1,7 +1,7 @@
 package hu.progmasters.servicebooker.repository;
 
-import hu.progmasters.servicebooker.domain.Boose;
-import hu.progmasters.servicebooker.domain.SpecificPeriod;
+import hu.progmasters.servicebooker.domain.entity.Boose;
+import hu.progmasters.servicebooker.domain.entity.SpecificPeriod;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import org.springframework.stereotype.Repository;
 

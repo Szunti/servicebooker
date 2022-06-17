@@ -1,6 +1,5 @@
-package hu.progmasters.servicebooker.util.period;
+package hu.progmasters.servicebooker.domain;
 
-import hu.progmasters.servicebooker.domain.Period;
 import hu.progmasters.servicebooker.util.interval.IntervalLike;
 import hu.progmasters.servicebooker.util.interval.Pair;
 import lombok.Value;

@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.domain;
+package hu.progmasters.servicebooker.domain.entity;
 
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import lombok.Data;

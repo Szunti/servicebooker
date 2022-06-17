@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 @Data
 @StartBeforeEnd
 public class SpecificPeriodCreateCommand {
+    // TODO use interval instead of start and end
+
     @NotNull
     private LocalDateTime start;
 

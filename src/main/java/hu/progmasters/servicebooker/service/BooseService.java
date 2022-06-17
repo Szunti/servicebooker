@@ -1,8 +1,8 @@
 package hu.progmasters.servicebooker.service;
 
-import hu.progmasters.servicebooker.domain.Boose;
-import hu.progmasters.servicebooker.domain.SpecificPeriod;
-import hu.progmasters.servicebooker.domain.WeeklyPeriod;
+import hu.progmasters.servicebooker.domain.entity.Boose;
+import hu.progmasters.servicebooker.domain.entity.SpecificPeriod;
+import hu.progmasters.servicebooker.domain.entity.WeeklyPeriod;
 import hu.progmasters.servicebooker.dto.boose.BooseCreateCommand;
 import hu.progmasters.servicebooker.dto.boose.BooseInfo;
 import hu.progmasters.servicebooker.dto.boose.FreePeriodInfo;
@@ -23,8 +23,8 @@ import hu.progmasters.servicebooker.repository.WeeklyPeriodRepository;
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import hu.progmasters.servicebooker.util.interval.IntervalSet;
-import hu.progmasters.servicebooker.util.period.PeriodInterval;
-import hu.progmasters.servicebooker.util.period.SimplePeriod;
+import hu.progmasters.servicebooker.domain.PeriodInterval;
+import hu.progmasters.servicebooker.domain.SimplePeriod;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -36,7 +36,7 @@ import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import static hu.progmasters.servicebooker.util.interval.Interval.interval;
-import static hu.progmasters.servicebooker.util.period.PeriodInterval.periodInterval;
+import static hu.progmasters.servicebooker.domain.PeriodInterval.periodInterval;
 
 @Service
 @Transactional(isolation = Isolation.REPEATABLE_READ)

@@ -1,7 +1,7 @@
 package hu.progmasters.servicebooker.repository;
 
-import hu.progmasters.servicebooker.domain.Boose;
-import hu.progmasters.servicebooker.domain.WeeklyPeriod;
+import hu.progmasters.servicebooker.domain.entity.Boose;
+import hu.progmasters.servicebooker.domain.entity.WeeklyPeriod;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

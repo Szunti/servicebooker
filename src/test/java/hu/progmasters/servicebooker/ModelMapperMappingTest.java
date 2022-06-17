@@ -1,7 +1,7 @@
 package hu.progmasters.servicebooker;
 
-import hu.progmasters.servicebooker.domain.Boose;
-import hu.progmasters.servicebooker.domain.WeeklyPeriod;
+import hu.progmasters.servicebooker.domain.entity.Boose;
+import hu.progmasters.servicebooker.domain.entity.WeeklyPeriod;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodInfo;
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.domain;
+package hu.progmasters.servicebooker.domain.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
