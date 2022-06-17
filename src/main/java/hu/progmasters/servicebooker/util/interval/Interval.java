@@ -62,19 +62,19 @@ public class Interval<T extends Comparable<? super T>> implements IntervalLike<I
         return pair(leftRemaining, rightRemaining);
     }
 
-    public static <T extends Comparable<? super T>> T min(T a, T b) {
+    private static <T extends Comparable<? super T>> T min(T a, T b) {
         return a.compareTo(b) < 0 ? a : b;
     }
 
-    public static <T extends Comparable<? super T>> T max(T a, T b) {
+    private static <T extends Comparable<? super T>> T max(T a, T b) {
         return a.compareTo(b) > 0 ? a : b;
     }
 
-    public static <T extends Comparable<? super T>> boolean isInOrder(T start, T end) {
+    private static <T extends Comparable<? super T>> boolean isInOrder(T start, T end) {
         return start.compareTo(end) <= 0;
     }
 
-    public static <T extends Comparable<? super T>> boolean isInOrderAndNotEmpty(T start, T end) {
+    private static <T extends Comparable<? super T>> boolean isInOrderAndNotEmpty(T start, T end) {
         return start.compareTo(end) < 0;
     }
 }

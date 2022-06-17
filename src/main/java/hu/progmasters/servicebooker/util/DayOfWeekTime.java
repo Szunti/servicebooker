@@ -41,7 +41,7 @@ public class DayOfWeekTime implements TemporalAccessor {
         return new DayOfWeekTime(dayOfWeek, time);
     }
 
-    public static void checkValidValue(int secondsFromWeekStart) {
+    private static void checkValidValue(int secondsFromWeekStart) {
         ValueRange.of(0, SECONDS_PER_WEEK - 1).checkValidValue(secondsFromWeekStart, null);
     }
 
@@ -93,7 +93,6 @@ public class DayOfWeekTime implements TemporalAccessor {
             }
             return temporal.plus(differenceInSeconds, ChronoUnit.SECONDS);
         }
-
     }
 
     public static TemporalAdjuster next(DayOfWeekTime dayOfWeekTime) {
