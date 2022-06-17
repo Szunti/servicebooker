@@ -14,20 +14,16 @@ class IntervalTest {
 
         @Test
         void interval_nullFirstParam() {
-            assertThatNullPointerException().isThrownBy(
-                    () -> {
-                        interval(null, 1);
-                    }
-            );
+            assertThatNullPointerException().isThrownBy(() -> {
+                interval(null, 1);
+            });
         }
 
         @Test
         void interval_nullSecondParam() {
-            assertThatNullPointerException().isThrownBy(
-                    () -> {
-                        interval(3, null);
-                    }
-            );
+            assertThatNullPointerException().isThrownBy(() -> {
+                interval(3, null);
+            });
         }
 
         @Test
@@ -39,10 +35,9 @@ class IntervalTest {
 
         @Test
         void interval_wrongOrder() {
-            assertThatIllegalArgumentException().isThrownBy(
-                    () -> {
-                        interval(8, 5);
-                    });
+            assertThatIllegalArgumentException().isThrownBy(() -> {
+                interval(8, 5);
+            });
         }
     }
 
@@ -87,26 +82,22 @@ class IntervalTest {
     class Contains {
         @Test
         void contains_inside() {
-            assertThat(interval(1, 4).contains(2))
-                    .isTrue();
+            assertThat(interval(1, 4).contains(2)).isTrue();
         }
 
         @Test
         void contains_outside() {
-            assertThat(interval(1, 4).contains(8))
-                    .isFalse();
+            assertThat(interval(1, 4).contains(8)).isFalse();
         }
 
         @Test
         void contains_start() {
-            assertThat(interval(1, 4).contains(1))
-                    .isTrue();
+            assertThat(interval(1, 4).contains(1)).isTrue();
         }
 
         @Test
         void contains_end() {
-            assertThat(interval(1, 4).contains(4))
-                    .isFalse();
+            assertThat(interval(1, 4).contains(4)).isFalse();
         }
     }
 
@@ -128,8 +119,7 @@ class IntervalTest {
             Interval<Integer> subtrahend = interval(-3, 0);
             Pair<Interval<Integer>> difference = pair(null, interval(0, 5));
 
-            assertThat(minuend.subtract(subtrahend))
-                    .isEqualTo(difference);
+            assertThat(minuend.subtract(subtrahend)).isEqualTo(difference);
         }
 
 
@@ -139,8 +129,7 @@ class IntervalTest {
             Interval<Integer> subtrahend = interval(-2, 0);
             Pair<Interval<Integer>> difference = pair(null, interval(0, 5));
 
-            assertThat(minuend.subtract(subtrahend))
-                    .isEqualTo(difference);
+            assertThat(minuend.subtract(subtrahend)).isEqualTo(difference);
         }
 
         @Test
@@ -149,8 +138,7 @@ class IntervalTest {
             Interval<Integer> subtrahend = interval(3, 8);
             Pair<Interval<Integer>> difference = pair(interval(-2, 3), null);
 
-            assertThat(minuend.subtract(subtrahend))
-                    .isEqualTo(difference);
+            assertThat(minuend.subtract(subtrahend)).isEqualTo(difference);
         }
 
         @Test
@@ -159,8 +147,7 @@ class IntervalTest {
             Interval<Integer> subtrahend = interval(-8, -4);
             Pair<Interval<Integer>> difference = pair(null, interval(-2, 5));
 
-            assertThat(minuend.subtract(subtrahend))
-                    .isEqualTo(difference);
+            assertThat(minuend.subtract(subtrahend)).isEqualTo(difference);
         }
 
         @Test
@@ -169,8 +156,7 @@ class IntervalTest {
             Interval<Integer> subtrahend = interval(8, 10);
             Pair<Interval<Integer>> difference = pair(interval(-2, 5), null);
 
-            assertThat(minuend.subtract(subtrahend))
-                    .isEqualTo(difference);
+            assertThat(minuend.subtract(subtrahend)).isEqualTo(difference);
         }
     }
 

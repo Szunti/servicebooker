@@ -48,7 +48,7 @@ public class IntervalSet<I extends IntervalLike<I, T>, T extends Comparable<? su
             throw new IllegalArgumentException(interval + " is empty");
         }
         if (!getIntervalSetIntersecting(interval).isEmpty()) {
-            throw new IllegalStateException(interval +  "overlaps with the existing set");
+            throw new IllegalStateException(interval + " overlaps with the existing set");
         }
         addWithoutChecks(interval);
         return true;
@@ -190,5 +190,22 @@ public class IntervalSet<I extends IntervalLike<I, T>, T extends Comparable<? su
 
     private I getIntervalFromEntry(Map.Entry<T, I> entry) {
         return entry == null ? null : entry.getValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return intervalMap.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+        IntervalSet<?, ?> other = (IntervalSet<?, ?>) obj;
+        return this.intervalMap.equals(other.intervalMap);
     }
 }
