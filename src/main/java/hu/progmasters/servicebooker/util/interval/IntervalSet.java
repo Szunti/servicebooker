@@ -45,10 +45,10 @@ public class IntervalSet<I extends IntervalLike<I, T>, T extends Comparable<? su
     public boolean add(I interval) {
         Objects.requireNonNull(interval);
         if (interval.isEmpty()) {
-            throw new EmptyIntervalException(interval);
+            throw new IllegalArgumentException(interval + " is empty");
         }
         if (!getIntervalSetIntersecting(interval).isEmpty()) {
-            throw new OverlappingIntervalException(interval);
+            throw new IllegalStateException(interval +  "overlaps with the existing set");
         }
         addWithoutChecks(interval);
         return true;
