@@ -13,8 +13,8 @@ import java.util.Objects;
 
 @Value
 public class DayOfWeekTime implements TemporalAccessor {
-    private static final int SECONDS_PER_DAY = 24 * 60 * 60;
-    private static final int SECONDS_PER_WEEK = 7 * SECONDS_PER_DAY;
+    public static final int SECONDS_PER_DAY = 24 * 60 * 60;
+    public static final int SECONDS_PER_WEEK = 7 * SECONDS_PER_DAY;
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE HH:mm:ss");
 
