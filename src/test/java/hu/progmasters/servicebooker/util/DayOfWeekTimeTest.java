@@ -13,7 +13,7 @@ class DayOfWeekTimeTest {
     void testToString() {
         Locale.setDefault(Locale.ENGLISH);
         DayOfWeekTime dayOfWeekTime = DayOfWeekTime.of(MONDAY, 10, 24, 5);
-        assertEquals("DayOfWeekTime(Mon 10:24:05)", dayOfWeekTime.toString());
+        assertEquals("Mon 10:24:05", dayOfWeekTime.toString());
     }
 
 }
