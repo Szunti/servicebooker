@@ -20,6 +20,7 @@ public class SpecificPeriod implements Period {
 
     private String comment;
 
+    // TODO turn bookable to an Enum
     private boolean bookable;
 
     @ManyToOne(optional = false)

@@ -25,11 +25,13 @@ Az ügyfelek lefoglalhatnak időpontokat.
 - **/services/{id}/weekly-periods/{id}**
 - **/services/{id}/specific-periods?start=\<datetime\>&end=\<datetime\>&bookable=true**
 - **/services/{id}/specific-periods/{id}**
+- **/services/{id}/bookings?customer=\<customer-id\>&start=\<datetime\>&end=\<datetime\>**
+- **/services/{id}/bookings/{id}**
+- **/services/{id}/timetable?filter=free**
 - **/customers**
 - **/customers/{id}**
-- **/bookings?service=\<service-id\>**
-- **/bookings?customer=\<customer-id\>**
-- **/bookings/{id}**
+- **/customer/{id}/bookings?service=\<service-id\>&start=\<datetime\>&end=\<datetime\>**
+- **/customer/{id}/bookings/{id}**
 
 ## Szerző
 - Vandrus Zoltán
