@@ -6,8 +6,10 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.autoconfigure.transaction.PlatformTransactionManagerCustomizer;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
@@ -28,5 +30,10 @@ public class ServicebookerApplication {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jacksonCustomizer() {
         return builder -> builder.featuresToEnable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    }
+
+    @Bean
+    public PlatformTransactionManagerCustomizer<AbstractPlatformTransactionManager> validateExistingTransaction() {
+        return txManager -> txManager.setValidateExistingTransaction(true);
     }
 }
