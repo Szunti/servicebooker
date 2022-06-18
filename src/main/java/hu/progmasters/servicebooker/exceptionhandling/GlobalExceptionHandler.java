@@ -4,8 +4,10 @@ import hu.progmasters.servicebooker.dto.error.SimpleError;
 import hu.progmasters.servicebooker.dto.error.ValidationError;
 import hu.progmasters.servicebooker.exceptionhandling.controller.BooseNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.boose.NoSuchBooseException;
+import hu.progmasters.servicebooker.exceptionhandling.controller.CustomerNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.controller.SpecificPeriodNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.controller.WeeklyPeriodNotFoundException;
+import hu.progmasters.servicebooker.exceptionhandling.customer.NoSuchCustomerException;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.NoSuchSpecificPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.OverlappingSpecificPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotInBooseException;
@@ -60,7 +62,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             BooseNotFoundException.class,
             WeeklyPeriodNotFoundException.class,
-            SpecificPeriodNotFoundException.class
+            SpecificPeriodNotFoundException.class,
+            CustomerNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public List<SimpleError> handleNotFound(Exception exception) {
@@ -72,6 +75,7 @@ public class GlobalExceptionHandler {
             NoSuchBooseException.class,
             NoSuchWeeklyPeriodException.class,
             NoSuchSpecificPeriodException.class,
+            NoSuchCustomerException.class,
             WeeklyPeriodNotInBooseException.class,
             SpecificPeriodNotInBooseException.class,
             OverlappingWeeklyPeriodException.class,
