@@ -6,6 +6,7 @@ import hu.progmasters.servicebooker.dto.boose.FreePeriodInfo;
 import hu.progmasters.servicebooker.exceptionhandling.controller.BooseNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.boose.NoSuchBooseException;
 import hu.progmasters.servicebooker.service.BooseService;
+import hu.progmasters.servicebooker.service.TimeTableService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +22,11 @@ public class BooseController {
     // TODO logging
 
     private final BooseService booseService;
+    private final TimeTableService timeTableService;
 
-    public BooseController(BooseService booseService) {
+    public BooseController(BooseService booseService, TimeTableService timeTableService) {
         this.booseService = booseService;
+        this.timeTableService = timeTableService;
     }
 
     @PostMapping
@@ -53,6 +56,6 @@ public class BooseController {
     public List<FreePeriodInfo> getFreePeriods(@PathVariable("id") int id,
                                                @RequestParam("start") LocalDateTime start,
                                                @RequestParam("end") LocalDateTime end) {
-        return booseService.getFreePeriodsForBoose(id, interval(start, end));
+        return timeTableService.getFreePeriodsForBoose(id, interval(start, end));
     }
 }

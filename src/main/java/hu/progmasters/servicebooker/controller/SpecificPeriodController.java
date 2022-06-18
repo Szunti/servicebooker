@@ -5,7 +5,7 @@ import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodInfo;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.NoSuchSpecificPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.controller.SpecificPeriodNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotInBooseException;
-import hu.progmasters.servicebooker.service.BooseService;
+import hu.progmasters.servicebooker.service.SpecificPeriodService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,16 +19,16 @@ import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 @RequestMapping("/api/services/{booseId}/specific-periods")
 public class SpecificPeriodController {
 
-    private final BooseService booseService;
+    private final SpecificPeriodService specificPeriodService;
 
-    public SpecificPeriodController(BooseService booseService) {
-        this.booseService = booseService;
+    public SpecificPeriodController(SpecificPeriodService specificPeriodService) {
+        this.specificPeriodService = specificPeriodService;
     }
 
     @PostMapping
     public SpecificPeriodInfo save(@PathVariable("booseId") int booseId,
                                    @Valid @RequestBody SpecificPeriodCreateCommand command) {
-        return booseService.addSpecificPeriodForBoose(booseId, command);
+        return specificPeriodService.addSpecificPeriodForBoose(booseId, command);
     }
 
     @GetMapping
@@ -36,14 +36,14 @@ public class SpecificPeriodController {
                                             @RequestParam(value = "start") LocalDateTime start,
                                             @RequestParam(value = "end") LocalDateTime end,
                                             @RequestParam(value = "bookable", required = false) Boolean bookable) {
-        return booseService.findAllSpecificPeriodsForBoose(booseId, interval(start, end), bookable);
+        return specificPeriodService.findAllSpecificPeriodsForBoose(booseId, interval(start, end), bookable);
     }
 
     @GetMapping("/{id}")
     public SpecificPeriodInfo findById(@PathVariable("booseId") int booseId,
                                        @PathVariable("id") int id) {
         try {
-            return booseService.findSpecificPeriodForBooseById(booseId, id);
+            return specificPeriodService.findSpecificPeriodForBooseById(booseId, id);
         } catch (NoSuchSpecificPeriodException | SpecificPeriodNotInBooseException e) {
             throw new SpecificPeriodNotFoundException(e);
         }

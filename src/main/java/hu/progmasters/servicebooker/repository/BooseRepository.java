@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,10 +25,8 @@ public class BooseRepository {
     }
 
     public List<Boose> findAll() {
-        TypedQuery<Boose> query = entityManager.createQuery(
-                "SELECT b FROM Boose b",
-                Boose.class);
-        return query.getResultList();
+        return entityManager.createQuery("SELECT b FROM Boose b", Boose.class)
+            .getResultList();
     }
 
     public void lockForUpdate(Boose boose) {

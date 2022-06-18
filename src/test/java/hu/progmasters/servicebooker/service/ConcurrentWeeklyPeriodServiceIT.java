@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @SpringBootTest
-class ConcurrentBooseServiceIT {
+class ConcurrentWeeklyPeriodServiceIT {
 
     @TestConfiguration
     static class Config {
@@ -33,6 +33,9 @@ class ConcurrentBooseServiceIT {
 
     @Autowired
     BooseService booseService;
+
+    @Autowired
+    WeeklyPeriodService weeklyPeriodService;
 
     @Test
     void testConcurrentSave(@Autowired AsyncTaskExecutor executor) {
@@ -55,7 +58,7 @@ class ConcurrentBooseServiceIT {
             }
         });
 
-        List<WeeklyPeriodInfo> weeklyPeriodsInDatabase = booseService.findAllWeeklyPeriodsForBoose(boose.getId());
+        List<WeeklyPeriodInfo> weeklyPeriodsInDatabase = weeklyPeriodService.findAllWeeklyPeriodsForBoose(boose.getId());
 
         assertThat(threadFutures)
                 .extracting(Future::get)
@@ -74,7 +77,7 @@ class ConcurrentBooseServiceIT {
         command.setStart(DayOfWeekTime.of(DayOfWeek.TUESDAY, 10, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.TUESDAY, 14, 0));
         command.setComment("test period");
-        return booseService.addWeeklyPeriodForBoose(boose.getId(), command);
+        return weeklyPeriodService.addWeeklyPeriodForBoose(boose.getId(), command);
     }
 
     WeeklyPeriodInfo saveOtherWeeklyPeriod(BooseInfo boose) {
@@ -82,6 +85,6 @@ class ConcurrentBooseServiceIT {
         command.setStart(DayOfWeekTime.of(DayOfWeek.THURSDAY, 6, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.MONDAY, 14, 0));
         command.setComment("test period saved concurrently");
-        return booseService.addWeeklyPeriodForBoose(boose.getId(), command);
+        return weeklyPeriodService.addWeeklyPeriodForBoose(boose.getId(), command);
     }
 }

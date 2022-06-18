@@ -19,7 +19,10 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 class BooseServiceIT {
 
     @Autowired
-    BooseService service;
+    BooseService booseService;
+
+    @Autowired
+    WeeklyPeriodService weeklyPeriodService;
 
     @Test
     void testAddWeeklyPeriodForBoose() {
@@ -29,7 +32,7 @@ class BooseServiceIT {
         command.setStart(DayOfWeekTime.of(DayOfWeek.TUESDAY, 12, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.TUESDAY, 18, 0));
         command.setComment("overlapping test period");
-        WeeklyPeriodInfo weeklyPeriod = service.addWeeklyPeriodForBoose(boose.getId(), command);
+        WeeklyPeriodInfo weeklyPeriod = weeklyPeriodService.addWeeklyPeriodForBoose(boose.getId(), command);
 
         assertThat(weeklyPeriod).as("weekly period saved as expected")
                 .isNotNull()
@@ -54,7 +57,7 @@ class BooseServiceIT {
         BooseCreateCommand command = new BooseCreateCommand();
         command.setName("Doctor");
         command.setDescription("Reserve a time and become healthy.");
-        return service.save(command);
+        return booseService.save(command);
     }
 
     WeeklyPeriodInfo saveSampleWeeklyPeriod(BooseInfo boose) {
@@ -62,7 +65,7 @@ class BooseServiceIT {
         command.setStart(DayOfWeekTime.of(DayOfWeek.TUESDAY, 10, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.TUESDAY, 14, 0));
         command.setComment("test period");
-        return service.addWeeklyPeriodForBoose(boose.getId(), command);
+        return weeklyPeriodService.addWeeklyPeriodForBoose(boose.getId(), command);
     }
 
     WeeklyPeriodInfo saveOverlappingWeeklyPeriod(BooseInfo boose) {
@@ -70,7 +73,7 @@ class BooseServiceIT {
         command.setStart(DayOfWeekTime.of(DayOfWeek.TUESDAY, 12, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.TUESDAY, 18, 0));
         command.setComment("overlapping test period");
-        return service.addWeeklyPeriodForBoose(boose.getId(), command);
+        return weeklyPeriodService.addWeeklyPeriodForBoose(boose.getId(), command);
     }
 
 }
