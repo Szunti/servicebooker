@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(isolation = Isolation.REPEATABLE_READ)
+@Transactional
 public class WeeklyPeriodService {
 
     private final WeeklyPeriodRepository repository;

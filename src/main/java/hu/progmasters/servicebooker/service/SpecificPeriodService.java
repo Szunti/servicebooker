@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 
 @Service
-@Transactional(isolation = Isolation.REPEATABLE_READ)
+@Transactional
 public class SpecificPeriodService {
 
     private final SpecificPeriodRepository repository;

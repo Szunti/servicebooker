@@ -7,14 +7,13 @@ import hu.progmasters.servicebooker.exceptionhandling.boose.NoSuchBooseException
 import hu.progmasters.servicebooker.repository.BooseRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(isolation = Isolation.REPEATABLE_READ)
+@Transactional
 public class BooseService {
 
     private final BooseRepository repository;
