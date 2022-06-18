@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.service;
+package hu.progmasters.servicebooker.various;
 
 public enum ThreadOrder {
     FIRST, SECOND;

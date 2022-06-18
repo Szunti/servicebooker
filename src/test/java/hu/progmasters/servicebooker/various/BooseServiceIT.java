@@ -1,10 +1,12 @@
-package hu.progmasters.servicebooker.service;
+package hu.progmasters.servicebooker.various;
 
 import hu.progmasters.servicebooker.dto.boose.BooseCreateCommand;
 import hu.progmasters.servicebooker.dto.boose.BooseInfo;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodInfo;
 import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.OverlappingWeeklyPeriodException;
+import hu.progmasters.servicebooker.service.BooseService;
+import hu.progmasters.servicebooker.service.WeeklyPeriodService;
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.service;
+package hu.progmasters.servicebooker.various;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

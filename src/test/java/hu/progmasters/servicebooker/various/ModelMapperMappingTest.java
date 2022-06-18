@@ -1,5 +1,6 @@
-package hu.progmasters.servicebooker;
+package hu.progmasters.servicebooker.various;
 
+import hu.progmasters.servicebooker.ServicebookerApplication;
 import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.domain.entity.WeeklyPeriod;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodInfo;

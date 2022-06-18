@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker;
+package hu.progmasters.servicebooker.various;
 
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodCreateCommand;
 import hu.progmasters.servicebooker.service.WeeklyPeriodService;
