@@ -6,6 +6,7 @@ import hu.progmasters.servicebooker.util.interval.Interval;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
@@ -26,15 +27,14 @@ public class SpecificPeriodRepository {
         // Let the period be [s,e) (closed on s, open on e).
         // [s1, e1) intersects [s2, e2) when:
         // s1 < e2 AND s2 < e1
-        TypedQuery<SpecificPeriod> query = entityManager.createQuery(
-                        "SELECT sp FROM SpecificPeriod sp " +
+        return entityManager.createQuery("SELECT sp FROM SpecificPeriod sp " +
                                 "WHERE sp.boose = :boose " +
-                                "AND :start < sp.end AND sp.start < :end",
-                        SpecificPeriod.class)
+                                "  AND :start < sp.end AND sp.start < :end", SpecificPeriod.class)
                 .setParameter("boose", boose)
                 .setParameter("start", specificPeriod.getStart())
-                .setParameter("end", specificPeriod.getEnd());
-        return query.getResultList();
+                .setParameter("end", specificPeriod.getEnd())
+                .setLockMode(LockModeType.PESSIMISTIC_READ)
+                .getResultList();
     }
 
     public Optional<SpecificPeriod> findById(int id) {

@@ -5,6 +5,7 @@ import hu.progmasters.servicebooker.domain.entity.WeeklyPeriod;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -38,10 +39,9 @@ public class WeeklyPeriodRepository {
         //  OR
         // e <= s AND (s <= x  OR  x < e)
 
-        TypedQuery<WeeklyPeriod> query = entityManager.createQuery(
-                        // TODO optimize for using start index, only the last one can cross the week,
-                        //  else the same as non-periodic. For non periodic the same as in IntervalSet
-                        "SELECT wp FROM WeeklyPeriod wp " +
+        // TODO optimize for using start index, only the last one can cross the week,
+        //  else the same as non-periodic. For non periodic the same as in IntervalSet
+        return entityManager.createQuery("SELECT wp FROM WeeklyPeriod wp " +
                                 "WHERE wp.boose = :boose " +
                                 "AND (" +
                                 "    (wp.start <= :start AND :start < wp.end) " +
@@ -50,12 +50,13 @@ public class WeeklyPeriodRepository {
                                 "           OR " +
                                 "    (:start <= wp.start AND wp.start < :end) " +
                                 "           OR " +
-                                "    (:end <= :start AND (:start <= wp.start OR wp.start < :end))" +
-                                ")", WeeklyPeriod.class)
+                                "    (:end <= :start AND (:start <= wp.start OR wp.start < :end)))",
+                        WeeklyPeriod.class)
                 .setParameter("boose", boose)
                 .setParameter("start", weeklyPeriod.getStart().toSecondsFromWeekStart())
-                .setParameter("end", weeklyPeriod.getEnd().toSecondsFromWeekStart());
-        return query.getResultList();
+                .setParameter("end", weeklyPeriod.getEnd().toSecondsFromWeekStart())
+                .setLockMode(LockModeType.PESSIMISTIC_READ)
+                .getResultList();
     }
 
     public Optional<WeeklyPeriod> findById(int id) {

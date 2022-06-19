@@ -10,7 +10,6 @@ import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.WeeklyPeriodN
 import hu.progmasters.servicebooker.repository.WeeklyPeriodRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -32,14 +31,13 @@ public class WeeklyPeriodService {
         this.modelMapper = modelMapper;
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional
     public WeeklyPeriodInfo addWeeklyPeriodForBoose(int booseId, WeeklyPeriodCreateCommand command) {
         Boose boose = booseService.getFromIdOrThrow(booseId);
         WeeklyPeriod toSave = modelMapper.map(command, WeeklyPeriod.class);
         toSave.setBoose(boose);
 
         booseService.lockForUpdate(boose);
-        // this check needs to read already committed, that is why the isolation level is set
         if (!repository.findOverlappingPeriods(boose, toSave).isEmpty()) {
             throw new OverlappingWeeklyPeriodException();
         }

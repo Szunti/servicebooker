@@ -11,7 +11,6 @@ import hu.progmasters.servicebooker.repository.SpecificPeriodRepository;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -40,7 +39,7 @@ public class SpecificPeriodService {
         this.dateTimeBoundChecker = dateTimeBoundChecker;
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional
     public SpecificPeriodInfo addSpecificPeriodForBoose(int booseId, SpecificPeriodCreateCommand command) {
         dateTimeBoundChecker.checkInBound(interval(command.getStart(), command.getEnd()));
         Boose boose = booseService.getFromIdOrThrow(booseId);
@@ -48,13 +47,10 @@ public class SpecificPeriodService {
         toSave.setBoose(boose);
 
         booseService.lockForUpdate(boose);
-        // this check needs to read already committed that is why the isolation level is set
         if (!repository.findOverlappingPeriods(boose, toSave).isEmpty()) {
             throw new OverlappingSpecificPeriodException();
         }
-        Interval<LocalDateTime> periodInterval = interval(command.getStart(), command.getEnd());
         // TODO return if weekly is replaced, partially covered or neither
-//        IntervalSet<LocalDateTime> expandedWeeklyPeriods = expandWeeklyPeriods(boose, periodInterval);
         SpecificPeriod saved = repository.save(toSave);
         return modelMapper.map(saved, SpecificPeriodInfo.class);
     }
