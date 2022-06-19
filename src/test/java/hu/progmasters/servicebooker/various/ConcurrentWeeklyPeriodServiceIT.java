@@ -60,7 +60,7 @@ class ConcurrentWeeklyPeriodServiceIT {
             }
         });
 
-        List<WeeklyPeriodInfo> weeklyPeriodsInDatabase = weeklyPeriodService.findAllWeeklyPeriodsForBoose(boose.getId());
+        List<WeeklyPeriodInfo> weeklyPeriodsInDatabase = weeklyPeriodService.findAllForBoose(boose.getId());
 
         assertThat(threadFutures)
                 .extracting(Future::get)
@@ -79,7 +79,7 @@ class ConcurrentWeeklyPeriodServiceIT {
         command.setStart(DayOfWeekTime.of(DayOfWeek.TUESDAY, 10, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.TUESDAY, 14, 0));
         command.setComment("test period");
-        return weeklyPeriodService.addWeeklyPeriodForBoose(boose.getId(), command);
+        return weeklyPeriodService.addForBoose(boose.getId(), command);
     }
 
     WeeklyPeriodInfo saveOtherWeeklyPeriod(BooseInfo boose) {
@@ -87,6 +87,6 @@ class ConcurrentWeeklyPeriodServiceIT {
         command.setStart(DayOfWeekTime.of(DayOfWeek.THURSDAY, 6, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.MONDAY, 14, 0));
         command.setComment("test period saved concurrently");
-        return weeklyPeriodService.addWeeklyPeriodForBoose(boose.getId(), command);
+        return weeklyPeriodService.addForBoose(boose.getId(), command);
     }
 }

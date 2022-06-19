@@ -6,7 +6,7 @@ import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodCreateComma
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodInfo;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.NoSuchSpecificPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.OverlappingSpecificPeriodException;
-import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotInBooseException;
+import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotForBooseException;
 import hu.progmasters.servicebooker.repository.SpecificPeriodRepository;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import hu.progmasters.servicebooker.validation.DateTimeBoundChecker;
@@ -41,7 +41,7 @@ public class SpecificPeriodService {
     }
 
     @Transactional
-    public SpecificPeriodInfo addSpecificPeriodForBoose(int booseId, SpecificPeriodCreateCommand command) {
+    public SpecificPeriodInfo addForBoose(int booseId, SpecificPeriodCreateCommand command) {
         dateTimeBoundChecker.checkInBound(interval(command.getStart(), command.getEnd()));
         Boose boose = booseService.getFromIdOrThrow(booseId);
         SpecificPeriod toSave = modelMapper.map(command, SpecificPeriod.class);
@@ -57,8 +57,8 @@ public class SpecificPeriodService {
     }
 
     @Transactional
-    public List<SpecificPeriodInfo> findAllSpecificPeriodsForBoose(int booseId, Interval<LocalDateTime> interval,
-                                                                   Boolean bookable) {
+    public List<SpecificPeriodInfo> findAllForBoose(int booseId, Interval<LocalDateTime> interval,
+                                                    Boolean bookable) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = booseService.getFromIdOrThrow(booseId);
         return repository.findAllOrderedFor(boose, constrainedInterval, bookable).stream()
@@ -66,28 +66,27 @@ public class SpecificPeriodService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public List<SpecificPeriod> getAllSpecificPeriodsForBoose(Boose boose, Interval<LocalDateTime> interval,
-                                                                   Boolean bookable) {
+    public List<SpecificPeriod> getAllForBoose(Boose boose, Interval<LocalDateTime> interval,
+                                               Boolean bookable) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         return repository.findAllOrderedFor(boose, constrainedInterval, bookable);
     }
 
     @Transactional
-    public SpecificPeriodInfo findSpecificPeriodForBooseById(int booseId, int id) {
-        SpecificPeriod specificPeriod = getSpecificPeriodFromBooseAndIdOrThrow(booseId, id);
+    public SpecificPeriodInfo findForBooseById(int booseId, int id) {
+        SpecificPeriod specificPeriod = getForBooseByIdOrThrow(booseId, id);
         return modelMapper.map(specificPeriod, SpecificPeriodInfo.class);
     }
 
 
-    private SpecificPeriod getSpecificPeriodFromBooseAndIdOrThrow(int booseId, int id) {
+    private SpecificPeriod getForBooseByIdOrThrow(int booseId, int id) {
         // TODO maybe getReference is enough
         Boose boose = booseService.getFromIdOrThrow(booseId);
         SpecificPeriod specificPeriod = repository.findById(id).orElseThrow(
                 () -> new NoSuchSpecificPeriodException(id)
         );
         if (specificPeriod.getBoose() != boose) {
-            throw new SpecificPeriodNotInBooseException(id, booseId);
+            throw new SpecificPeriodNotForBooseException(id, booseId);
         }
         return specificPeriod;
     }

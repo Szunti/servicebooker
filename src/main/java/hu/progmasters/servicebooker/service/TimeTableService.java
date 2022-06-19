@@ -51,7 +51,7 @@ public class TimeTableService {
         IntervalSet<PeriodInterval, LocalDateTime> weeklyPeriods = expandWeeklyPeriods(boose, constrainedInterval);
 
         List<SpecificPeriod> specificPeriodList =
-                specificPeriodService.getAllSpecificPeriodsForBoose(boose, constrainedInterval, null);
+                specificPeriodService.getAllForBoose(boose, constrainedInterval, null);
 
         IntervalSet<PeriodInterval, LocalDateTime> specificPeriodsToRemove = new IntervalSet<>();
         IntervalSet<PeriodInterval, LocalDateTime> specificPeriodsToAdd = new IntervalSet<>();
@@ -77,7 +77,7 @@ public class TimeTableService {
                                                                            Interval<LocalDateTime> queriedInterval) {
         IntervalSet<PeriodInterval, LocalDateTime> result = new IntervalSet<>();
 
-        List<WeeklyPeriod> weeklyPeriods = weeklyPeriodService.getAllWeeklyPeriodsForBoose(boose);
+        List<WeeklyPeriod> weeklyPeriods = weeklyPeriodService.getAllForBoose(boose);
 
         if (weeklyPeriods.isEmpty()) {
             return result;

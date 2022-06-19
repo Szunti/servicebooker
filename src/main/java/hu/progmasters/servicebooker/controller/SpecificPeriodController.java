@@ -4,7 +4,7 @@ import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodCreateComma
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodInfo;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.NoSuchSpecificPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.controller.SpecificPeriodNotFoundException;
-import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotInBooseException;
+import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotForBooseException;
 import hu.progmasters.servicebooker.service.SpecificPeriodService;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ public class SpecificPeriodController {
     @PostMapping
     public SpecificPeriodInfo save(@PathVariable("booseId") int booseId,
                                    @Valid @RequestBody SpecificPeriodCreateCommand command) {
-        return specificPeriodService.addSpecificPeriodForBoose(booseId, command);
+        return specificPeriodService.addForBoose(booseId, command);
     }
 
     @GetMapping
@@ -36,15 +36,15 @@ public class SpecificPeriodController {
                                             @RequestParam(value = "start") LocalDateTime start,
                                             @RequestParam(value = "end") LocalDateTime end,
                                             @RequestParam(value = "bookable", required = false) Boolean bookable) {
-        return specificPeriodService.findAllSpecificPeriodsForBoose(booseId, interval(start, end), bookable);
+        return specificPeriodService.findAllForBoose(booseId, interval(start, end), bookable);
     }
 
     @GetMapping("/{id}")
     public SpecificPeriodInfo findById(@PathVariable("booseId") int booseId,
                                        @PathVariable("id") int id) {
         try {
-            return specificPeriodService.findSpecificPeriodForBooseById(booseId, id);
-        } catch (NoSuchSpecificPeriodException | SpecificPeriodNotInBooseException e) {
+            return specificPeriodService.findForBooseById(booseId, id);
+        } catch (NoSuchSpecificPeriodException | SpecificPeriodNotForBooseException e) {
             throw new SpecificPeriodNotFoundException(e);
         }
     }

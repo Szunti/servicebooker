@@ -34,7 +34,7 @@ class BooseServiceIT {
         command.setStart(DayOfWeekTime.of(DayOfWeek.TUESDAY, 12, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.TUESDAY, 18, 0));
         command.setComment("overlapping test period");
-        WeeklyPeriodInfo weeklyPeriod = weeklyPeriodService.addWeeklyPeriodForBoose(boose.getId(), command);
+        WeeklyPeriodInfo weeklyPeriod = weeklyPeriodService.addForBoose(boose.getId(), command);
 
         assertThat(weeklyPeriod).as("weekly period saved as expected")
                 .isNotNull()
@@ -67,7 +67,7 @@ class BooseServiceIT {
         command.setStart(DayOfWeekTime.of(DayOfWeek.TUESDAY, 10, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.TUESDAY, 14, 0));
         command.setComment("test period");
-        return weeklyPeriodService.addWeeklyPeriodForBoose(boose.getId(), command);
+        return weeklyPeriodService.addForBoose(boose.getId(), command);
     }
 
     WeeklyPeriodInfo saveOverlappingWeeklyPeriod(BooseInfo boose) {
@@ -75,7 +75,7 @@ class BooseServiceIT {
         command.setStart(DayOfWeekTime.of(DayOfWeek.TUESDAY, 12, 0));
         command.setEnd(DayOfWeekTime.of(DayOfWeek.TUESDAY, 18, 0));
         command.setComment("overlapping test period");
-        return weeklyPeriodService.addWeeklyPeriodForBoose(boose.getId(), command);
+        return weeklyPeriodService.addForBoose(boose.getId(), command);
     }
 
 }
