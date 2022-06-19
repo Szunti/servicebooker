@@ -102,6 +102,15 @@ public class IntervalSet<I extends IntervalLike<I, T>, T extends Comparable<? su
         return true;
     }
 
+    public I get(IntervalLike<?, T> key) {
+        I found = null;
+        I intervalWithSameStart = intervalMap.get(key.getStart());
+        if (intervalWithSameStart != null && intervalWithSameStart.getEnd().equals(key.getEnd())) {
+            found = intervalWithSameStart;
+        }
+        return found;
+    }
+
     public IntervalSet<I, T> intersect(IntervalSet<I, T> other) {
 
         List<I> toAdd = new ArrayList<>();

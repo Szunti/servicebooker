@@ -1,12 +1,11 @@
 package hu.progmasters.servicebooker.service;
 
 import hu.progmasters.servicebooker.domain.PeriodInterval;
-import hu.progmasters.servicebooker.domain.SimplePeriod;
+import hu.progmasters.servicebooker.domain.TablePeriod;
 import hu.progmasters.servicebooker.domain.entity.Booking;
 import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.domain.entity.SpecificPeriod;
 import hu.progmasters.servicebooker.domain.entity.WeeklyPeriod;
-import hu.progmasters.servicebooker.dto.booking.BookingInfo;
 import hu.progmasters.servicebooker.dto.boose.TablePeriodInfo;
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import hu.progmasters.servicebooker.util.interval.Interval;
@@ -19,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static hu.progmasters.servicebooker.domain.PeriodInterval.periodInterval;
 import static hu.progmasters.servicebooker.util.interval.Interval.interval;
@@ -51,14 +50,12 @@ public class TimeTableService {
         this.dateTimeBoundChecker = dateTimeBoundChecker;
     }
 
-    @Transactional
-    public List<TablePeriodInfo> getTimeTableForBoose(int booseId, Interval<LocalDateTime> interval) {
-        Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
-        Boose boose = booseService.getFromIdOrThrow(booseId);
-        IntervalSet<PeriodInterval, LocalDateTime> timeTable = expandWeeklyPeriods(boose, constrainedInterval);
+    public Stream<TablePeriod> getTimeTableStreamForBoose(Boose boose, Interval<LocalDateTime> interval) {
+        // expand weekly periods
+        IntervalSet<PeriodInterval, LocalDateTime> timeTable = expandWeeklyPeriods(boose, interval);
 
-        List<SpecificPeriod> specificPeriodList =
-                specificPeriodService.getAllForBoose(boose, constrainedInterval, null);
+        // modify with specific periods
+        List<SpecificPeriod> specificPeriodList = specificPeriodService.getAllForBoose(boose, interval, null);
 
         IntervalSet<PeriodInterval, LocalDateTime> specificPeriodsToRemove = new IntervalSet<>();
         IntervalSet<PeriodInterval, LocalDateTime> specificPeriodsToAdd = new IntervalSet<>();
@@ -74,18 +71,25 @@ public class TimeTableService {
         timeTable.subtract(specificPeriodsToRemove);
         timeTable.addAllWithoutChecks(specificPeriodsToAdd);
 
+        // add booking information
+        List<Booking> bookingList = bookingService.getAllForBoose(boose, interval);
+        for (Booking booking : bookingList) {
+            Interval<LocalDateTime> bookingInterval = interval(booking.getStart(), booking.getEnd());
+            PeriodInterval intervalFromTimeTable = timeTable.get(bookingInterval);
+            assert intervalFromTimeTable != null;
+            intervalFromTimeTable.getPeriod().setBooking(booking);
+        }
+
         return timeTable.stream()
-                .map(periodInterval -> {
-                    TablePeriodInfo periodInfo = modelMapper.map(periodInterval.getPeriod(), TablePeriodInfo.class);
-                    Interval<LocalDateTime> intervalOfPeriod =
-                            interval(periodInterval.getStart(), periodInterval.getEnd());
-                    Optional<Booking> optBooking =
-                            bookingService.getOptionalByBooseAndDate(boose, intervalOfPeriod);
-                    if (optBooking.isPresent()) {
-                        periodInfo.setBooking(modelMapper.map(optBooking.get(), BookingInfo.class));
-                    }
-                    return periodInfo;
-                })
+                .map(PeriodInterval::getPeriod);
+    }
+
+    @Transactional
+    public List<TablePeriodInfo> collectTimeTableForBoose(int booseId, Interval<LocalDateTime> interval) {
+        Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
+        Boose boose = booseService.getFromIdOrThrow(booseId);
+        return getTimeTableStreamForBoose(boose, interval)
+                .map(period -> modelMapper.map(period, TablePeriodInfo.class))
                 .collect(Collectors.toList());
     }
 
@@ -137,7 +141,7 @@ public class TimeTableService {
             if (!start.isBefore(queriedInterval.getEnd())) {
                 break;
             }
-            result.addWithoutChecks(periodInterval(SimplePeriod.of(start, end, toExpand.getComment())));
+            result.addWithoutChecks(periodInterval(new TablePeriod(start, end, toExpand.getComment())));
             currentDateTime = end;
             if (!expansionIterator.hasNext()) {
                 expansionIterator = weeklyPeriods.listIterator();

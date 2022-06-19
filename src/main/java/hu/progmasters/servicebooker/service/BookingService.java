@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,9 +57,13 @@ public class BookingService {
     public List<BookingInfo> findAllForBoose(Integer booseId, Interval<LocalDateTime> interval) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = booseService.getFromIdOrThrow(booseId);
-        return repository.findAllOrderedFor(boose, null, constrainedInterval).stream()
+        return getAllForBoose(boose, constrainedInterval).stream()
                 .map(booking -> modelMapper.map(booking, BookingInfo.class))
                 .collect(Collectors.toList());
+    }
+
+    public List<Booking> getAllForBoose(Boose boose, Interval<LocalDateTime> interval) {
+        return repository.findAllOrderedFor(boose, null, interval);
     }
 
     @Transactional
@@ -70,10 +73,6 @@ public class BookingService {
         return repository.findAllOrderedFor(null, customer, constrainedInterval).stream()
                 .map(booking -> modelMapper.map(booking, BookingInfo.class))
                 .collect(Collectors.toList());
-    }
-
-    public Optional<Booking> getOptionalByBooseAndDate(Boose boose, Interval<LocalDateTime> interval) {
-        return repository.findByBooseAndDate(boose, interval);
     }
 
     private Booking getByIdOrThrow(int id) {

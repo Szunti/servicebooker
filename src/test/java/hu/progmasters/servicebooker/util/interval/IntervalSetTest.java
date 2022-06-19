@@ -89,6 +89,34 @@ class IntervalSetTest {
         assertThat(intervalSet.size()).isEqualTo(3);
     }
 
+    @Test
+    void get() {
+        class TestInterval implements IntervalLike<TestInterval, Integer> {
+            @Override
+            public Integer getStart() {
+                return 1;
+            }
+
+            @Override
+            public Integer getEnd() {
+                return 4;
+            }
+
+            @Override
+            public TestInterval intersect(TestInterval other) {
+                return null;
+            }
+
+            @Override
+            public Pair<TestInterval> subtract(TestInterval other) {
+                return null;
+            }
+        }
+
+        addInterval(1, 4);
+        assertThat(intervalSet.get(new TestInterval())).isEqualTo(interval(1, 4));
+    }
+
     @Nested
     class Intersect {
         @Test
