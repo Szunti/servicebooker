@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class CustomerService {
 
     private final CustomerRepository repository;
@@ -25,17 +24,20 @@ public class CustomerService {
         this.modelMapper = modelMapper;
     }
 
+    @Transactional
     public CustomerInfo save(CustomerCreateCommand command) {
         Customer toSave = modelMapper.map(command, Customer.class);
         Customer saved = repository.save(toSave);
         return modelMapper.map(saved, CustomerInfo.class);
     }
 
+    @Transactional
     public CustomerInfo findById(int id) {
         Customer customer = getFromIdOrThrow(id);
         return modelMapper.map(customer, CustomerInfo.class);
     }
 
+    @Transactional
     public List<CustomerInfo> findAll() {
         return repository.findAll().stream()
                 .map(customer -> modelMapper.map(customer, CustomerInfo.class))

@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import static hu.progmasters.servicebooker.domain.PeriodInterval.periodInterval;
 
 @Service
-@Transactional
 public class TimeTableService {
 
     private final BooseService booseService;
@@ -44,6 +43,7 @@ public class TimeTableService {
         this.dateTimeBoundChecker = dateTimeBoundChecker;
     }
 
+    @Transactional
     public List<FreePeriodInfo> getFreePeriodsForBoose(int booseId, Interval<LocalDateTime> interval) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = booseService.getFromIdOrThrow(booseId);

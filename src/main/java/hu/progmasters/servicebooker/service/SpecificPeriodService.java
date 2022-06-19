@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 
 @Service
-@Transactional
 public class SpecificPeriodService {
 
     private final SpecificPeriodRepository repository;
@@ -60,6 +59,7 @@ public class SpecificPeriodService {
         return modelMapper.map(saved, SpecificPeriodInfo.class);
     }
 
+    @Transactional
     public List<SpecificPeriodInfo> findAllSpecificPeriodsForBoose(int booseId, Interval<LocalDateTime> interval,
                                                                    Boolean bookable) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
@@ -69,12 +69,14 @@ public class SpecificPeriodService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public List<SpecificPeriod> getAllSpecificPeriodsForBoose(Boose boose, Interval<LocalDateTime> interval,
                                                                    Boolean bookable) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         return repository.findAllOrderedFor(boose, constrainedInterval, bookable);
     }
 
+    @Transactional
     public SpecificPeriodInfo findSpecificPeriodForBooseById(int booseId, int id) {
         SpecificPeriod specificPeriod = getSpecificPeriodFromBooseAndIdOrThrow(booseId, id);
         return modelMapper.map(specificPeriod, SpecificPeriodInfo.class);

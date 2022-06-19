@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class WeeklyPeriodService {
 
     private final WeeklyPeriodRepository repository;
@@ -48,6 +47,7 @@ public class WeeklyPeriodService {
         return modelMapper.map(saved, WeeklyPeriodInfo.class);
     }
 
+    @Transactional
     public List<WeeklyPeriodInfo> findAllWeeklyPeriodsForBoose(int booseId) {
         Boose boose = booseService.getFromIdOrThrow(booseId);
         return repository.findAllOrderedFor(boose).stream()
@@ -55,10 +55,12 @@ public class WeeklyPeriodService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public List<WeeklyPeriod> getAllWeeklyPeriodsForBoose(Boose boose) {
         return repository.findAllOrderedFor(boose);
     }
 
+    @Transactional
     public WeeklyPeriodInfo findWeeklyPeriodForBooseById(int booseId, int id) {
         WeeklyPeriod weeklyPeriod = getWeeklyPeriodFromBooseAndIdOrThrow(booseId, id);
         return modelMapper.map(weeklyPeriod, WeeklyPeriodInfo.class);

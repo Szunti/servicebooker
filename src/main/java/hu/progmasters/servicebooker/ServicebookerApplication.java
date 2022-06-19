@@ -31,9 +31,4 @@ public class ServicebookerApplication {
     public Jackson2ObjectMapperBuilderCustomizer jacksonCustomizer() {
         return builder -> builder.featuresToEnable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
-
-    @Bean
-    public PlatformTransactionManagerCustomizer<AbstractPlatformTransactionManager> validateExistingTransaction() {
-        return txManager -> txManager.setValidateExistingTransaction(true);
-    }
 }
