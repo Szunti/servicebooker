@@ -2,9 +2,7 @@ package hu.progmasters.servicebooker.exceptionhandling;
 
 import hu.progmasters.servicebooker.dto.error.SimpleError;
 import hu.progmasters.servicebooker.dto.error.ValidationError;
-import hu.progmasters.servicebooker.exceptionhandling.booking.BookingNotByCustomerException;
-import hu.progmasters.servicebooker.exceptionhandling.booking.BookingNotForBooseException;
-import hu.progmasters.servicebooker.exceptionhandling.booking.NoSuchBookingException;
+import hu.progmasters.servicebooker.exceptionhandling.booking.*;
 import hu.progmasters.servicebooker.exceptionhandling.boose.NoSuchBooseException;
 import hu.progmasters.servicebooker.exceptionhandling.controller.*;
 import hu.progmasters.servicebooker.exceptionhandling.customer.NoSuchCustomerException;
@@ -85,7 +83,9 @@ public class GlobalExceptionHandler {
             DateOutOfBookableBoundsException.class,
             IntervalOutOfBookableBoundsException.class,
             BookingNotForBooseException.class,
-            BookingNotByCustomerException.class
+            BookingNotByCustomerException.class,
+            BookingNotAvailablePeriodException.class,
+            AlreadyBookedException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<SimpleError> handleCommonExceptions(Exception exception) {

@@ -57,20 +57,20 @@ public class BookingService {
     public List<BookingInfo> findAllForBoose(Integer booseId, Interval<LocalDateTime> interval) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = booseService.getFromIdOrThrow(booseId);
-        return getAllForBoose(boose, constrainedInterval).stream()
+        return getAllForBoose(boose, constrainedInterval, false).stream()
                 .map(booking -> modelMapper.map(booking, BookingInfo.class))
                 .collect(Collectors.toList());
     }
 
-    public List<Booking> getAllForBoose(Boose boose, Interval<LocalDateTime> interval) {
-        return repository.findAllOrderedFor(boose, null, interval);
+    public List<Booking> getAllForBoose(Boose boose, Interval<LocalDateTime> interval, boolean lock) {
+        return repository.findAllOrderedFor(boose, null, interval, lock);
     }
 
     @Transactional
     public List<BookingInfo> findAllForCustomer(Integer customerId, Interval<LocalDateTime> interval) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Customer customer = customerService.getFromIdOrThrow(customerId);
-        return repository.findAllOrderedFor(null, customer, constrainedInterval).stream()
+        return repository.findAllOrderedFor(null, customer, constrainedInterval, false).stream()
                 .map(booking -> modelMapper.map(booking, BookingInfo.class))
                 .collect(Collectors.toList());
     }

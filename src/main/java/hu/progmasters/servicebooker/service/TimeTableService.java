@@ -50,12 +50,13 @@ public class TimeTableService {
         this.dateTimeBoundChecker = dateTimeBoundChecker;
     }
 
-    public Stream<TablePeriod> getTimeTableStreamForBoose(Boose boose, Interval<LocalDateTime> interval) {
+    public Stream<TablePeriod> getTimeTableStreamForBoose(Boose boose, Interval<LocalDateTime> interval, boolean lock) {
         // expand weekly periods
-        IntervalSet<PeriodInterval, LocalDateTime> timeTable = expandWeeklyPeriods(boose, interval);
+        IntervalSet<PeriodInterval, LocalDateTime> timeTable = expandWeeklyPeriods(boose, interval, lock);
 
         // modify with specific periods
-        List<SpecificPeriod> specificPeriodList = specificPeriodService.getAllForBoose(boose, interval, null);
+        List<SpecificPeriod> specificPeriodList =
+                specificPeriodService.getAllForBoose(boose, interval, null, lock);
 
         IntervalSet<PeriodInterval, LocalDateTime> specificPeriodsToRemove = new IntervalSet<>();
         IntervalSet<PeriodInterval, LocalDateTime> specificPeriodsToAdd = new IntervalSet<>();
@@ -72,7 +73,7 @@ public class TimeTableService {
         timeTable.addAllWithoutChecks(specificPeriodsToAdd);
 
         // add booking information
-        List<Booking> bookingList = bookingService.getAllForBoose(boose, interval);
+        List<Booking> bookingList = bookingService.getAllForBoose(boose, interval, lock);
         for (Booking booking : bookingList) {
             Interval<LocalDateTime> bookingInterval = interval(booking.getStart(), booking.getEnd());
             PeriodInterval intervalFromTimeTable = timeTable.get(bookingInterval);
@@ -88,16 +89,17 @@ public class TimeTableService {
     public List<TablePeriodInfo> collectTimeTableForBoose(int booseId, Interval<LocalDateTime> interval) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = booseService.getFromIdOrThrow(booseId);
-        return getTimeTableStreamForBoose(boose, interval)
+        return getTimeTableStreamForBoose(boose, constrainedInterval, false)
                 .map(period -> modelMapper.map(period, TablePeriodInfo.class))
                 .collect(Collectors.toList());
     }
 
     private IntervalSet<PeriodInterval, LocalDateTime> expandWeeklyPeriods(Boose boose,
-                                                                           Interval<LocalDateTime> queriedInterval) {
+                                                                           Interval<LocalDateTime> queriedInterval,
+                                                                           boolean lock) {
         IntervalSet<PeriodInterval, LocalDateTime> result = new IntervalSet<>();
 
-        List<WeeklyPeriod> weeklyPeriods = weeklyPeriodService.getAllForBoose(boose);
+        List<WeeklyPeriod> weeklyPeriods = weeklyPeriodService.getAllForBoose(boose, lock);
 
         if (weeklyPeriods.isEmpty()) {
             return result;

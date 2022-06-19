@@ -41,7 +41,9 @@ public class SpecificPeriodRepository {
         return Optional.ofNullable(entityManager.find(SpecificPeriod.class, id));
     }
 
-    public List<SpecificPeriod> findAllOrderedFor(Boose boose, Interval<LocalDateTime> interval, Boolean bookable) {
+    // TODO can we do better with the lock?
+    public List<SpecificPeriod> findAllOrderedFor(Boose boose, Interval<LocalDateTime> interval,
+                                                  Boolean bookable, boolean lock) {
         TypedQuery<SpecificPeriod> query = entityManager.createQuery(
                         "SELECT sp FROM SpecificPeriod sp WHERE sp.boose = :boose " +
                                 "AND sp.start < :intervalEnd AND sp.end > :intervalStart " +
@@ -52,6 +54,9 @@ public class SpecificPeriodRepository {
                 .setParameter("intervalStart", interval.getStart())
                 .setParameter("intervalEnd", interval.getEnd())
                 .setParameter("bookable", bookable);
+        if (lock) {
+            query.setLockMode(LockModeType.PESSIMISTIC_READ);
+        }
         return query.getResultList();
     }
 }

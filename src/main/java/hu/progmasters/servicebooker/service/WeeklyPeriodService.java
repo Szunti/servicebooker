@@ -48,13 +48,13 @@ public class WeeklyPeriodService {
     @Transactional
     public List<WeeklyPeriodInfo> findAllForBoose(int booseId) {
         Boose boose = booseService.getFromIdOrThrow(booseId);
-        return repository.findAllOrderedFor(boose).stream()
+        return getAllForBoose(boose, false).stream()
                 .map(weeklyPeriod -> modelMapper.map(weeklyPeriod, WeeklyPeriodInfo.class))
                 .collect(Collectors.toList());
     }
 
-    public List<WeeklyPeriod> getAllForBoose(Boose boose) {
-        return repository.findAllOrderedFor(boose);
+    public List<WeeklyPeriod> getAllForBoose(Boose boose, boolean lock) {
+        return repository.findAllOrderedFor(boose, lock);
     }
 
     @Transactional

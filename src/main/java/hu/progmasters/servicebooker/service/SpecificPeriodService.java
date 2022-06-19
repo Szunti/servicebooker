@@ -61,15 +61,15 @@ public class SpecificPeriodService {
                                                     Boolean bookable) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = booseService.getFromIdOrThrow(booseId);
-        return repository.findAllOrderedFor(boose, constrainedInterval, bookable).stream()
+        return getAllForBoose(boose, constrainedInterval, bookable, false).stream()
                 .map(specificPeriod -> modelMapper.map(specificPeriod, SpecificPeriodInfo.class))
                 .collect(Collectors.toList());
     }
 
     public List<SpecificPeriod> getAllForBoose(Boose boose, Interval<LocalDateTime> interval,
-                                               Boolean bookable) {
+                                               Boolean bookable, boolean lock) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
-        return repository.findAllOrderedFor(boose, constrainedInterval, bookable);
+        return repository.findAllOrderedFor(boose, constrainedInterval, bookable, lock);
     }
 
     @Transactional
