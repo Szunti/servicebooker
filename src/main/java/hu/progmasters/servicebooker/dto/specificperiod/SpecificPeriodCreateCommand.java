@@ -19,7 +19,6 @@ public class SpecificPeriodCreateCommand {
     @NotNull
     private LocalDateTime end;
 
-    @NotNull
     private String comment;
 
     @NotNull

@@ -15,6 +15,6 @@ public class WeeklyPeriodCreateCommand {
     @NotNull
     private DayOfWeekTime end;
 
-    @NotNull
+    //TODO null as empty string on view
     private String comment;
 }

@@ -12,6 +12,5 @@ public class BooseCreateCommand {
     @NotBlank
     private String name;
 
-    @NotNull
     private String description;
 }
