@@ -2,10 +2,12 @@ package hu.progmasters.servicebooker.service;
 
 import hu.progmasters.servicebooker.domain.PeriodInterval;
 import hu.progmasters.servicebooker.domain.SimplePeriod;
+import hu.progmasters.servicebooker.domain.entity.Booking;
 import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.domain.entity.SpecificPeriod;
 import hu.progmasters.servicebooker.domain.entity.WeeklyPeriod;
-import hu.progmasters.servicebooker.dto.boose.FreePeriodInfo;
+import hu.progmasters.servicebooker.dto.booking.BookingInfo;
+import hu.progmasters.servicebooker.dto.boose.TablePeriodInfo;
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import hu.progmasters.servicebooker.util.interval.IntervalSet;
@@ -17,9 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static hu.progmasters.servicebooker.domain.PeriodInterval.periodInterval;
+import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 
 @Service
 public class TimeTableService {
@@ -27,6 +31,7 @@ public class TimeTableService {
     private final BooseService booseService;
     private final WeeklyPeriodService weeklyPeriodService;
     private final SpecificPeriodService specificPeriodService;
+    private final BookingService bookingService;
 
     private final ModelMapper modelMapper;
 
@@ -35,20 +40,22 @@ public class TimeTableService {
     public TimeTableService(BooseService booseService,
                             WeeklyPeriodService weeklyPeriodService,
                             SpecificPeriodService specificPeriodService,
+                            BookingService bookingService,
                             ModelMapper modelMapper,
                             DateTimeBoundChecker dateTimeBoundChecker) {
         this.booseService = booseService;
         this.weeklyPeriodService = weeklyPeriodService;
         this.specificPeriodService = specificPeriodService;
+        this.bookingService = bookingService;
         this.modelMapper = modelMapper;
         this.dateTimeBoundChecker = dateTimeBoundChecker;
     }
 
     @Transactional
-    public List<FreePeriodInfo> getFreePeriodsForBoose(int booseId, Interval<LocalDateTime> interval) {
+    public List<TablePeriodInfo> getTimeTableForBoose(int booseId, Interval<LocalDateTime> interval) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = booseService.getFromIdOrThrow(booseId);
-        IntervalSet<PeriodInterval, LocalDateTime> weeklyPeriods = expandWeeklyPeriods(boose, constrainedInterval);
+        IntervalSet<PeriodInterval, LocalDateTime> timeTable = expandWeeklyPeriods(boose, constrainedInterval);
 
         List<SpecificPeriod> specificPeriodList =
                 specificPeriodService.getAllForBoose(boose, constrainedInterval, null);
@@ -64,12 +71,21 @@ public class TimeTableService {
             specificPeriodsToRemove.addWithoutChecks(periodInterval);
         }
 
-        weeklyPeriods.subtract(specificPeriodsToRemove);
-        weeklyPeriods.addAllWithoutChecks(specificPeriodsToAdd);
+        timeTable.subtract(specificPeriodsToRemove);
+        timeTable.addAllWithoutChecks(specificPeriodsToAdd);
 
-        return weeklyPeriods.stream()
-                .map(periodInterval ->
-                        modelMapper.map(periodInterval.getPeriod(), FreePeriodInfo.class))
+        return timeTable.stream()
+                .map(periodInterval -> {
+                    TablePeriodInfo periodInfo = modelMapper.map(periodInterval.getPeriod(), TablePeriodInfo.class);
+                    Interval<LocalDateTime> intervalOfPeriod =
+                            interval(periodInterval.getStart(), periodInterval.getEnd());
+                    Optional<Booking> optBooking =
+                            bookingService.getOptionalByBooseAndDate(boose, intervalOfPeriod);
+                    if (optBooking.isPresent()) {
+                        periodInfo.setBooking(modelMapper.map(optBooking.get(), BookingInfo.class));
+                    }
+                    return periodInfo;
+                })
                 .collect(Collectors.toList());
     }
 
