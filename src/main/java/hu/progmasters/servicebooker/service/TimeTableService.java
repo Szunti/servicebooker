@@ -9,6 +9,7 @@ import hu.progmasters.servicebooker.dto.boose.FreePeriodInfo;
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import hu.progmasters.servicebooker.util.interval.IntervalSet;
+import hu.progmasters.servicebooker.validation.DateTimeBoundChecker;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

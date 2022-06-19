@@ -1,4 +1,4 @@
-package hu.progmasters.servicebooker.service;
+package hu.progmasters.servicebooker.validation;
 
 import hu.progmasters.servicebooker.configuration.BookerProperties;
 import hu.progmasters.servicebooker.exceptionhandling.DateOutOfBookableBoundsException;

@@ -9,6 +9,7 @@ import hu.progmasters.servicebooker.exceptionhandling.specificperiod.Overlapping
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotInBooseException;
 import hu.progmasters.servicebooker.repository.SpecificPeriodRepository;
 import hu.progmasters.servicebooker.util.interval.Interval;
+import hu.progmasters.servicebooker.validation.DateTimeBoundChecker;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
