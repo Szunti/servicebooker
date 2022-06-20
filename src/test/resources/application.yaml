@@ -7,12 +7,12 @@ servicebooker:
 spring:
 #  TODO h2 for testing, was not sure if it behaves the same as mysql with locking
   datasource:
-    url: jdbc:mysql://localhost/servicebooker?createDatabaseIfNotExist=true
-    username: root
-    password: 1234
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         show_sql: true
