@@ -56,6 +56,6 @@ public class BooseController {
     public List<TablePeriodInfo> getTimeTable(@PathVariable("id") int id,
                                               @RequestParam("start") LocalDateTime start,
                                               @RequestParam("end") LocalDateTime end) {
-        return timeTableService.collectTimeTableForBoose(id, interval(start, end));
+        return timeTableService.assembleTimeTableForBoose(id, interval(start, end));
     }
 }

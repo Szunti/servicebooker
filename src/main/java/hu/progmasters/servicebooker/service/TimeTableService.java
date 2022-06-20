@@ -50,6 +50,15 @@ public class TimeTableService {
         this.dateTimeBoundChecker = dateTimeBoundChecker;
     }
 
+    @Transactional
+    public List<TablePeriodInfo> assembleTimeTableForBoose(int booseId, Interval<LocalDateTime> interval) {
+        Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
+        Boose boose = booseService.getFromIdOrThrow(booseId);
+        return getTimeTableStreamForBoose(boose, constrainedInterval, false)
+                .map(period -> modelMapper.map(period, TablePeriodInfo.class))
+                .collect(Collectors.toList());
+    }
+
     public Stream<TablePeriod> getTimeTableStreamForBoose(Boose boose, Interval<LocalDateTime> interval, boolean lock) {
         // expand weekly periods
         IntervalSet<PeriodInterval, LocalDateTime> timeTable = expandWeeklyPeriods(boose, interval, lock);
@@ -83,15 +92,6 @@ public class TimeTableService {
 
         return timeTable.stream()
                 .map(PeriodInterval::getPeriod);
-    }
-
-    @Transactional
-    public List<TablePeriodInfo> collectTimeTableForBoose(int booseId, Interval<LocalDateTime> interval) {
-        Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
-        Boose boose = booseService.getFromIdOrThrow(booseId);
-        return getTimeTableStreamForBoose(boose, constrainedInterval, false)
-                .map(period -> modelMapper.map(period, TablePeriodInfo.class))
-                .collect(Collectors.toList());
     }
 
     private IntervalSet<PeriodInterval, LocalDateTime> expandWeeklyPeriods(Boose boose,
