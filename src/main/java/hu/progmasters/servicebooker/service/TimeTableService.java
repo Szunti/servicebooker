@@ -51,10 +51,17 @@ public class TimeTableService {
     }
 
     @Transactional
-    public List<TablePeriodInfo> assembleTimeTableForBoose(int booseId, Interval<LocalDateTime> interval) {
+    public List<TablePeriodInfo> assembleTimeTableForBoose(int booseId, Interval<LocalDateTime> interval,
+                                                           boolean free) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = booseService.getFromIdOrThrow(booseId);
-        return getTimeTableStreamForBoose(boose, constrainedInterval, false)
+        Stream<TablePeriod> timeTableStream = getTimeTableStreamForBoose(boose, constrainedInterval, false);
+        if (free) {
+            timeTableStream = timeTableStream.filter(
+                    period -> period.getBooking() == null
+            );
+        }
+        return timeTableStream
                 .map(period -> modelMapper.map(period, TablePeriodInfo.class))
                 .collect(Collectors.toList());
     }
