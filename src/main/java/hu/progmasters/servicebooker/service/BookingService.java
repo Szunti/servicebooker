@@ -4,6 +4,7 @@ import hu.progmasters.servicebooker.domain.entity.Booking;
 import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.domain.entity.Customer;
 import hu.progmasters.servicebooker.dto.booking.BookingInfo;
+import hu.progmasters.servicebooker.dto.booking.BookingUpdateCommand;
 import hu.progmasters.servicebooker.exceptionhandling.booking.BookingNotByCustomerException;
 import hu.progmasters.servicebooker.exceptionhandling.booking.BookingNotForBooseException;
 import hu.progmasters.servicebooker.exceptionhandling.booking.NoSuchBookingException;
@@ -41,38 +42,15 @@ public class BookingService {
     }
 
     @Transactional
-    public BookingInfo findForBooseById(int booseId, int id) {
-        Booking booking = getForBooseByIdOrThrow(booseId, id);
-        return modelMapper.map(booking, BookingInfo.class);
-    }
-
-
-    @Transactional
-    public BookingInfo findForCustomerById(int customerId, int id) {
-        Booking booking = getForCustomerByIdOrThrow(customerId, id);
-        return modelMapper.map(booking, BookingInfo.class);
-    }
-
-    @Transactional
-    public List<BookingInfo> findAllForBoose(Integer booseId, Interval<LocalDateTime> interval) {
-        Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
-        Boose boose = booseService.getFromIdOrThrow(booseId);
-        return getAllForBoose(boose, constrainedInterval, false).stream()
-                .map(booking -> modelMapper.map(booking, BookingInfo.class))
-                .collect(Collectors.toList());
-    }
-
-    public List<Booking> getAllForBoose(Boose boose, Interval<LocalDateTime> interval, boolean lock) {
-        return repository.findAllOrderedFor(boose, null, interval, lock);
-    }
-
-    @Transactional
-    public List<BookingInfo> findAllForCustomer(Integer customerId, Interval<LocalDateTime> interval) {
-        Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
-        Customer customer = customerService.getFromIdOrThrow(customerId);
-        return repository.findAllOrderedFor(null, customer, constrainedInterval, false).stream()
-                .map(booking -> modelMapper.map(booking, BookingInfo.class))
-                .collect(Collectors.toList());
+    public BookingInfo findForBooseOrCustomerById(int id, Integer booseId, Integer customerId) {
+        Booking booking = getByIdOrThrow(id);
+        if (booseId != null) {
+            checkBoose(booking, booseId);
+        }
+        if (customerId != null) {
+            checkCustomer(booking, customerId);
+        }
+        return toDto(booking);
     }
 
     private Booking getByIdOrThrow(int id) {
@@ -81,21 +59,62 @@ public class BookingService {
         );
     }
 
-    private Booking getForBooseByIdOrThrow(int booseId, int id) {
-        Boose boose = booseService.getFromIdOrThrow(booseId);
-        Booking booking = getByIdOrThrow(id);
-        if (booking.getBoose() != boose) {
-            throw new BookingNotForBooseException(id, booseId);
-        }
-        return booking;
+    @Transactional
+    public List<BookingInfo> findAllForBooseOrCustomer(Integer booseId, Integer customerId,
+                                                       Interval<LocalDateTime> interval) {
+        Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
+        Boose boose = booseId != null ? booseService.getFromIdOrThrow(booseId) : null;
+        Customer customer = customerId != null ? customerService.getFromIdOrThrow(customerId) : null;
+        return repository.findAllOrderedFor(boose, customer, constrainedInterval, false).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    private Booking getForCustomerByIdOrThrow(int customerId, int id) {
-        Customer customer = customerService.getFromIdOrThrow(id);
+    public List<Booking> getAllForBoose(Boose boose, Interval<LocalDateTime> interval, boolean lock) {
+        return repository.findAllOrderedFor(boose, null, interval, lock);
+    }
+
+    @Transactional
+    public BookingInfo updateForBooseOrCustomer(int id, Integer booseId, Integer customerId, BookingUpdateCommand command) {
         Booking booking = getByIdOrThrow(id);
-        if (booking.getCustomer() != customer) {
-            throw new BookingNotByCustomerException(id, customerId);
+        if (booseId != null) {
+            checkBoose(booking, booseId);
         }
-        return booking;
+        if (customerId != null) {
+            checkCustomer(booking, customerId);
+        }
+        modelMapper.map(command, booking);
+        return toDto(booking);
+    }
+
+    @Transactional
+    public BookingInfo deleteForBooseOrCustomer(int id, Integer booseId, Integer customerId) {
+        Booking booking = getByIdOrThrow(id);
+        if (booseId != null) {
+            checkBoose(booking, booseId);
+        }
+        if (customerId != null) {
+            checkCustomer(booking, customerId);
+        }
+        repository.delete(booking);
+        return toDto(booking);
+    }
+
+    private void checkBoose(Booking booking, int booseId) {
+        Boose boose = booseService.getFromIdOrThrow(booseId);
+        if (booking.getBoose() != boose) {
+            throw new BookingNotForBooseException(booking.getId(), booseId);
+        }
+    }
+
+    private void checkCustomer(Booking booking, int customerId) {
+        Customer customer = customerService.getFromIdOrThrow(customerId);
+        if (booking.getCustomer() != customer) {
+            throw new BookingNotByCustomerException(booking.getId(), customerId);
+        }
+    }
+
+    private BookingInfo toDto(Booking booking) {
+        return modelMapper.map(booking, BookingInfo.class);
     }
 }

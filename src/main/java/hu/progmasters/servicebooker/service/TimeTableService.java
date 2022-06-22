@@ -62,7 +62,7 @@ public class TimeTableService {
             );
         }
         return timeTableStream
-                .map(period -> modelMapper.map(period, TablePeriodInfo.class))
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -157,5 +157,9 @@ public class TimeTableService {
             }
         }
         return result;
+    }
+
+    private TablePeriodInfo toDto(TablePeriod period) {
+        return modelMapper.map(period, TablePeriodInfo.class);
     }
 }

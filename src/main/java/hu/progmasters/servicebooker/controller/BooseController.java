@@ -27,8 +27,8 @@ import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 
 @Tag(name = "Services")
 @RestController
-@RequestMapping("/api/services")
 @Slf4j
+@RequestMapping("/api/services")
 public class BooseController {
     private final BooseService booseService;
     private final TimeTableService timeTableService;

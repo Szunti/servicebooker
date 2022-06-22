@@ -4,6 +4,7 @@ import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.domain.entity.SpecificPeriod;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodInfo;
+import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodUpdateCommand;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.NoSuchSpecificPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.OverlappingSpecificPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotForBooseException;
@@ -53,7 +54,7 @@ public class SpecificPeriodService {
         }
         // TODO return if weekly is replaced, partially covered or neither
         SpecificPeriod saved = repository.save(toSave);
-        return modelMapper.map(saved, SpecificPeriodInfo.class);
+        return toDto(saved);
     }
 
     @Transactional
@@ -62,7 +63,7 @@ public class SpecificPeriodService {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = booseService.getFromIdOrThrow(booseId);
         return getAllForBoose(boose, constrainedInterval, bookable, false).stream()
-                .map(specificPeriod -> modelMapper.map(specificPeriod, SpecificPeriodInfo.class))
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -75,9 +76,8 @@ public class SpecificPeriodService {
     @Transactional
     public SpecificPeriodInfo findForBooseById(int booseId, int id) {
         SpecificPeriod specificPeriod = getForBooseByIdOrThrow(booseId, id);
-        return modelMapper.map(specificPeriod, SpecificPeriodInfo.class);
+        return toDto(specificPeriod);
     }
-
 
     private SpecificPeriod getForBooseByIdOrThrow(int booseId, int id) {
         // TODO maybe getReference is enough
@@ -91,4 +91,14 @@ public class SpecificPeriodService {
         return specificPeriod;
     }
 
+    @Transactional
+    public SpecificPeriodInfo update(int booseId, int id, SpecificPeriodUpdateCommand command) {
+        SpecificPeriod specificPeriod = getForBooseByIdOrThrow(booseId, id);
+        modelMapper.map(command, specificPeriod);
+        return toDto(specificPeriod);
+    }
+
+    private SpecificPeriodInfo toDto(SpecificPeriod specificPeriod) {
+        return modelMapper.map(specificPeriod, SpecificPeriodInfo.class);
+    }
 }

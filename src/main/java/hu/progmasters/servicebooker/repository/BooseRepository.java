@@ -1,14 +1,14 @@
 package hu.progmasters.servicebooker.repository;
 
 import hu.progmasters.servicebooker.domain.entity.Boose;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.PersistenceContext;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Repository
 public class BooseRepository {
 
@@ -21,12 +21,19 @@ public class BooseRepository {
     }
 
     public Optional<Boose> findById(int id) {
-        return Optional.ofNullable(entityManager.find(Boose.class, id));
+        TypedQuery<Boose> query = entityManager.createQuery("SELECT b FROM Boose b " +
+                        "WHERE b.id = :id AND b.deleted = FALSE", Boose.class)
+                .setParameter("id", id);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException exception) {
+            return Optional.empty();
+        }
     }
 
     public List<Boose> findAll() {
-        return entityManager.createQuery("SELECT b FROM Boose b", Boose.class)
-            .getResultList();
+        return entityManager.createQuery("SELECT b FROM Boose b WHERE b.deleted = FALSE", Boose.class)
+                .getResultList();
     }
 
     public void lockForUpdate(Boose boose) {

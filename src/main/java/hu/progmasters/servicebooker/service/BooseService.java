@@ -3,6 +3,7 @@ package hu.progmasters.servicebooker.service;
 import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.dto.boose.BooseCreateCommand;
 import hu.progmasters.servicebooker.dto.boose.BooseInfo;
+import hu.progmasters.servicebooker.dto.boose.BooseUpdateCommand;
 import hu.progmasters.servicebooker.exceptionhandling.boose.NoSuchBooseException;
 import hu.progmasters.servicebooker.repository.BooseRepository;
 import org.modelmapper.ModelMapper;
@@ -28,29 +29,47 @@ public class BooseService {
     public BooseInfo save(BooseCreateCommand command) {
         Boose toSave = modelMapper.map(command, Boose.class);
         Boose saved = repository.save(toSave);
-        return modelMapper.map(saved, BooseInfo.class);
+        return toDto(saved);
     }
 
     @Transactional
     public BooseInfo findById(int id) {
         Boose boose = getFromIdOrThrow(id);
-        return modelMapper.map(boose, BooseInfo.class);
-    }
-
-    @Transactional
-    public List<BooseInfo> findAll() {
-        return repository.findAll().stream()
-                .map(boose -> modelMapper.map(boose, BooseInfo.class))
-                .collect(Collectors.toList());
-    }
-
-    public void lockForUpdate(Boose boose) {
-        repository.lockForUpdate(boose);
+        return toDto(boose);
     }
 
     public Boose getFromIdOrThrow(int id) {
         return repository.findById(id).orElseThrow(
                 () -> new NoSuchBooseException(id)
         );
+    }
+
+    @Transactional
+    public List<BooseInfo> findAll() {
+        return repository.findAll().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public BooseInfo update(int id, BooseUpdateCommand command) {
+        Boose boose = getFromIdOrThrow(id);
+        modelMapper.map(command, boose);
+        return toDto(boose);
+    }
+
+    @Transactional
+    public BooseInfo delete(int id) {
+        Boose boose = getFromIdOrThrow(id);
+        boose.setDeleted(true);
+        return toDto(boose);
+    }
+
+    public void lockForUpdate(Boose boose) {
+        repository.lockForUpdate(boose);
+    }
+
+    private BooseInfo toDto(Boose boose) {
+        return modelMapper.map(boose, BooseInfo.class);
     }
 }

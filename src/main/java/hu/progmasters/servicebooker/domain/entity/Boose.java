@@ -16,8 +16,6 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Entity
 public class Boose {
-    // TODO soft delete
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,4 +23,6 @@ public class Boose {
     private String name;
 
     private String description;
+
+    private boolean deleted;
 }

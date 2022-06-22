@@ -70,7 +70,7 @@ public class BookerService {
             throw new AlreadyBookedException(period);
         }
         Booking saved = repository.save(toSave);
-        return modelMapper.map(saved, BookingInfo.class);
+        return toDto(saved);
     }
 
     private TablePeriod getPeriodMatchingBooking(Booking booking, List<TablePeriod> timeTable) {
@@ -81,5 +81,9 @@ public class BookerService {
             }
         }
         throw new BookingNotAvailablePeriodException(booking);
+    }
+
+    private BookingInfo toDto(Booking booking) {
+        return modelMapper.map(booking, BookingInfo.class);
     }
 }

@@ -6,10 +6,7 @@ import hu.progmasters.servicebooker.domain.entity.Customer;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +24,10 @@ public class BookingRepository {
 
     public Optional<Booking> findById(int id) {
         return Optional.ofNullable(entityManager.find(Booking.class, id));
+    }
+
+    public void delete(Booking booking) {
+        entityManager.remove(booking);
     }
 
     public List<Booking> findAllOrderedFor(Boose boose, Customer customer, Interval<LocalDateTime> interval,

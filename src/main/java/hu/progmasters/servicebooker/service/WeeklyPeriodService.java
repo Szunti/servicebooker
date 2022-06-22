@@ -4,6 +4,7 @@ import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.domain.entity.WeeklyPeriod;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodInfo;
+import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodUpdateCommand;
 import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.NoSuchWeeklyPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.OverlappingWeeklyPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.WeeklyPeriodNotForBooseException;
@@ -42,14 +43,14 @@ public class WeeklyPeriodService {
             throw new OverlappingWeeklyPeriodException();
         }
         WeeklyPeriod saved = repository.save(toSave);
-        return modelMapper.map(saved, WeeklyPeriodInfo.class);
+        return toDto(saved);
     }
 
     @Transactional
     public List<WeeklyPeriodInfo> findAllForBoose(int booseId) {
         Boose boose = booseService.getFromIdOrThrow(booseId);
         return getAllForBoose(boose, false).stream()
-                .map(weeklyPeriod -> modelMapper.map(weeklyPeriod, WeeklyPeriodInfo.class))
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -60,7 +61,7 @@ public class WeeklyPeriodService {
     @Transactional
     public WeeklyPeriodInfo findForBooseById(int booseId, int id) {
         WeeklyPeriod weeklyPeriod = getForBooseByIdOrThrow(booseId, id);
-        return modelMapper.map(weeklyPeriod, WeeklyPeriodInfo.class);
+        return toDto(weeklyPeriod);
     }
 
     private WeeklyPeriod getForBooseByIdOrThrow(int booseId, int id) {
@@ -73,5 +74,16 @@ public class WeeklyPeriodService {
             throw new WeeklyPeriodNotForBooseException(id, booseId);
         }
         return weeklyPeriod;
+    }
+
+    @Transactional
+    public WeeklyPeriodInfo update(int booseId, int id, WeeklyPeriodUpdateCommand command) {
+        WeeklyPeriod weeklyPeriod = getForBooseByIdOrThrow(booseId, id);
+        modelMapper.map(command, weeklyPeriod);
+        return toDto(weeklyPeriod);
+    }
+
+    private WeeklyPeriodInfo toDto(WeeklyPeriod weeklyPeriod) {
+        return modelMapper.map(weeklyPeriod, WeeklyPeriodInfo.class);
     }
 }
