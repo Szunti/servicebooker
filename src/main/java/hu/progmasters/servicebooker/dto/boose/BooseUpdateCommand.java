@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
-@Schema(title = "ServiceUpdateCommand")
 @Data
 @NoArgsConstructor
 public class BooseUpdateCommand {
