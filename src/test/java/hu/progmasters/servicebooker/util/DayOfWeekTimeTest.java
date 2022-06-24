@@ -12,7 +12,6 @@ import static java.time.DayOfWeek.*;
 import static java.time.Month.JUNE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DayOfWeekTimeTest {
 
@@ -23,7 +22,7 @@ class DayOfWeekTimeTest {
     void testToString() {
         Locale.setDefault(Locale.ENGLISH);
         DayOfWeekTime dayOfWeekTime = DayOfWeekTime.of(MONDAY, 10, 24, 5);
-        assertEquals("Mon 10:24:05", dayOfWeekTime.toString());
+        assertThat(dayOfWeekTime.toString()).isEqualTo("Mon 10:24:05");
     }
 
     @Test
