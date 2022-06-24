@@ -23,7 +23,14 @@ public class BookingRepository {
     }
 
     public Optional<Booking> findById(int id) {
-        return Optional.ofNullable(entityManager.find(Booking.class, id));
+        TypedQuery<Booking> query = entityManager.createQuery("SELECT b FROM Booking b " +
+                "WHERE b.id = :id AND b.boose.deleted = FALSE and b.customer.deleted = FALSE", Booking.class)
+                .setParameter("id", id);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException exception) {
+            return Optional.empty();
+        }
     }
 
     public void delete(Booking booking) {
