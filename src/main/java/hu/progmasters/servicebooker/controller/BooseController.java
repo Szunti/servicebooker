@@ -32,6 +32,7 @@ import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 @RestController
 @RequestMapping(BooseController.BASE_URL)
 public class BooseController {
+
     public static final String BASE_URL = "/api/services";
 
     private final BooseService booseService;
@@ -68,7 +69,7 @@ public class BooseController {
         return response;
     }
 
-    @Operation(summary = "Get service by id")
+    @Operation(summary = "Find service by id")
     @Parameter(name = "id", example = "1")
     @ApiResponse(responseCode = "200", content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,

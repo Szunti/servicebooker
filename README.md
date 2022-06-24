@@ -33,8 +33,8 @@ Az ügyfelek lefoglalhatnak időpontokat.
 - **/services/{id}/bookings/{id}** [GET, PUT, DELETE]
 - **/customers** [GET, POST]
 - **/customers/{id}** [GET, PUT, DELETE]
-- **/customer/{id}/bookings?service=\<service-id\>&start=\<datetime\>&end=\<datetime\>** [GET]
 - **/customer/{id}/bookings** [POST]
+- **/customer/{id}/bookings?service=\<service-id\>&start=\<datetime\>&end=\<datetime\>** [GET]
 - **/customer/{id}/bookings/{id}** [GET, PUT, DELETE]
 
 ## Szerző
