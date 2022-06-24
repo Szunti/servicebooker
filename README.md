@@ -23,7 +23,7 @@ Az ügyfelek lefoglalhatnak időpontokat.
 ### API végpontok
 
 - **/services** [GET ✔, POST ✔]
-- **/services/{id}** [GET ✔, PUT, DELETE]
+- **/services/{id}** [GET ✔, PUT ✔, DELETE ✔]
 - **/services/{id}/timetable?start=\<datetime\>&end=\<datetime\>&free** [GET ✔]
 - **/services/{id}/weekly-periods** [GET, POST]
 - **/services/{id}/weekly-periods/{id}** [GET, PUT]
