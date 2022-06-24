@@ -24,13 +24,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static hu.progmasters.servicebooker.controller.LogMessages.*;
 import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 
 @Tag(name = "Bookable Services")
-@RestController
 @Slf4j
-@RequestMapping("/api/services")
+@RestController
+@RequestMapping(BooseController.BASE_URL)
 public class BooseController {
+    public static final String BASE_URL = "/api/services";
+
     private final BooseService booseService;
     private final TimeTableService timeTableService;
 
@@ -46,9 +49,9 @@ public class BooseController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BooseInfo save(@Valid @RequestBody BooseCreateCommand command) {
-        log.info("POST request on /api/services,  body: {}", command);
+        log.info(LOG_SAVE, BASE_URL, command);
         BooseInfo response = booseService.save(command);
-        log.info("HTTP status CREATED, response: {}", response);
+        log.info(LOG_RESPONSE, HttpStatus.CREATED, response);
         return response;
     }
 
@@ -59,9 +62,9 @@ public class BooseController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<BooseInfo> findAll() {
-        log.info("GET request on /api/services");
+        log.info(LOG_FINDALL, BASE_URL);
         List<BooseInfo> response = booseService.findAll();
-        log.info("HTTP status OK, response: {}", response);
+        log.info(LOG_RESPONSE, HttpStatus.OK, response);
         return response;
     }
 
@@ -73,9 +76,9 @@ public class BooseController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BooseInfo findById(@PathVariable("id") int id) {
-        log.info("GET request on /api/services/{}", id);
+        log.info(LOG_FINDBYID, BASE_URL, id);
         BooseInfo response = booseService.findById(id);
-        log.info("HTTP status OK, response: {}", response);
+        log.info(LOG_RESPONSE, HttpStatus.OK, response);
         return response;
     }
 
@@ -88,9 +91,9 @@ public class BooseController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BooseInfo update(@PathVariable("id") int id, @Valid @RequestBody BooseUpdateCommand command) {
-        log.info("PUT request on /api/services/{}, body: {}", id, command);
+        log.info(LOG_UPDATE, BASE_URL, id, command);
         BooseInfo response = booseService.update(id, command);
-        log.info("HTTP status OK, response: {}", response);
+        log.info(LOG_RESPONSE, HttpStatus.OK, response);
         return response;
     }
 
@@ -103,9 +106,9 @@ public class BooseController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BooseInfo delete(@PathVariable("id") int id) {
-        log.info("DELETE request on /api/services/{}", id);
+        log.info(LOG_DELETE, BASE_URL, id);
         BooseInfo response = booseService.delete(id);
-        log.info("HTTP status OK, response: {}", response);
+        log.info(LOG_RESPONSE, HttpStatus.OK, response);
         return response;
     }
 
@@ -126,9 +129,9 @@ public class BooseController {
                                               @RequestParam("end") LocalDateTime end,
                                               @RequestParam Map<String, String> switches) {
         boolean free = switches.get("free") != null;
-        log.info("GET request on /api/services/{}/timetable?start={}&end={}{}", id, start, end, free ? "&free" : "");
+        log.info(LOG_GET + "/{}/timetable?start={}&end={}{}", BASE_URL, id, start, end, free ? "&free" : "");
         List<TablePeriodInfo> response = timeTableService.assembleTimeTableForBoose(id, interval(start, end), free);
-        log.info("HTTP status OK, response: {}", response);
+        log.info(LOG_RESPONSE, HttpStatus.OK, response);
         return response;
     }
 }
