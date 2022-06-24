@@ -5,7 +5,7 @@ import hu.progmasters.servicebooker.domain.entity.SpecificPeriod;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodInfo;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodUpdateCommand;
-import hu.progmasters.servicebooker.exceptionhandling.specificperiod.NoSuchSpecificPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.OverlappingSpecificPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotForBooseException;
 import hu.progmasters.servicebooker.repository.SpecificPeriodRepository;
@@ -83,7 +83,7 @@ public class SpecificPeriodService {
         // TODO maybe getReference is enough
         Boose boose = booseService.getFromIdOrThrow(booseId);
         SpecificPeriod specificPeriod = repository.findById(id).orElseThrow(
-                () -> new NoSuchSpecificPeriodException(id)
+                () -> new SpecificPeriodNotFoundException(id)
         );
         if (specificPeriod.getBoose() != boose) {
             throw new SpecificPeriodNotForBooseException(id, booseId);

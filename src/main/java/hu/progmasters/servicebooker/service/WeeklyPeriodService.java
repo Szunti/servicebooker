@@ -5,7 +5,7 @@ import hu.progmasters.servicebooker.domain.entity.WeeklyPeriod;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodInfo;
 import hu.progmasters.servicebooker.dto.weeklyperiod.WeeklyPeriodUpdateCommand;
-import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.NoSuchWeeklyPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.WeeklyPeriodNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.OverlappingWeeklyPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.WeeklyPeriodNotForBooseException;
 import hu.progmasters.servicebooker.repository.WeeklyPeriodRepository;
@@ -68,7 +68,7 @@ public class WeeklyPeriodService {
         // TODO maybe getReference is enough
         Boose boose = booseService.getFromIdOrThrow(booseId);
         WeeklyPeriod weeklyPeriod = repository.findById(id).orElseThrow(
-                () -> new NoSuchWeeklyPeriodException(id)
+                () -> new WeeklyPeriodNotFoundException(id)
         );
         if (weeklyPeriod.getBoose() != boose) {
             throw new WeeklyPeriodNotForBooseException(id, booseId);

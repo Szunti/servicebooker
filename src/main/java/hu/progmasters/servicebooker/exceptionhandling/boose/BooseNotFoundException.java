@@ -1,16 +1,15 @@
-package hu.progmasters.servicebooker.exceptionhandling.controller;
+package hu.progmasters.servicebooker.exceptionhandling.boose;
 
 import lombok.Getter;
 
 @Getter
-public class BooseNotFoundException extends ControllerException {
+public class BooseNotFoundException extends RuntimeException {
+
+    private final int id;
 
     public BooseNotFoundException(int id) {
         super(defaultMessage(id));
-    }
-
-    public BooseNotFoundException(Throwable cause) {
-        super(cause);
+        this.id = id;
     }
 
     private static String defaultMessage(int id) {

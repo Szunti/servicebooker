@@ -3,11 +3,11 @@ package hu.progmasters.servicebooker.exceptionhandling.weeklyperiod;
 import lombok.Getter;
 
 @Getter
-public class NoSuchWeeklyPeriodException extends RuntimeException {
+public class WeeklyPeriodNotFoundException extends RuntimeException {
 
     private final int id;
 
-    public NoSuchWeeklyPeriodException(int id) {
+    public WeeklyPeriodNotFoundException(int id) {
         super(defaultMessage(id));
         this.id = id;
     }

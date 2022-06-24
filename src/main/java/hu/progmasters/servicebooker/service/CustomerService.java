@@ -4,7 +4,7 @@ import hu.progmasters.servicebooker.domain.entity.Customer;
 import hu.progmasters.servicebooker.dto.customer.CustomerCreateCommand;
 import hu.progmasters.servicebooker.dto.customer.CustomerInfo;
 import hu.progmasters.servicebooker.dto.customer.CustomerUpdateCommand;
-import hu.progmasters.servicebooker.exceptionhandling.customer.NoSuchCustomerException;
+import hu.progmasters.servicebooker.exceptionhandling.customer.CustomerNotFoundException;
 import hu.progmasters.servicebooker.repository.CustomerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class CustomerService {
 
     public Customer getFromIdOrThrow(int id) {
         return repository.findById(id).orElseThrow(
-                () -> new NoSuchCustomerException(id)
+                () -> new CustomerNotFoundException(id)
         );
     }
 

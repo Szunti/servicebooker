@@ -2,9 +2,6 @@ package hu.progmasters.servicebooker.controller;
 
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodInfo;
-import hu.progmasters.servicebooker.exceptionhandling.specificperiod.NoSuchSpecificPeriodException;
-import hu.progmasters.servicebooker.exceptionhandling.controller.SpecificPeriodNotFoundException;
-import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotForBooseException;
 import hu.progmasters.servicebooker.service.SpecificPeriodService;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,10 +39,6 @@ public class SpecificPeriodController {
     @GetMapping("/{id}")
     public SpecificPeriodInfo findById(@PathVariable("booseId") int booseId,
                                        @PathVariable("id") int id) {
-        try {
-            return specificPeriodService.findForBooseById(booseId, id);
-        } catch (NoSuchSpecificPeriodException | SpecificPeriodNotForBooseException e) {
-            throw new SpecificPeriodNotFoundException(e);
-        }
+        return specificPeriodService.findForBooseById(booseId, id);
     }
 }

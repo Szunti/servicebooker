@@ -3,13 +3,13 @@ package hu.progmasters.servicebooker.exceptionhandling;
 import hu.progmasters.servicebooker.dto.error.SimpleError;
 import hu.progmasters.servicebooker.dto.error.ValidationError;
 import hu.progmasters.servicebooker.exceptionhandling.booking.*;
-import hu.progmasters.servicebooker.exceptionhandling.boose.NoSuchBooseException;
-import hu.progmasters.servicebooker.exceptionhandling.controller.*;
-import hu.progmasters.servicebooker.exceptionhandling.customer.NoSuchCustomerException;
-import hu.progmasters.servicebooker.exceptionhandling.specificperiod.NoSuchSpecificPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.booking.BookingNotFoundException;
+import hu.progmasters.servicebooker.exceptionhandling.boose.BooseNotFoundException;
+import hu.progmasters.servicebooker.exceptionhandling.customer.CustomerNotFoundException;
+import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.OverlappingSpecificPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.specificperiod.SpecificPeriodNotForBooseException;
-import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.NoSuchWeeklyPeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.WeeklyPeriodNotFoundException;
 import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.OverlappingWeeklyPeriodException;
 import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.WeeklyPeriodNotForBooseException;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -92,11 +92,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            NoSuchBooseException.class,
-            NoSuchWeeklyPeriodException.class,
-            NoSuchSpecificPeriodException.class,
-            NoSuchCustomerException.class,
-            NoSuchBookingException.class,
             WeeklyPeriodNotForBooseException.class,
             SpecificPeriodNotForBooseException.class,
             OverlappingWeeklyPeriodException.class,

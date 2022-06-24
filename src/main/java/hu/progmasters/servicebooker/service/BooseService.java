@@ -4,7 +4,7 @@ import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.dto.boose.BooseCreateCommand;
 import hu.progmasters.servicebooker.dto.boose.BooseInfo;
 import hu.progmasters.servicebooker.dto.boose.BooseUpdateCommand;
-import hu.progmasters.servicebooker.exceptionhandling.boose.NoSuchBooseException;
+import hu.progmasters.servicebooker.exceptionhandling.boose.BooseNotFoundException;
 import hu.progmasters.servicebooker.repository.BooseRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class BooseService {
 
     public Boose getFromIdOrThrow(int id) {
         return repository.findById(id).orElseThrow(
-                () -> new NoSuchBooseException(id)
+                () -> new BooseNotFoundException(id)
         );
     }
 

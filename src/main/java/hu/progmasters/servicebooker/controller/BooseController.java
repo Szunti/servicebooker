@@ -4,8 +4,6 @@ import hu.progmasters.servicebooker.dto.boose.BooseCreateCommand;
 import hu.progmasters.servicebooker.dto.boose.BooseInfo;
 import hu.progmasters.servicebooker.dto.boose.BooseUpdateCommand;
 import hu.progmasters.servicebooker.dto.boose.TablePeriodInfo;
-import hu.progmasters.servicebooker.exceptionhandling.boose.NoSuchBooseException;
-import hu.progmasters.servicebooker.exceptionhandling.controller.BooseNotFoundException;
 import hu.progmasters.servicebooker.service.BooseService;
 import hu.progmasters.servicebooker.service.TimeTableService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -76,12 +74,7 @@ public class BooseController {
     @ResponseStatus(HttpStatus.OK)
     public BooseInfo findById(@PathVariable("id") int id) {
         log.info("GET request on /api/services/{}", id);
-        BooseInfo response;
-        try {
-            response = booseService.findById(id);
-        } catch (NoSuchBooseException exception) {
-            throw new BooseNotFoundException(exception);
-        }
+        BooseInfo response = booseService.findById(id);
         log.info("HTTP status OK, response: {}", response);
         return response;
     }
@@ -96,12 +89,7 @@ public class BooseController {
     @ResponseStatus(HttpStatus.OK)
     public BooseInfo update(@PathVariable("id") int id, @Valid @RequestBody BooseUpdateCommand command) {
         log.info("PUT request on /api/services/{}, body: {}", id, command);
-        BooseInfo response;
-        try {
-            response = booseService.update(id, command);
-        } catch (NoSuchBooseException exception) {
-            throw new BooseNotFoundException(exception);
-        }
+        BooseInfo response = booseService.update(id, command);
         log.info("HTTP status OK, response: {}", response);
         return response;
     }
@@ -116,12 +104,7 @@ public class BooseController {
     @ResponseStatus(HttpStatus.OK)
     public BooseInfo delete(@PathVariable("id") int id) {
         log.info("DELETE request on /api/services/{}", id);
-        BooseInfo response;
-        try {
-            response = booseService.delete(id);
-        } catch (NoSuchBooseException exception) {
-            throw new BooseNotFoundException(exception);
-        }
+        BooseInfo response = booseService.delete(id);
         log.info("HTTP status OK, response: {}", response);
         return response;
     }
@@ -144,12 +127,7 @@ public class BooseController {
                                               @RequestParam Map<String, String> switches) {
         boolean free = switches.get("free") != null;
         log.info("GET request on /api/services/{}/timetable?start={}&end={}{}", id, start, end, free ? "&free" : "");
-        List<TablePeriodInfo> response;
-        try {
-            response = timeTableService.assembleTimeTableForBoose(id, interval(start, end), free);
-        } catch (NoSuchBooseException exception) {
-            throw new BooseNotFoundException(exception);
-        }
+        List<TablePeriodInfo> response = timeTableService.assembleTimeTableForBoose(id, interval(start, end), free);
         log.info("HTTP status OK, response: {}", response);
         return response;
     }

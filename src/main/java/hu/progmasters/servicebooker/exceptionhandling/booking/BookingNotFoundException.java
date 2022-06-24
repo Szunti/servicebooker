@@ -1,16 +1,15 @@
-package hu.progmasters.servicebooker.exceptionhandling.controller;
+package hu.progmasters.servicebooker.exceptionhandling.booking;
 
 import lombok.Getter;
 
 @Getter
-public class BookingNotFoundException extends ControllerException {
+public class BookingNotFoundException extends RuntimeException {
+
+    private final int id;
 
     public BookingNotFoundException(int id) {
         super(defaultMessage(id));
-    }
-
-    public BookingNotFoundException(Throwable cause) {
-        super(cause);
+        this.id = id;
     }
 
     private static String defaultMessage(int id) {

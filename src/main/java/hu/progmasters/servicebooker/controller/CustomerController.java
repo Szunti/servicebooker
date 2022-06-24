@@ -2,8 +2,6 @@ package hu.progmasters.servicebooker.controller;
 
 import hu.progmasters.servicebooker.dto.customer.CustomerCreateCommand;
 import hu.progmasters.servicebooker.dto.customer.CustomerInfo;
-import hu.progmasters.servicebooker.exceptionhandling.boose.NoSuchBooseException;
-import hu.progmasters.servicebooker.exceptionhandling.controller.CustomerNotFoundException;
 import hu.progmasters.servicebooker.service.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -36,10 +34,6 @@ public class CustomerController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerInfo findById(@PathVariable("id") int id) {
-        try {
-            return customerService.findById(id);
-        } catch (NoSuchBooseException exception) {
-            throw new CustomerNotFoundException(exception);
-        }
+        return customerService.findById(id);
     }
 }

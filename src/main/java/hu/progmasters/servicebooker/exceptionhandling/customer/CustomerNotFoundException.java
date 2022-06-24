@@ -1,16 +1,15 @@
-package hu.progmasters.servicebooker.exceptionhandling.controller;
+package hu.progmasters.servicebooker.exceptionhandling.customer;
 
 import lombok.Getter;
 
 @Getter
-public class CustomerNotFoundException extends ControllerException {
+public class CustomerNotFoundException extends RuntimeException {
+
+    private final int id;
 
     public CustomerNotFoundException(int id) {
         super(defaultMessage(id));
-    }
-
-    public CustomerNotFoundException(Throwable cause) {
-        super(cause);
+        this.id = id;
     }
 
     private static String defaultMessage(int id) {

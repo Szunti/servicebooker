@@ -7,7 +7,7 @@ import hu.progmasters.servicebooker.dto.booking.BookingInfo;
 import hu.progmasters.servicebooker.dto.booking.BookingUpdateCommand;
 import hu.progmasters.servicebooker.exceptionhandling.booking.BookingNotByCustomerException;
 import hu.progmasters.servicebooker.exceptionhandling.booking.BookingNotForBooseException;
-import hu.progmasters.servicebooker.exceptionhandling.booking.NoSuchBookingException;
+import hu.progmasters.servicebooker.exceptionhandling.booking.BookingNotFoundException;
 import hu.progmasters.servicebooker.repository.BookingRepository;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import hu.progmasters.servicebooker.validation.DateTimeBoundChecker;
@@ -55,7 +55,7 @@ public class BookingService {
 
     private Booking getByIdOrThrow(int id) {
         return repository.findById(id).orElseThrow(
-                () -> new NoSuchBookingException(id)
+                () -> new BookingNotFoundException(id)
         );
     }
 
