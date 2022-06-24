@@ -26,8 +26,4 @@ public class BookingCreateCommand {
     @Schema(example = "1")
     @NotNull
     private int booseId;
-
-    @Schema(example = "2")
-    @NotNull
-    private int customerId;
 }

@@ -8,6 +8,8 @@ import hu.progmasters.servicebooker.dto.booking.BookingCreateCommand;
 import hu.progmasters.servicebooker.dto.booking.BookingInfo;
 import hu.progmasters.servicebooker.exceptionhandling.booking.AlreadyBookedException;
 import hu.progmasters.servicebooker.exceptionhandling.booking.BookingNotAvailablePeriodException;
+import hu.progmasters.servicebooker.exceptionhandling.booking.NoSuchBooseException;
+import hu.progmasters.servicebooker.exceptionhandling.boose.BooseNotFoundException;
 import hu.progmasters.servicebooker.repository.BookingRepository;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import hu.progmasters.servicebooker.validation.DateTimeBoundChecker;
@@ -48,14 +50,19 @@ public class BookerService {
     }
 
     @Transactional
-    public BookingInfo save(BookingCreateCommand command) {
+    public BookingInfo save(int customerId, BookingCreateCommand command) {
         Interval<LocalDateTime> interval = interval(command.getStart(), command.getEnd());
         dateTimeBoundChecker.checkInBound(interval);
-        Boose boose = booseService.getFromIdOrThrow(command.getBooseId());
-        Customer customer = customerService.getFromIdOrThrow(command.getCustomerId());
+        Customer customer = customerService.getFromIdOrThrow(customerId);
+        Boose boose;
+        try {
+            boose = booseService.getFromIdOrThrow(command.getBooseId());
+        } catch (BooseNotFoundException exception) {
+            throw new NoSuchBooseException(exception);
+        }
         Booking toSave = modelMapper.map(command, Booking.class);
-        toSave.setBoose(boose);
         toSave.setCustomer(customer);
+        toSave.setBoose(boose);
 
         booseService.lockForUpdate(boose);
         // the part of the timeTable where periods intersect the booking

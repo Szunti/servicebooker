@@ -29,11 +29,12 @@ Az ügyfelek lefoglalhatnak időpontokat.
 - **/services/{id}/weekly-periods/{id}** [GET, PUT]
 - **/services/{id}/specific-periods?start=\<datetime\>&end=\<datetime\>&bookable=true** [GET, POST]
 - **/services/{id}/specific-periods/{id}** [GET, PUT]
-- **/services/{id}/bookings?customer=\<customer-id\>&start=\<datetime\>&end=\<datetime\>** [GET, POST]
+- **/services/{id}/bookings?customer=\<customer-id\>&start=\<datetime\>&end=\<datetime\>** [GET]
 - **/services/{id}/bookings/{id}** [GET, PUT, DELETE]
 - **/customers** [GET, POST]
 - **/customers/{id}** [GET, PUT, DELETE]
 - **/customer/{id}/bookings?service=\<service-id\>&start=\<datetime\>&end=\<datetime\>** [GET]
+- **/customer/{id}/bookings** [POST]
 - **/customer/{id}/bookings/{id}** [GET, PUT, DELETE]
 
 ## Szerző

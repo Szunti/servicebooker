@@ -101,7 +101,8 @@ public class GlobalExceptionHandler {
             BookingNotForBooseException.class,
             BookingNotByCustomerException.class,
             BookingNotAvailablePeriodException.class,
-            AlreadyBookedException.class
+            AlreadyBookedException.class,
+            NoSuchBooseException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<SimpleError> handleCommonExceptions(Exception exception) {
