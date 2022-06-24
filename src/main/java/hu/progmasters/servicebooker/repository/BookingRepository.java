@@ -33,8 +33,8 @@ public class BookingRepository {
     public List<Booking> findAllOrderedFor(Boose boose, Customer customer, Interval<LocalDateTime> interval,
                                            boolean lock) {
         TypedQuery<Booking> query = entityManager.createQuery("SELECT b FROM Booking b " +
-                        "WHERE (b.boose IS NULL OR b.boose = :boose) " +
-                        "  AND (b.customer IS NULL OR b.customer = :customer) " +
+                        "WHERE ((:boose IS NULL AND b.boose.deleted = FALSE) OR b.boose = :boose) " +
+                        "  AND ((:customer IS NULL AND b.customer.deleted = FALSE) OR b.customer = :customer) " +
                         "  AND (b.start < :intervalEnd) AND (b.end > :intervalStart) " +
                         "ORDER BY b.start", Booking.class)
                 .setParameter("boose", boose)
