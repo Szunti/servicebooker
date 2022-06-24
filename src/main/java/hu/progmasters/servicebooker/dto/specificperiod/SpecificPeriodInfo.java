@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class SpecificPeriodInfo {
-    @Schema(example = "1")
+    @Schema(example = "3")
     private Integer id;
 
     @Schema(type = "string", example = "2022-06-22T08:00")

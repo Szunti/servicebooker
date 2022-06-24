@@ -63,7 +63,7 @@ public class BooseController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<BooseInfo> findAll() {
-        log.info(LOG_FINDALL, BASE_URL);
+        log.info(LOG_GET, BASE_URL);
         List<BooseInfo> response = booseService.findAll();
         log.info(LOG_RESPONSE, HttpStatus.OK, response);
         return response;
@@ -87,9 +87,7 @@ public class BooseController {
     @Parameter(name = "id", example = "1")
     @ApiResponse(responseCode = "200", content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = BooseInfo.class)
-    ))
-    @PutMapping("/{id}")
+            schema = @Schema(implementation = BooseInfo.class))) @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BooseInfo update(@PathVariable("id") int id, @Valid @RequestBody BooseUpdateCommand command) {
         log.info(LOG_UPDATE, BASE_URL, id, command);
@@ -102,9 +100,7 @@ public class BooseController {
     @Parameter(name = "id", example = "1")
     @ApiResponse(responseCode = "200", content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = BooseInfo.class)
-    ))
-    @DeleteMapping("/{id}")
+            schema = @Schema(implementation = BooseInfo.class))) @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BooseInfo delete(@PathVariable("id") int id) {
         log.info(LOG_DELETE, BASE_URL, id);
@@ -121,9 +117,7 @@ public class BooseController {
     @Parameter(name = "switches", hidden = true)
     @ApiResponse(responseCode = "200", content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            array = @ArraySchema(schema = @Schema(implementation = TablePeriodInfo.class))
-    ))
-    @GetMapping("/{id}/timetable")
+            array = @ArraySchema(schema = @Schema(implementation = TablePeriodInfo.class)))) @GetMapping("/{id}/timetable")
     @ResponseStatus(HttpStatus.OK)
     public List<TablePeriodInfo> getTimeTable(@PathVariable("id") int id,
                                               @RequestParam("start") LocalDateTime start,

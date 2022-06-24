@@ -53,7 +53,7 @@ public class CustomerController {
             array = @ArraySchema(schema = @Schema(implementation = CustomerInfo.class)))) @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<CustomerInfo> findAll() {
-        log.info(LOG_FINDALL, BASE_URL);
+        log.info(LOG_GET, BASE_URL);
         List<CustomerInfo> response = customerService.findAll();
         log.info(LOG_RESPONSE, HttpStatus.OK, response);
         return response;

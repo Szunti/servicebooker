@@ -17,9 +17,9 @@ import org.springframework.context.annotation.Bean;
                 description = "API for:\n" +
                         "- registering services\n" +
                         "- adding bookable periods to those services\n" +
-                        "- read a timetable for the services\n" +
-                        "- register customers\n" +
-                        "- create bookings for the services by the customers\n",
+                        "- reading a timetable for the services\n" +
+                        "- registering customers\n" +
+                        "- creating bookings for the services by the customers\n",
                 version = "1.0.0"
         )
 )

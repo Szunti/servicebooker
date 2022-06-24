@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class WeeklyPeriodInfo {
-    @Schema(example = "1")
+    @Schema(example = "4")
     private Integer id;
 
     @Schema(example = "Mon 08:00")
