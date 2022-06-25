@@ -117,10 +117,10 @@ class WeeklyPeriodServiceTest {
 
     @Test
     void findForBooseById_notForBoose() {
-        Boose firstBoose = exampleBoose();
-        Boose secondBoose = anotherBoose();
-        WeeklyPeriod weeklyPeriod = exampleSavedWeeklyPeriod(firstBoose);
-        when(booseService.getFromIdOrThrow(2)).thenReturn(secondBoose);
+        Boose booseOfPeriod = exampleBoose();
+        Boose anotherBoose = anotherBoose();
+        WeeklyPeriod weeklyPeriod = exampleSavedWeeklyPeriod(booseOfPeriod);
+        when(booseService.getFromIdOrThrow(2)).thenReturn(anotherBoose);
         when(weeklyPeriodRepository.findById(3)).thenReturn(Optional.of(weeklyPeriod));
 
         assertThatExceptionOfType(WeeklyPeriodNotForBooseException.class).isThrownBy(() -> {
@@ -158,10 +158,10 @@ class WeeklyPeriodServiceTest {
     @Test
     void update_notForBoose() {
         WeeklyPeriodUpdateCommand command = exampleWeeklyPeriodUpdateCommand();
-        Boose firstBoose = exampleBoose();
-        Boose secondBoose = anotherBoose();
-        WeeklyPeriod weeklyPeriod = exampleSavedWeeklyPeriod(firstBoose);
-        when(booseService.getFromIdOrThrow(2)).thenReturn(secondBoose);
+        Boose booseOfPeriod = exampleBoose();
+        Boose anotherBoose = anotherBoose();
+        WeeklyPeriod weeklyPeriod = exampleSavedWeeklyPeriod(booseOfPeriod);
+        when(booseService.getFromIdOrThrow(2)).thenReturn(anotherBoose);
         when(weeklyPeriodRepository.findById(3)).thenReturn(Optional.of(weeklyPeriod));
 
         assertThatExceptionOfType(WeeklyPeriodNotForBooseException.class).isThrownBy(() -> {

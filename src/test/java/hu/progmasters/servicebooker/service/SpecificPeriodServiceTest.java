@@ -131,10 +131,10 @@ class SpecificPeriodServiceTest {
 
     @Test
     void findForBooseById_notForBoose() {
-        Boose firstBoose = exampleBoose();
-        Boose secondBoose = anotherBoose();
-        SpecificPeriod specificPeriod = exampleSavedSpecificPeriod(firstBoose);
-        when(booseService.getFromIdOrThrow(2)).thenReturn(secondBoose);
+        Boose booseOfPeriod = exampleBoose();
+        Boose anotherBoose = anotherBoose();
+        SpecificPeriod specificPeriod = exampleSavedSpecificPeriod(booseOfPeriod);
+        when(booseService.getFromIdOrThrow(2)).thenReturn(anotherBoose);
         when(specificPeriodRepository.findById(3)).thenReturn(Optional.of(specificPeriod));
 
         assertThatExceptionOfType(SpecificPeriodNotForBooseException.class).isThrownBy(() -> {
@@ -172,10 +172,10 @@ class SpecificPeriodServiceTest {
     @Test
     void update_notForBoose() {
         SpecificPeriodUpdateCommand command = exampleSpecificPeriodUpdateCommand();
-        Boose firstBoose = exampleBoose();
-        Boose secondBoose = anotherBoose();
-        SpecificPeriod specificPeriod = exampleSavedSpecificPeriod(firstBoose);
-        when(booseService.getFromIdOrThrow(2)).thenReturn(secondBoose);
+        Boose booseOfPeriod = exampleBoose();
+        Boose anotherBoose = anotherBoose();
+        SpecificPeriod specificPeriod = exampleSavedSpecificPeriod(booseOfPeriod);
+        when(booseService.getFromIdOrThrow(2)).thenReturn(anotherBoose);
         when(specificPeriodRepository.findById(3)).thenReturn(Optional.of(specificPeriod));
 
         assertThatExceptionOfType(SpecificPeriodNotForBooseException.class).isThrownBy(() -> {
