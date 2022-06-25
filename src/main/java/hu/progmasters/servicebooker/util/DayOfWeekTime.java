@@ -16,7 +16,7 @@ public class DayOfWeekTime implements TemporalAccessor {
     public static final int SECONDS_PER_DAY = 24 * 60 * 60;
     public static final int SECONDS_PER_WEEK = 7 * SECONDS_PER_DAY;
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE HH:mm:ss");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE HH:mm[:ss]");
 
     public static final Comparator<DayOfWeekTime> SAME_WEEK_COMPARATOR =
             Comparator.comparing(DayOfWeekTime::toSecondsFromWeekStart);

@@ -136,13 +136,6 @@ class CustomerServiceTest {
         return command;
     }
 
-    CustomerUpdateCommand exampleCustomerUpdateCommand() {
-        CustomerUpdateCommand command = new CustomerUpdateCommand();
-        command.setName("Joseph Smith");
-        command.setEmail("joseph.smith@gmail.com");
-        return command;
-    }
-
     Customer exampleNewCustomer() {
         Customer customer = new Customer();
         customer.setId(null);
@@ -173,6 +166,13 @@ class CustomerServiceTest {
         customer.setEmail("alice.tailor@gmail.com");
         customer.setDeleted(false);
         return customer;
+    }
+
+    CustomerUpdateCommand exampleCustomerUpdateCommand() {
+        CustomerUpdateCommand command = new CustomerUpdateCommand();
+        command.setName("Joseph Smith");
+        command.setEmail("joseph.smith@gmail.com");
+        return command;
     }
 
     CustomerInfo updatedCustomerInfo() {
