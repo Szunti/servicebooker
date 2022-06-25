@@ -13,6 +13,6 @@ public class BooseInfo {
     @Schema(example = "Hairdresser Lisa")
     private String name;
 
-    @Schema(example = "I have a small shop on the Pearl street.")
+    @Schema(example = "I have a small shop on the Pearl Street.")
     private String description;
 }

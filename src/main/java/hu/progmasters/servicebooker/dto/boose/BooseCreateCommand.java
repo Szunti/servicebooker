@@ -14,6 +14,6 @@ public class BooseCreateCommand {
     @NotBlank
     private String name;
 
-    @Schema(example = "I have a small shop on the Pearl street.")
+    @Schema(example = "I have a small shop on the Pearl Street.")
     private String description;
 }

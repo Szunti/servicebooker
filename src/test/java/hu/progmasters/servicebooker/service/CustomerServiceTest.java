@@ -39,21 +39,21 @@ class CustomerServiceTest {
     @Test
     void save() {
         CustomerCreateCommand command = exampleCustomerCreateCommand();
-        Customer customer = exampleNewCustomer();
+        Customer newCustomer = exampleNewCustomer();
         Customer savedCustomer = exampleSavedCustomer();
-        when(customerRepository.save(customer)).thenReturn(savedCustomer);
+        when(customerRepository.save(newCustomer)).thenReturn(savedCustomer);
 
         CustomerInfo customerInfo = customerService.save(command);
 
-        verify(customerRepository).save(customer);
+        verify(customerRepository).save(newCustomer);
         CustomerInfo exampleCustomerInfo = exampleCustomerInfo();
         assertThat(customerInfo).isEqualTo(exampleCustomerInfo);
     }
 
     @Test
     void findById() {
-        Customer savedCustomer = exampleSavedCustomer();
-        when(customerRepository.findById(1)).thenReturn(Optional.of(savedCustomer));
+        Customer customer = exampleSavedCustomer();
+        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
 
         CustomerInfo customerInfo = customerService.findById(1);
 
@@ -92,6 +92,7 @@ class CustomerServiceTest {
 
         CustomerInfo customerInfo = customerService.update(1, command);
 
+        assertThat(customer.getName()).isEqualTo("Joseph Smith");
         CustomerInfo updatedInfo = updatedCustomerInfo();
         assertThat(customerInfo).isEqualTo(updatedInfo);
     }
