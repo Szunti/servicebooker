@@ -10,7 +10,8 @@ import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.OverlappingWe
 import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.WeeklyPeriodNotForBooseException;
 import hu.progmasters.servicebooker.exceptionhandling.weeklyperiod.WeeklyPeriodNotFoundException;
 import hu.progmasters.servicebooker.repository.WeeklyPeriodRepository;
-import hu.progmasters.servicebooker.util.DayOfWeekTime;
+import hu.progmasters.servicebooker.service.examples.BooseExamples;
+import hu.progmasters.servicebooker.service.examples.WeeklyPeriodExamples;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,199 +47,128 @@ class WeeklyPeriodServiceTest {
 
     @Test
     void addForBoose() {
-        WeeklyPeriodCreateCommand command = exampleWeeklyPeriodCreateCommand();
-        Boose boose = exampleBoose();
-        WeeklyPeriod exampleNewWeeklyPeriod = exampleNewWeeklyPeriod(boose);
-        WeeklyPeriod exampleSavedWeeklyPeriod = exampleSavedWeeklyPeriod(boose);
-        when(booseService.getFromIdOrThrow(1)).thenReturn(boose);
-        when(weeklyPeriodRepository.save(exampleNewWeeklyPeriod)).thenReturn(exampleSavedWeeklyPeriod);
+        WeeklyPeriodCreateCommand command = WeeklyPeriodExamples.mondayCreateCommand();
+        Boose boose = BooseExamples.hairdresser();
+        WeeklyPeriod newWeeklyPeriod = WeeklyPeriodExamples.mondayNew(boose);
+        WeeklyPeriod savedWeeklyPeriod = WeeklyPeriodExamples.monday(boose);
+        when(booseService.getFromIdOrThrow(BooseExamples.HAIRDRESSER_ID)).thenReturn(boose);
+        when(weeklyPeriodRepository.save(newWeeklyPeriod)).thenReturn(savedWeeklyPeriod);
 
-        WeeklyPeriodInfo weeklyPeriodInfo = weeklyPeriodService.addForBoose(1, command);
+        WeeklyPeriodInfo weeklyPeriodInfo = weeklyPeriodService.addForBoose(BooseExamples.HAIRDRESSER_ID, command);
 
-        verify(weeklyPeriodRepository).save(exampleNewWeeklyPeriod);
-        WeeklyPeriodInfo exampleWeeklyPeriodInfo = exampleWeeklyPeriodInfo();
-        assertThat(weeklyPeriodInfo).isEqualTo(exampleWeeklyPeriodInfo);
+        verify(weeklyPeriodRepository).save(newWeeklyPeriod);
+        WeeklyPeriodInfo expectedWeeklyPeriodInfo = WeeklyPeriodExamples.mondayInfo();
+        assertThat(weeklyPeriodInfo).isEqualTo(expectedWeeklyPeriodInfo);
     }
 
     @Test
     void addForBoose_overlapping() {
-        WeeklyPeriodCreateCommand command = exampleWeeklyPeriodCreateCommand();
-        Boose boose = exampleBoose();
-        WeeklyPeriod exampleNewWeeklyPeriod = exampleNewWeeklyPeriod(boose);
-        WeeklyPeriod exampleSavedWeeklyPeriod = exampleSavedWeeklyPeriod(boose);
-        when(booseService.getFromIdOrThrow(1)).thenReturn(boose);
-        when(weeklyPeriodRepository.findOverlappingPeriods(boose, exampleNewWeeklyPeriod))
-                .thenReturn(List.of(exampleSavedWeeklyPeriod));
+        WeeklyPeriodCreateCommand command = WeeklyPeriodExamples.mondayCreateCommand();
+        Boose boose = BooseExamples.hairdresser();
+        WeeklyPeriod newWeeklyPeriod = WeeklyPeriodExamples.mondayNew(boose);
+        WeeklyPeriod savedWeeklyPeriod = WeeklyPeriodExamples.monday(boose);
+        when(booseService.getFromIdOrThrow(BooseExamples.HAIRDRESSER_ID)).thenReturn(boose);
+        when(weeklyPeriodRepository.findOverlappingPeriods(boose, newWeeklyPeriod))
+                .thenReturn(List.of(savedWeeklyPeriod));
 
         assertThatExceptionOfType(OverlappingWeeklyPeriodException.class).isThrownBy(() -> {
-            weeklyPeriodService.addForBoose(1, command);
+            weeklyPeriodService.addForBoose(BooseExamples.HAIRDRESSER_ID, command);
         });
     }
 
     @Test
     void findAllForBoose() {
-        Boose boose = exampleBoose();
-        WeeklyPeriod first = exampleSavedWeeklyPeriod(boose);
-        WeeklyPeriod second = anotherSavedWeeklyPeriod(boose);
-        when(booseService.getFromIdOrThrow(1)).thenReturn(boose);
+        Boose boose = BooseExamples.hairdresser();
+        WeeklyPeriod first = WeeklyPeriodExamples.monday(boose);
+        WeeklyPeriod second = WeeklyPeriodExamples.wednesday(boose);
+        when(booseService.getFromIdOrThrow(BooseExamples.HAIRDRESSER_ID)).thenReturn(boose);
         when(weeklyPeriodRepository.findAllOrderedFor(boose, false)).thenReturn(List.of(first, second));
 
-        List<WeeklyPeriodInfo> weeklyPeriodInfos = weeklyPeriodService.findAllForBoose(1);
+        List<WeeklyPeriodInfo> weeklyPeriodInfos = weeklyPeriodService.findAllForBoose(BooseExamples.HAIRDRESSER_ID);
 
-        WeeklyPeriodInfo exampleWeeklyPeriodInfo = exampleWeeklyPeriodInfo();
+        WeeklyPeriodInfo firstWeeklyPeriodInfo = WeeklyPeriodExamples.mondayInfo();
         assertThat(weeklyPeriodInfos).hasSize(2)
                 .first()
-                .isEqualTo(exampleWeeklyPeriodInfo);
+                .isEqualTo(firstWeeklyPeriodInfo);
     }
 
     @Test
     void findForBooseById() {
-        Boose boose = exampleBoose();
-        WeeklyPeriod weeklyPeriod = exampleSavedWeeklyPeriod(boose);
-        when(booseService.getFromIdOrThrow(1)).thenReturn(boose);
-        when(weeklyPeriodRepository.findById(3)).thenReturn(Optional.of(weeklyPeriod));
+        Boose boose = BooseExamples.hairdresser();
+        WeeklyPeriod weeklyPeriod = WeeklyPeriodExamples.monday(boose);
+        when(booseService.getFromIdOrThrow(BooseExamples.HAIRDRESSER_ID)).thenReturn(boose);
+        when(weeklyPeriodRepository.findById(WeeklyPeriodExamples.MONDAY_ID)).thenReturn(Optional.of(weeklyPeriod));
 
-        WeeklyPeriodInfo weeklyPeriodInfo = weeklyPeriodService.findForBooseById(1, 3);
+        WeeklyPeriodInfo weeklyPeriodInfo =
+                weeklyPeriodService.findForBooseById(BooseExamples.HAIRDRESSER_ID, WeeklyPeriodExamples.MONDAY_ID);
 
-        WeeklyPeriodInfo exampleWeeklyPeriodInfo = exampleWeeklyPeriodInfo();
-        assertThat(weeklyPeriodInfo).isEqualTo(exampleWeeklyPeriodInfo);
+        WeeklyPeriodInfo expectedWeeklyPeriodInfo = WeeklyPeriodExamples.mondayInfo();
+        assertThat(weeklyPeriodInfo).isEqualTo(expectedWeeklyPeriodInfo);
     }
 
     @Test
     void findForBooseById_notFound() {
-        Boose boose = exampleBoose();
-        when(booseService.getFromIdOrThrow(1)).thenReturn(boose);
-        when(weeklyPeriodRepository.findById(3)).thenReturn(Optional.empty());
+        Boose boose = BooseExamples.hairdresser();
+        when(booseService.getFromIdOrThrow(BooseExamples.HAIRDRESSER_ID)).thenReturn(boose);
+        when(weeklyPeriodRepository.findById(32)).thenReturn(Optional.empty());
 
         assertThatExceptionOfType(WeeklyPeriodNotFoundException.class).isThrownBy(() -> {
-            weeklyPeriodService.findForBooseById(1, 3);
+            weeklyPeriodService.findForBooseById(BooseExamples.HAIRDRESSER_ID, 32);
         });
     }
 
     @Test
     void findForBooseById_notForBoose() {
-        Boose booseOfPeriod = exampleBoose();
-        Boose anotherBoose = anotherBoose();
-        WeeklyPeriod weeklyPeriod = exampleSavedWeeklyPeriod(booseOfPeriod);
-        when(booseService.getFromIdOrThrow(2)).thenReturn(anotherBoose);
-        when(weeklyPeriodRepository.findById(3)).thenReturn(Optional.of(weeklyPeriod));
+        Boose booseOfPeriod = BooseExamples.hairdresser();
+        Boose anotherBoose = BooseExamples.cleaner();
+        WeeklyPeriod weeklyPeriod = WeeklyPeriodExamples.monday(booseOfPeriod);
+        when(booseService.getFromIdOrThrow(BooseExamples.CLEANER_ID)).thenReturn(anotherBoose);
+        when(weeklyPeriodRepository.findById(WeeklyPeriodExamples.MONDAY_ID)).thenReturn(Optional.of(weeklyPeriod));
 
         assertThatExceptionOfType(WeeklyPeriodNotForBooseException.class).isThrownBy(() -> {
-            weeklyPeriodService.findForBooseById(2, 3);
+            weeklyPeriodService.findForBooseById(BooseExamples.CLEANER_ID, WeeklyPeriodExamples.MONDAY_ID);
         });
     }
 
     @Test
     void update() {
-        WeeklyPeriodUpdateCommand command = exampleWeeklyPeriodUpdateCommand();
-        Boose boose = exampleBoose();
-        WeeklyPeriod weeklyPeriod = exampleSavedWeeklyPeriod(boose);
-        when(booseService.getFromIdOrThrow(1)).thenReturn(boose);
-        when(weeklyPeriodRepository.findById(3)).thenReturn(Optional.of(weeklyPeriod));
+        WeeklyPeriodUpdateCommand command = WeeklyPeriodExamples.mondayUpdateCommand();
+        Boose boose = BooseExamples.hairdresser();
+        WeeklyPeriod weeklyPeriod = WeeklyPeriodExamples.monday(boose);
+        when(booseService.getFromIdOrThrow(BooseExamples.HAIRDRESSER_ID)).thenReturn(boose);
+        when(weeklyPeriodRepository.findById(WeeklyPeriodExamples.MONDAY_ID)).thenReturn(Optional.of(weeklyPeriod));
 
-        WeeklyPeriodInfo weeklyPeriodInfo = weeklyPeriodService.update(1, 3, command);
+        WeeklyPeriodInfo weeklyPeriodInfo =
+                weeklyPeriodService.update(BooseExamples.HAIRDRESSER_ID, WeeklyPeriodExamples.MONDAY_ID, command);
 
-        assertThat(weeklyPeriod.getComment()).isEqualTo("Actually, Tuesday is the worst.");
-        WeeklyPeriodInfo updatedWeeklyPeriodInfo = updatedWeeklyPeriodInfo();
+        assertThat(weeklyPeriod.getComment()).isEqualTo(WeeklyPeriodExamples.MONDAY_UPDATED_COMMENT);
+        WeeklyPeriodInfo updatedWeeklyPeriodInfo = WeeklyPeriodExamples.mondayUpdatedInfo();
         assertThat(weeklyPeriodInfo).isEqualTo(updatedWeeklyPeriodInfo);
     }
 
     @Test
     void update_notFound() {
-        WeeklyPeriodUpdateCommand command = exampleWeeklyPeriodUpdateCommand();
-        Boose boose = exampleBoose();
-        when(booseService.getFromIdOrThrow(1)).thenReturn(boose);
-        when(weeklyPeriodRepository.findById(3)).thenReturn(Optional.empty());
+        WeeklyPeriodUpdateCommand command = WeeklyPeriodExamples.mondayUpdateCommand();
+        Boose boose = BooseExamples.hairdresser();
+        when(booseService.getFromIdOrThrow(BooseExamples.HAIRDRESSER_ID)).thenReturn(boose);
+        when(weeklyPeriodRepository.findById(35)).thenReturn(Optional.empty());
 
         assertThatExceptionOfType(WeeklyPeriodNotFoundException.class).isThrownBy(() -> {
-            weeklyPeriodService.update(1, 3, command);
+            weeklyPeriodService.update(BooseExamples.HAIRDRESSER_ID, 35, command);
         });
     }
 
     @Test
     void update_notForBoose() {
-        WeeklyPeriodUpdateCommand command = exampleWeeklyPeriodUpdateCommand();
-        Boose booseOfPeriod = exampleBoose();
-        Boose anotherBoose = anotherBoose();
-        WeeklyPeriod weeklyPeriod = exampleSavedWeeklyPeriod(booseOfPeriod);
-        when(booseService.getFromIdOrThrow(2)).thenReturn(anotherBoose);
-        when(weeklyPeriodRepository.findById(3)).thenReturn(Optional.of(weeklyPeriod));
+        WeeklyPeriodUpdateCommand command = WeeklyPeriodExamples.mondayUpdateCommand();
+        Boose booseOfPeriod = BooseExamples.hairdresser();
+        Boose anotherBoose = BooseExamples.cleaner();
+        WeeklyPeriod weeklyPeriod = WeeklyPeriodExamples.monday(booseOfPeriod);
+        when(booseService.getFromIdOrThrow(BooseExamples.CLEANER_ID)).thenReturn(anotherBoose);
+        when(weeklyPeriodRepository.findById(WeeklyPeriodExamples.MONDAY_ID)).thenReturn(Optional.of(weeklyPeriod));
 
         assertThatExceptionOfType(WeeklyPeriodNotForBooseException.class).isThrownBy(() -> {
-            weeklyPeriodService.update(2, 3, command);
+            weeklyPeriodService.update(BooseExamples.CLEANER_ID, WeeklyPeriodExamples.MONDAY_ID, command);
         });
-    }
-
-    WeeklyPeriodCreateCommand exampleWeeklyPeriodCreateCommand() {
-        WeeklyPeriodCreateCommand command = new WeeklyPeriodCreateCommand();
-        command.setStart(DayOfWeekTime.parse("Mon 08:00"));
-        command.setEnd(DayOfWeekTime.parse("Mon 12:00"));
-        command.setComment("Worst part of the week.");
-        return command;
-    }
-
-    WeeklyPeriod exampleNewWeeklyPeriod(Boose boose) {
-        WeeklyPeriod weeklyPeriod = new WeeklyPeriod();
-        weeklyPeriod.setId(null);
-        weeklyPeriod.setStart(DayOfWeekTime.parse("Mon 08:00"));
-        weeklyPeriod.setEnd(DayOfWeekTime.parse("Mon 12:00"));
-        weeklyPeriod.setComment("Worst part of the week.");
-        weeklyPeriod.setBoose(boose);
-        return weeklyPeriod;
-    }
-
-    WeeklyPeriod exampleSavedWeeklyPeriod(Boose boose) {
-        WeeklyPeriod weeklyPeriod = exampleNewWeeklyPeriod(boose);
-        weeklyPeriod.setId(3);
-        return weeklyPeriod;
-    }
-
-    WeeklyPeriodInfo exampleWeeklyPeriodInfo() {
-        WeeklyPeriodInfo info = new WeeklyPeriodInfo();
-        info.setId(3);
-        info.setStart(DayOfWeekTime.parse("Mon 08:00"));
-        info.setEnd(DayOfWeekTime.parse("Mon 12:00"));
-        info.setComment("Worst part of the week.");
-        return info;
-    }
-
-    WeeklyPeriod anotherSavedWeeklyPeriod(Boose boose) {
-        WeeklyPeriod weeklyPeriod = new WeeklyPeriod();
-        weeklyPeriod.setId(4);
-        weeklyPeriod.setStart(DayOfWeekTime.parse("Tue 18:17:52"));
-        weeklyPeriod.setEnd(DayOfWeekTime.parse("Wed 20:04:19"));
-        weeklyPeriod.setComment("A long period.");
-        weeklyPeriod.setBoose(boose);
-        return weeklyPeriod;
-    }
-
-    WeeklyPeriodUpdateCommand exampleWeeklyPeriodUpdateCommand() {
-        WeeklyPeriodUpdateCommand command = new WeeklyPeriodUpdateCommand();
-        command.setComment("Actually, Tuesday is the worst.");
-        return command;
-    }
-
-    WeeklyPeriodInfo updatedWeeklyPeriodInfo() {
-        WeeklyPeriodInfo info = exampleWeeklyPeriodInfo();
-        info.setComment("Actually, Tuesday is the worst.");
-        return info;
-    }
-
-    Boose exampleBoose() {
-        Boose boose = new Boose();
-        boose.setId(1);
-        boose.setName("Hairdresser Lisa");
-        boose.setDescription("I have a small shop on the Pearl Street.");
-        boose.setDeleted(false);
-        return boose;
-    }
-
-    Boose anotherBoose() {
-        Boose boose = new Boose();
-        boose.setId(2);
-        boose.setName("Cleaner Jack");
-        boose.setDescription("Dust is my enemy.");
-        boose.setDeleted(false);
-        return boose;
     }
 }

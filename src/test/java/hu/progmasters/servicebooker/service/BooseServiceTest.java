@@ -7,6 +7,7 @@ import hu.progmasters.servicebooker.dto.boose.BooseInfo;
 import hu.progmasters.servicebooker.dto.boose.BooseUpdateCommand;
 import hu.progmasters.servicebooker.exceptionhandling.boose.BooseNotFoundException;
 import hu.progmasters.servicebooker.repository.BooseRepository;
+import hu.progmasters.servicebooker.service.examples.BooseExamples;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,146 +40,94 @@ class BooseServiceTest {
 
     @Test
     void save() {
-        BooseCreateCommand command = exampleBooseCreateCommand();
-        Boose newBoose = exampleNewBoose();
-        Boose savedBoose = exampleSavedBoose();
+        BooseCreateCommand command = BooseExamples.hairdresserCreateCommand();
+        Boose newBoose = BooseExamples.hairdresserNew();
+        Boose savedBoose = BooseExamples.hairdresser();
         when(booseRepository.save(newBoose)).thenReturn(savedBoose);
 
         BooseInfo booseInfo = booseService.save(command);
 
         verify(booseRepository).save(newBoose);
-        BooseInfo exampleBooseInfo = exampleBooseInfo();
-        assertThat(booseInfo).isEqualTo(exampleBooseInfo);
+        BooseInfo expectedBoseInfo = BooseExamples.hairdresserInfo();
+        assertThat(booseInfo).isEqualTo(expectedBoseInfo);
     }
 
     @Test
     void findById() {
-        Boose boose = exampleSavedBoose();
-        when(booseRepository.findById(1)).thenReturn(Optional.of(boose));
+        Boose boose = BooseExamples.hairdresser();
+        when(booseRepository.findById(BooseExamples.HAIRDRESSER_ID)).thenReturn(Optional.of(boose));
 
-        BooseInfo booseInfo = booseService.findById(1);
+        BooseInfo booseInfo = booseService.findById(BooseExamples.HAIRDRESSER_ID);
 
-        BooseInfo exampleBooseInfo = exampleBooseInfo();
-        assertThat(booseInfo).isEqualTo(exampleBooseInfo);
+        BooseInfo expectedBooseInfo = BooseExamples.hairdresserInfo();
+        assertThat(booseInfo).isEqualTo(expectedBooseInfo);
     }
 
     @Test
     void findById_notFound() {
-        when(booseRepository.findById(1)).thenReturn(Optional.empty());
+        when(booseRepository.findById(11)).thenReturn(Optional.empty());
 
         assertThatExceptionOfType(BooseNotFoundException.class).isThrownBy(() -> {
-            booseService.findById(1);
+            booseService.findById(11);
         });
     }
 
     @Test
     void findAll() {
-        Boose firstBoose = anotherSavedBoose();
-        Boose secondBoose = exampleSavedBoose();
+        Boose firstBoose = BooseExamples.cleaner();
+        Boose secondBoose = BooseExamples.hairdresser();
         when(booseRepository.findAll()).thenReturn(List.of(firstBoose, secondBoose));
 
         List<BooseInfo> booseInfos = booseService.findAll();
 
-        BooseInfo exampleBooseInfo = exampleBooseInfo();
+        BooseInfo secondBooseInfo = BooseExamples.hairdresserInfo();
         assertThat(booseInfos).hasSize(2)
                 .element(1)
-                .isEqualTo(exampleBooseInfo);
+                .isEqualTo(secondBooseInfo);
     }
 
     @Test
     void update() {
-        BooseUpdateCommand command = exampleBooseUpdateCommand();
-        Boose boose = exampleSavedBoose();
+        BooseUpdateCommand command = BooseExamples.hairdresserUpdateCommand();
+        Boose boose = BooseExamples.hairdresser();
         when(booseRepository.findById(1)).thenReturn(Optional.of(boose));
 
-        BooseInfo booseInfo = booseService.update(1, command);
+        BooseInfo booseInfo = booseService.update(BooseExamples.HAIRDRESSER_ID, command);
 
-        assertThat(boose.getName()).isEqualTo("Doctor Bob");
-        BooseInfo updatedBooseInfo = updatedBooseInfo();
+        assertThat(boose.getName()).isEqualTo(BooseExamples.HAIRDRESSER_UPDATED_NAME);
+        assertThat(boose.getDescription()).isEqualTo(BooseExamples.HAIRDRESSER_UPDATED_DESC);
+        BooseInfo updatedBooseInfo = BooseExamples.hairdresserUpdatedInfo();
         assertThat(booseInfo).isEqualTo(updatedBooseInfo);
     }
 
     @Test
     void update_notFound() {
-        BooseUpdateCommand command = exampleBooseUpdateCommand();
-        when(booseRepository.findById(1)).thenReturn(Optional.empty());
+        BooseUpdateCommand command = BooseExamples.hairdresserUpdateCommand();
+        when(booseRepository.findById(11)).thenReturn(Optional.empty());
 
         assertThatExceptionOfType(BooseNotFoundException.class).isThrownBy(() -> {
-            booseService.update(1, command);
+            booseService.update(11, command);
         });
     }
 
     @Test
     void delete() {
-        Boose boose = exampleSavedBoose();
-        when(booseRepository.findById(1)).thenReturn(Optional.of(boose));
+        Boose boose = BooseExamples.hairdresser();
+        when(booseRepository.findById(BooseExamples.HAIRDRESSER_ID)).thenReturn(Optional.of(boose));
 
-        BooseInfo booseInfo = booseService.delete(1);
+        BooseInfo booseInfo = booseService.delete(BooseExamples.HAIRDRESSER_ID);
 
         assertThat(boose.isDeleted()).isTrue();
-        BooseInfo exampleBooseInfo = exampleBooseInfo();
-        assertThat(booseInfo).isEqualTo(exampleBooseInfo);
+        BooseInfo deletedBooseInfo = BooseExamples.hairdresserInfo();
+        assertThat(booseInfo).isEqualTo(deletedBooseInfo);
     }
 
     @Test
     void delete_notFound() {
-        when(booseRepository.findById(1)).thenReturn(Optional.empty());
+        when(booseRepository.findById(11)).thenReturn(Optional.empty());
 
         assertThatExceptionOfType(BooseNotFoundException.class).isThrownBy(() -> {
-            booseService.delete(1);
+            booseService.delete(11);
         });
-    }
-
-    BooseCreateCommand exampleBooseCreateCommand() {
-        BooseCreateCommand command = new BooseCreateCommand();
-        command.setName("Hairdresser Lisa");
-        command.setDescription("I have a small shop on the Pearl Street.");
-        return command;
-    }
-
-    Boose exampleNewBoose() {
-        Boose boose = new Boose();
-        boose.setId(null);
-        boose.setName("Hairdresser Lisa");
-        boose.setDescription("I have a small shop on the Pearl Street.");
-        boose.setDeleted(false);
-        return boose;
-    }
-
-    Boose exampleSavedBoose() {
-        Boose boose = exampleNewBoose();
-        boose.setId(1);
-        return boose;
-    }
-
-    BooseInfo exampleBooseInfo() {
-        BooseInfo info = new BooseInfo();
-        info.setId(1);
-        info.setName("Hairdresser Lisa");
-        info.setDescription("I have a small shop on the Pearl Street.");
-        return info;
-    }
-
-    Boose anotherSavedBoose() {
-        Boose boose = new Boose();
-        boose.setId(2);
-        boose.setName("Cleaner Jack");
-        boose.setDescription("Dust is my enemy.");
-        boose.setDeleted(false);
-        return boose;
-    }
-
-    BooseUpdateCommand exampleBooseUpdateCommand() {
-        BooseUpdateCommand command = new BooseUpdateCommand();
-        command.setName("Doctor Bob");
-        command.setDescription("I am not a hairdresser.");
-        return command;
-    }
-
-    BooseInfo updatedBooseInfo() {
-        BooseInfo info = exampleBooseInfo();
-        info.setName("Doctor Bob");
-        info.setDescription("I am not a hairdresser.");
-        return info;
     }
 }

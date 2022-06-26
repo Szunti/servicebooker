@@ -7,6 +7,7 @@ import hu.progmasters.servicebooker.dto.customer.CustomerInfo;
 import hu.progmasters.servicebooker.dto.customer.CustomerUpdateCommand;
 import hu.progmasters.servicebooker.exceptionhandling.customer.CustomerNotFoundException;
 import hu.progmasters.servicebooker.repository.CustomerRepository;
+import hu.progmasters.servicebooker.service.examples.CustomerExamples;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,149 +39,95 @@ class CustomerServiceTest {
 
     @Test
     void save() {
-        CustomerCreateCommand command = exampleCustomerCreateCommand();
-        Customer newCustomer = exampleNewCustomer();
-        Customer savedCustomer = exampleSavedCustomer();
+        CustomerCreateCommand command = CustomerExamples.johnCreateCommand();
+        Customer newCustomer = CustomerExamples.johnNew();
+        Customer savedCustomer = CustomerExamples.john();
         when(customerRepository.save(newCustomer)).thenReturn(savedCustomer);
 
         CustomerInfo customerInfo = customerService.save(command);
 
         verify(customerRepository).save(newCustomer);
-        CustomerInfo exampleCustomerInfo = exampleCustomerInfo();
-        assertThat(customerInfo).isEqualTo(exampleCustomerInfo);
-    }
-
-    @Test
-    void findById() {
-        Customer customer = exampleSavedCustomer();
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
-
-        CustomerInfo customerInfo = customerService.findById(1);
-
-        CustomerInfo exampleCustomerInfo = exampleCustomerInfo();
-        assertThat(customerInfo).isEqualTo(exampleCustomerInfo);
-    }
-
-    @Test
-    void findById_notFound() {
-        when(customerRepository.findById(1)).thenReturn(Optional.empty());
-
-        assertThatExceptionOfType(CustomerNotFoundException.class).isThrownBy(() -> {
-            customerService.findById(1);
-        });
+        CustomerInfo expectedCustomerInfo = CustomerExamples.johnInfo();
+        assertThat(customerInfo).isEqualTo(expectedCustomerInfo);
     }
 
     @Test
     void findAll() {
-        Customer firstCustomer = exampleSavedCustomer();
-        Customer secondCustomer = anotherSavedCustomer();
+        Customer firstCustomer = CustomerExamples.john();
+        Customer secondCustomer = CustomerExamples.alice();
         when(customerRepository.findAll()).thenReturn(List.of(firstCustomer, secondCustomer));
 
         List<CustomerInfo> customerInfos = customerService.findAll();
 
-        CustomerInfo exampleCustomerInfo = exampleCustomerInfo();
+        CustomerInfo firstCustomerInfo = CustomerExamples.johnInfo();
         assertThat(customerInfos).hasSize(2)
                 .first()
-                .isEqualTo(exampleCustomerInfo);
+                .isEqualTo(firstCustomerInfo);
+    }
+
+    @Test
+    void findById() {
+        Customer customer = CustomerExamples.john();
+        when(customerRepository.findById(CustomerExamples.JOHN_ID)).thenReturn(Optional.of(customer));
+
+        CustomerInfo customerInfo = customerService.findById(CustomerExamples.JOHN_ID);
+
+        CustomerInfo expectedCustomerInfo = CustomerExamples.johnInfo();
+        assertThat(customerInfo).isEqualTo(expectedCustomerInfo);
+    }
+
+    @Test
+    void findById_notFound() {
+        when(customerRepository.findById(21)).thenReturn(Optional.empty());
+
+        assertThatExceptionOfType(CustomerNotFoundException.class).isThrownBy(() -> {
+            customerService.findById(21);
+        });
     }
 
     @Test
     void update() {
-        CustomerUpdateCommand command = exampleCustomerUpdateCommand();
-        Customer customer = exampleSavedCustomer();
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        CustomerUpdateCommand command = CustomerExamples.johnUpdateCommand();
+        Customer customer = CustomerExamples.john();
+        when(customerRepository.findById(CustomerExamples.JOHN_ID)).thenReturn(Optional.of(customer));
 
-        CustomerInfo customerInfo = customerService.update(1, command);
+        CustomerInfo customerInfo = customerService.update(CustomerExamples.JOHN_ID, command);
 
-        assertThat(customer.getName()).isEqualTo("Joseph Smith");
-        CustomerInfo updatedInfo = updatedCustomerInfo();
-        assertThat(customerInfo).isEqualTo(updatedInfo);
+        assertThat(customer.getName()).isEqualTo(CustomerExamples.JOHN_UPDATED_NAME);
+        assertThat(customer.getEmail()).isEqualTo(CustomerExamples.JOHN_UPDATED_EMAIL);
+        CustomerInfo updatedCustomerInfo = CustomerExamples.johnUpdatedInfo();
+        assertThat(customerInfo).isEqualTo(updatedCustomerInfo);
     }
 
 
     @Test
     void update_notFound() {
-        CustomerUpdateCommand command = exampleCustomerUpdateCommand();
-        when(customerRepository.findById(1)).thenReturn(Optional.empty());
+        CustomerUpdateCommand command = CustomerExamples.johnUpdateCommand();
+        when(customerRepository.findById(21)).thenReturn(Optional.empty());
 
         assertThatExceptionOfType(CustomerNotFoundException.class).isThrownBy(() -> {
-            customerService.update(1, command);
+            customerService.update(21, command);
         });
     }
 
     @Test
     void delete() {
-        Customer customer = exampleSavedCustomer();
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        Customer customer = CustomerExamples.john();
+        when(customerRepository.findById(CustomerExamples.JOHN_ID)).thenReturn(Optional.of(customer));
 
-        CustomerInfo customerInfo = customerService.delete(1);
+        CustomerInfo customerInfo = customerService.delete(CustomerExamples.JOHN_ID);
 
         assertThat(customer.isDeleted()).isTrue();
-        CustomerInfo exampleCustomerInfo = exampleCustomerInfo();
-        assertThat(customerInfo).isEqualTo(exampleCustomerInfo);
+        CustomerInfo deletedCustomerInfo = CustomerExamples.johnInfo();
+        assertThat(customerInfo).isEqualTo(deletedCustomerInfo);
     }
 
     @Test
     void delete_notFound() {
-        when(customerRepository.findById(1)).thenReturn(Optional.empty());
+        when(customerRepository.findById(21)).thenReturn(Optional.empty());
 
         assertThatExceptionOfType(CustomerNotFoundException.class).isThrownBy(() -> {
-            customerService.delete(1);
+            customerService.delete(21);
         });
     }
-
-    CustomerCreateCommand exampleCustomerCreateCommand() {
-        CustomerCreateCommand command = new CustomerCreateCommand();
-        command.setName("John Smith");
-        command.setEmail("john.smith@gmail.com");
-        return command;
-    }
-
-    Customer exampleNewCustomer() {
-        Customer customer = new Customer();
-        customer.setId(null);
-        customer.setName("John Smith");
-        customer.setEmail("john.smith@gmail.com");
-        customer.setDeleted(false);
-        return customer;
-    }
-
-    Customer exampleSavedCustomer() {
-        Customer customer = exampleNewCustomer();
-        customer.setId(1);
-        return customer;
-    }
-
-    CustomerInfo exampleCustomerInfo() {
-        CustomerInfo info = new CustomerInfo();
-        info.setId(1);
-        info.setName("John Smith");
-        info.setEmail("john.smith@gmail.com");
-        return info;
-    }
-
-    Customer anotherSavedCustomer() {
-        Customer customer = new Customer();
-        customer.setId(2);
-        customer.setName("Alice Tailor");
-        customer.setEmail("alice.tailor@gmail.com");
-        customer.setDeleted(false);
-        return customer;
-    }
-
-    CustomerUpdateCommand exampleCustomerUpdateCommand() {
-        CustomerUpdateCommand command = new CustomerUpdateCommand();
-        command.setName("Joseph Smith");
-        command.setEmail("joseph.smith@gmail.com");
-        return command;
-    }
-
-    CustomerInfo updatedCustomerInfo() {
-        CustomerInfo info = exampleCustomerInfo();
-        info.setName("Joseph Smith");
-        info.setEmail("joseph.smith@gmail.com");
-        return info;
-    }
-
-
 }
