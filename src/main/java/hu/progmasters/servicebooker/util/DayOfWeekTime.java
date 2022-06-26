@@ -72,35 +72,64 @@ public class DayOfWeekTime implements TemporalAccessor {
         return formatter.parse(text, DayOfWeekTime::from);
     }
 
-    private static class NextAdjuster implements TemporalAdjuster {
+    private static class Adjuster implements TemporalAdjuster {
+        private enum AdjustType {
+            NEXT, NEXT_OR_SAME, PREVIOUS, PREVIOUS_OR_SAME
+        }
+
         private final int targetSecondsFromWeekStart;
-        private final boolean allowSame;
+        private final AdjustType adjustType;
 
-
-        public NextAdjuster(DayOfWeekTime dayOfWeekTime, boolean allowSame) {
+        public Adjuster(DayOfWeekTime dayOfWeekTime, AdjustType adjustType) {
             this.targetSecondsFromWeekStart = dayOfWeekTime.toSecondsFromWeekStart();
-            this.allowSame = allowSame;
+            this.adjustType = adjustType;
         }
 
         @Override
         public Temporal adjustInto(Temporal temporal) {
             int sourceSecondsFromWeekStart = DayOfWeekTime.from(temporal).toSecondsFromWeekStart();
             int differenceInSeconds = targetSecondsFromWeekStart - sourceSecondsFromWeekStart;
-            if (differenceInSeconds < 0) {
-                differenceInSeconds += SECONDS_PER_WEEK;
-            } else if (!allowSame && differenceInSeconds == 0) {
-                differenceInSeconds = SECONDS_PER_WEEK;
+            switch (adjustType) {
+                case NEXT:
+                    if (differenceInSeconds <= 0) {
+                        differenceInSeconds += SECONDS_PER_WEEK;
+                    }
+                    break;
+                case NEXT_OR_SAME:
+                    if (differenceInSeconds < 0) {
+                        differenceInSeconds += SECONDS_PER_WEEK;
+                    }
+                    break;
+                case PREVIOUS:
+                    if (differenceInSeconds >= 0) {
+                        differenceInSeconds -= SECONDS_PER_WEEK;
+                    }
+                    break;
+                case PREVIOUS_OR_SAME:
+                    if (differenceInSeconds > 0) {
+                        differenceInSeconds -= SECONDS_PER_WEEK;
+
+                    }
+                    break;
             }
             return temporal.plus(differenceInSeconds, ChronoUnit.SECONDS);
         }
     }
 
     public static TemporalAdjuster next(DayOfWeekTime dayOfWeekTime) {
-        return new NextAdjuster(dayOfWeekTime, false);
+        return new Adjuster(dayOfWeekTime, Adjuster.AdjustType.NEXT);
     }
 
     public static TemporalAdjuster nextOrSame(DayOfWeekTime dayOfWeekTime) {
-        return new NextAdjuster(dayOfWeekTime, true);
+        return new Adjuster(dayOfWeekTime, Adjuster.AdjustType.NEXT_OR_SAME);
+    }
+
+    public static TemporalAdjuster previous(DayOfWeekTime dayOfWeekTime) {
+        return new Adjuster(dayOfWeekTime, Adjuster.AdjustType.PREVIOUS);
+    }
+
+    public static TemporalAdjuster previousOrSame(DayOfWeekTime dayOfWeekTime) {
+        return new Adjuster(dayOfWeekTime, Adjuster.AdjustType.PREVIOUS_OR_SAME);
     }
 
     public boolean sameWeekBefore(DayOfWeekTime dayOfWeekTime) {

@@ -145,8 +145,8 @@ public class TimeTableService {
         ListIterator<WeeklyPeriod> expansionIterator = firstToExpand;
         while (true) {
             WeeklyPeriod toExpand = expansionIterator.next();
-            LocalDateTime start = currentDateTime.with(DayOfWeekTime.nextOrSame(toExpand.getStart()));
             LocalDateTime end = currentDateTime.with(DayOfWeekTime.next(toExpand.getEnd()));
+            LocalDateTime start = end.with(DayOfWeekTime.previous(toExpand.getStart()));
             if (!start.isBefore(queriedInterval.getEnd())) {
                 break;
             }

@@ -35,16 +35,15 @@ class DayOfWeekTimeTest {
     @Test
     void toSecondsFromWeekStart() {
         DayOfWeekTime dayOfWeekTime = DayOfWeekTime.of(TUESDAY, 6, 35);
-        assertThat(dayOfWeekTime.toSecondsFromWeekStart()).isEqualTo(
-                1 * SECONDS_PER_DAY + 6 * SECONDS_PER_HOUR + 35 * SECONDS_PER_MINUTE);
+        assertThat(dayOfWeekTime.toSecondsFromWeekStart())
+                .isEqualTo(1 * SECONDS_PER_DAY + 6 * SECONDS_PER_HOUR + 35 * SECONDS_PER_MINUTE);
     }
 
     @Test
     void ofSecondsFromWeekStart() {
         int wednesdayMorning = 2 * SECONDS_PER_DAY + 7 * SECONDS_PER_HOUR + 32 * SECONDS_PER_MINUTE + 17;
-        assertThat(DayOfWeekTime.of(wednesdayMorning)).isEqualTo(
-                DayOfWeekTime.of(WEDNESDAY, 7, 32, 17)
-        );
+        assertThat(DayOfWeekTime.of(wednesdayMorning))
+                .isEqualTo(DayOfWeekTime.of(WEDNESDAY, 7, 32, 17));
     }
 
     @Test
@@ -89,13 +88,48 @@ class DayOfWeekTimeTest {
     }
 
     @Test
+    void previous_different() {
+        LocalDateTime datetime = LocalDateTime.of(2022, JUNE, 16, 10, 0);
+        DayOfWeekTime dayOfWeekTime = DayOfWeekTime.of(TUESDAY, 6, 0);
+
+        assertThat(datetime.with(DayOfWeekTime.previous(dayOfWeekTime)))
+                .isEqualTo(LocalDateTime.of(2022, JUNE, 14, 6, 0));
+    }
+
+    @Test
+    void previous_same() {
+        LocalDateTime datetime = LocalDateTime.of(2022, JUNE, 16, 10, 0);
+        DayOfWeekTime dayOfWeekTime = DayOfWeekTime.of(THURSDAY, 10, 0);
+
+        assertThat(datetime.with(DayOfWeekTime.previous(dayOfWeekTime)))
+                .isEqualTo(LocalDateTime.of(2022, JUNE, 9, 10, 0));
+    }
+
+    @Test
+    void previousOrSame_different() {
+        LocalDateTime datetime = LocalDateTime.of(2022, JUNE, 16, 10, 0);
+        DayOfWeekTime dayOfWeekTime = DayOfWeekTime.of(TUESDAY, 6, 0);
+
+        assertThat(datetime.with(DayOfWeekTime.previousOrSame(dayOfWeekTime)))
+                .isEqualTo(LocalDateTime.of(2022, JUNE, 14, 6, 0));
+    }
+
+    @Test
+    void previousOrSame_same() {
+        LocalDateTime datetime = LocalDateTime.of(2022, JUNE, 16, 10, 0);
+        DayOfWeekTime dayOfWeekTime = DayOfWeekTime.of(THURSDAY, 10, 0);
+
+        assertThat(datetime.with(DayOfWeekTime.previousOrSame(dayOfWeekTime)))
+                .isEqualTo(LocalDateTime.of(2022, JUNE, 16, 10, 0));
+    }
+
+    @Test
     void next_different() {
         LocalDateTime datetime = LocalDateTime.of(2022, JUNE, 16, 10, 0);
         DayOfWeekTime dayOfWeekTime = DayOfWeekTime.of(TUESDAY, 6, 0);
 
-        assertThat(datetime.with(DayOfWeekTime.next(dayOfWeekTime))).isEqualTo(
-                LocalDateTime.of(2022, JUNE, 21, 6, 0)
-        );
+        assertThat(datetime.with(DayOfWeekTime.next(dayOfWeekTime)))
+                .isEqualTo(LocalDateTime.of(2022, JUNE, 21, 6, 0));
     }
 
     @Test
@@ -103,9 +137,8 @@ class DayOfWeekTimeTest {
         LocalDateTime datetime = LocalDateTime.of(2022, JUNE, 16, 10, 0);
         DayOfWeekTime dayOfWeekTime = DayOfWeekTime.of(THURSDAY, 10, 0);
 
-        assertThat(datetime.with(DayOfWeekTime.next(dayOfWeekTime))).isEqualTo(
-                LocalDateTime.of(2022, JUNE, 23, 10, 0)
-        );
+        assertThat(datetime.with(DayOfWeekTime.next(dayOfWeekTime)))
+                .isEqualTo(LocalDateTime.of(2022, JUNE, 23, 10, 0));
     }
 
     @Test
@@ -113,9 +146,8 @@ class DayOfWeekTimeTest {
         LocalDateTime datetime = LocalDateTime.of(2022, JUNE, 16, 10, 0);
         DayOfWeekTime dayOfWeekTime = DayOfWeekTime.of(TUESDAY, 6, 0);
 
-        assertThat(datetime.with(DayOfWeekTime.nextOrSame(dayOfWeekTime))).isEqualTo(
-                LocalDateTime.of(2022, JUNE, 21, 6, 0)
-        );
+        assertThat(datetime.with(DayOfWeekTime.nextOrSame(dayOfWeekTime)))
+                .isEqualTo(LocalDateTime.of(2022, JUNE, 21, 6, 0));
     }
 
     @Test
@@ -123,9 +155,7 @@ class DayOfWeekTimeTest {
         LocalDateTime datetime = LocalDateTime.of(2022, JUNE, 16, 10, 0);
         DayOfWeekTime dayOfWeekTime = DayOfWeekTime.of(THURSDAY, 10, 0);
 
-        assertThat(datetime.with(DayOfWeekTime.nextOrSame(dayOfWeekTime))).
-                isEqualTo(
-                        LocalDateTime.of(2022, JUNE, 16, 10, 0)
-                );
+        assertThat(datetime.with(DayOfWeekTime.nextOrSame(dayOfWeekTime)))
+                .isEqualTo(LocalDateTime.of(2022, JUNE, 16, 10, 0));
     }
 }
