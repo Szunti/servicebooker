@@ -66,8 +66,7 @@ public class BookerService {
 
         booseService.lockForUpdate(boose);
         // the part of the timeTable where periods intersect the booking
-        List<TablePeriod> timeTable = timeTableService.getTimeTableStreamForBoose(boose,
-                        interval, true)
+        List<TablePeriod> timeTable = timeTableService.getTimeTableStreamForBoose(boose, interval, true)
                 .collect(Collectors.toList());
         // timeTable should be a singe period with the same start and end as command and not booked already
 

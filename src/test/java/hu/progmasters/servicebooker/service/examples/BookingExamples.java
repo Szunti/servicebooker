@@ -3,6 +3,7 @@ package hu.progmasters.servicebooker.service.examples;
 import hu.progmasters.servicebooker.domain.entity.Booking;
 import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.domain.entity.Customer;
+import hu.progmasters.servicebooker.dto.booking.BookingCreateCommand;
 import hu.progmasters.servicebooker.dto.booking.BookingInfo;
 import hu.progmasters.servicebooker.dto.booking.BookingUpdateCommand;
 import hu.progmasters.servicebooker.dto.boose.BooseInfo;
@@ -23,14 +24,29 @@ public class BookingExamples {
     public static final String JUN22LATER_COMMENT = "This will be my first time. My friends recommended you.";
     public static final String JUN22_UPDATED_COMMENT = "I was wrong, I can definitely arrive on time.";
 
-    public static Booking jun22(Boose boose, Customer customer) {
+    public static BookingCreateCommand jun22CreateCommand(int booseId) {
+        BookingCreateCommand command = new BookingCreateCommand();
+        command.setStart(JUN22_START);
+        command.setEnd(JUN22_END);
+        command.setComment(JUN22_COMMENT);
+        command.setBooseId(booseId);
+        return command;
+    }
+
+    public static Booking jun22New(Boose boose, Customer customer) {
         Booking booking = new Booking();
-        booking.setId(JUN22_ID);
+        booking.setId(null);
         booking.setStart(JUN22_START);
         booking.setEnd(JUN22_END);
         booking.setComment(JUN22_COMMENT);
         booking.setBoose(boose);
         booking.setCustomer(customer);
+        return booking;
+    }
+
+    public static Booking jun22(Boose boose, Customer customer) {
+        Booking booking = jun22New(boose, customer);
+        booking.setId(JUN22_ID);
         return booking;
     }
 
