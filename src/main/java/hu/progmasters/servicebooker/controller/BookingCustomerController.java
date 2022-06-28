@@ -56,7 +56,6 @@ public class BookingCustomerController {
         return response;
     }
 
-
     @Operation(summary = "List bookings by customer")
     @Parameter(name = "customerId", example = "2")
     @Parameter(name = "start", example = "2022-06-20T08:00")

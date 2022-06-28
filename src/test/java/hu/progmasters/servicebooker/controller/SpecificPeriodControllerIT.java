@@ -113,8 +113,7 @@ class SpecificPeriodControllerIT {
 
     @Test
     void findAll_empty() throws Exception {
-        specificPeriod.findAll(booseId, "2022-06-20T00:00", "2022-06-28T00:00",
-                        ADD_OR_REPLACE)
+        specificPeriod.findAll(booseId, "2022-06-20T00:00", "2022-06-28T00:00", ADD_OR_REPLACE)
                 .andExpectAll(
                         status().isOk(),
                         content().json("[]")
@@ -180,11 +179,6 @@ class SpecificPeriodControllerIT {
 
     @Test
     void findAll_outsideGlobalBounds() throws Exception {
-        specificPeriod.save(booseId, "2022-06-20T10:00", "2022-06-20T12:00",
-                "remove", REMOVE);
-        specificPeriod.save(booseId, "2022-06-20T08:00", "2022-06-20T10:00",
-                "add_or_replace", ADD_OR_REPLACE);
-
         specificPeriod.findAll(booseId, "3022-06-20T00:00", "3022-06-28T00:00", ADD_OR_REPLACE)
                 .andExpectAll(
                         status().isBadRequest(),
