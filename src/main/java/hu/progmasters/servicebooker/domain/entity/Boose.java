@@ -8,9 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-/**
- * Bookable Service, or boose in short
- */
+// Bookable Service, or boose in short
 
 @Data
 @NoArgsConstructor

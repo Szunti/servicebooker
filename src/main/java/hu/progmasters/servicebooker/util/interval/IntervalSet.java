@@ -2,13 +2,8 @@ package hu.progmasters.servicebooker.util.interval;
 
 import java.util.*;
 
-/**
- * A set of intervals with common set operations.
- * <p>
- * Intervals in the set are not overlapping. The set will never contain empty (0 length) intervals.
- *
- * @param <T> the type the intervals are going over
- */
+// Intervals in the set are not overlapping. The set will never contain empty (0 length) intervals.
+
 public class IntervalSet<I extends IntervalLike<I, T>, T extends Comparable<? super T>> extends AbstractCollection<I> {
 
     private final NavigableMap<T, I> intervalMap;
@@ -22,11 +17,6 @@ public class IntervalSet<I extends IntervalLike<I, T>, T extends Comparable<? su
         addAll(intervals);
     }
 
-    /**
-     * A constructor to reuse a {@link NavigableMap}
-     *
-     * @param intervalMap the {@link NavigableMap} to reuse
-     */
     private IntervalSet(NavigableMap<T, I> intervalMap) {
         this.intervalMap = intervalMap;
     }
@@ -71,14 +61,6 @@ public class IntervalSet<I extends IntervalLike<I, T>, T extends Comparable<? su
         intervalMap.clear();
     }
 
-    /**
-     * Adds an interval assuming it is not null, not empty and there is no overlap with the current ones.
-     * <p>
-     * Main motivation is performance. Could be useful when adding the intervals from another {@link IntervalSet}.
-     *
-     * @param interval the interval to add
-     * @return true
-     */
     public boolean addWithoutChecks(I interval) {
         intervalMap.put(interval.getStart(), interval);
         return true;

@@ -7,11 +7,6 @@ import java.util.Objects;
 
 import static hu.progmasters.servicebooker.util.interval.Pair.pair;
 
-/**
- * This class is value-based.
- *
- * @param <T>
- */
 @Value
 @ToString(includeFieldNames = false)
 public class Interval<T extends Comparable<? super T>> implements IntervalLike<Interval<T>, T> {
