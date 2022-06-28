@@ -25,7 +25,7 @@ import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 @Tag(name = "Bookings")
 @Slf4j
 @RestController
-@RequestMapping(BookingBooseController.BASE_URL + "/{booseId}/bookings" + BookingBooseController.SUB_URL)
+@RequestMapping(BookingBooseController.BASE_URL + "/{booseId}" + BookingBooseController.SUB_URL)
 public class BookingBooseController {
 
     public static final String BASE_URL = "/api/services";
@@ -50,7 +50,8 @@ public class BookingBooseController {
                                      @RequestParam("start") LocalDateTime start,
                                      @RequestParam("end") LocalDateTime end) {
         log.info(LOG_GET_SUB + "?start={}&end={}", BASE_URL, booseId, SUB_URL, start, end);
-        List<BookingInfo> response = bookingService.findAllForBooseOrCustomer(booseId, null, interval(start, end));
+        List<BookingInfo> response = bookingService
+                .findAllForBooseOrCustomer(booseId, null, interval(start, end));
         log.info(LOG_RESPONSE, HttpStatus.OK, response);
         return response;
     }
