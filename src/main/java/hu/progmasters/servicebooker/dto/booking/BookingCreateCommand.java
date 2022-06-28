@@ -1,5 +1,6 @@
 package hu.progmasters.servicebooker.dto.booking;
 
+import hu.progmasters.servicebooker.dto.CommandWithStartAndEnd;
 import hu.progmasters.servicebooker.validation.StartBeforeEnd;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @StartBeforeEnd
-public class BookingCreateCommand {
+public class BookingCreateCommand implements CommandWithStartAndEnd {
     @Schema(type = "string", example = "2022-06-22T08:00")
     @NotNull
     private LocalDateTime start;
@@ -25,5 +26,5 @@ public class BookingCreateCommand {
 
     @Schema(example = "1")
     @NotNull
-    private int booseId;
+    private Integer booseId;
 }

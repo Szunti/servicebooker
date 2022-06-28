@@ -1,18 +1,20 @@
 package hu.progmasters.servicebooker.validation;
 
+import hu.progmasters.servicebooker.dto.CommandWithStartAndEnd;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodCreateCommand;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDateTime;
 
-public class StartBeforeEndValidator implements ConstraintValidator<StartBeforeEnd, SpecificPeriodCreateCommand> {
+public class StartBeforeEndValidator
+        implements ConstraintValidator<StartBeforeEnd, CommandWithStartAndEnd> {
     @Override
-    public boolean isValid(SpecificPeriodCreateCommand specificPeriodCreateCommand,
+    public boolean isValid(CommandWithStartAndEnd command,
                            ConstraintValidatorContext constraintValidatorContext) {
 
-        LocalDateTime start = specificPeriodCreateCommand.getStart();
-        LocalDateTime end = specificPeriodCreateCommand.getEnd();
+        LocalDateTime start = command.getStart();
+        LocalDateTime end = command.getEnd();
         if (start == null || end == null) {
             return true;
         }

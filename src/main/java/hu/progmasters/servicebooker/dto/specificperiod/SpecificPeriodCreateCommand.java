@@ -1,6 +1,7 @@
 package hu.progmasters.servicebooker.dto.specificperiod;
 
 import hu.progmasters.servicebooker.domain.entity.SpecificPeriodType;
+import hu.progmasters.servicebooker.dto.CommandWithStartAndEnd;
 import hu.progmasters.servicebooker.validation.StartBeforeEnd;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @StartBeforeEnd
-public class SpecificPeriodCreateCommand {
+public class SpecificPeriodCreateCommand implements CommandWithStartAndEnd {
     // TODO use interval instead of start and end
     @Schema(type = "string", example = "2022-06-22T08:00")
     @NotNull
