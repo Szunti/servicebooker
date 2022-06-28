@@ -247,5 +247,18 @@ class BookingCustomerControllerIT {
                         jsonPath("$.comment", is("Updated comment"))
                 );
     }
+
+    @Test
+    void delete() throws Exception {
+        int id = booking.saveWithPeriodAndGetId(customerId, booseId,"2022-06-28T10:00", "2022-06-28T12:00",
+                "saved");
+
+        booking.deleteById(customerId, id);
+
+        booking.findById(customerId, id)
+                .andExpect(
+                        status().isNotFound()
+                );
+    }
 }
 

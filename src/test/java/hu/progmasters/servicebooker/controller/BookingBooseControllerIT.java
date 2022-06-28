@@ -147,5 +147,37 @@ class BookingBooseControllerIT {
                         jsonPath("$.comment", is("Updated comment"))
                 );
     }
+
+    @Test
+    void delete() throws Exception {
+        int id = booking.saveWithPeriodAndGetId(booseId, customerId,"2022-06-28T10:00", "2022-06-28T12:00",
+                "saved");
+
+        booking.deleteById(booseId, id);
+
+        booking.findById(booseId, id)
+                .andExpect(
+                        status().isNotFound()
+                );
+    }
+
+    @Test
+    void deletedWithCustomer() throws Exception {
+        int id = booking.saveWithPeriodAndGetId(booseId, customerId,"2022-06-28T10:00", "2022-06-28T12:00",
+                "saved");
+
+        customer.deleteById(customerId);
+
+        booking.findById(booseId, id)
+                .andExpect(
+                        status().isNotFound()
+                );
+
+        booking.findAll(booseId, "2022-06-28T08:00", "2022-06-28T18:00")
+                .andExpectAll(
+                        status().isOk(),
+                        content().json("[]")
+                );
+    }
 }
 

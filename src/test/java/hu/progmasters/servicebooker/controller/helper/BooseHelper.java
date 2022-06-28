@@ -2,6 +2,7 @@ package hu.progmasters.servicebooker.controller.helper;
 
 import com.jayway.jsonpath.JsonPath;
 import hu.progmasters.servicebooker.controller.BooseController;
+import hu.progmasters.servicebooker.service.TimeTableFilter;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
@@ -56,5 +57,10 @@ public class BooseHelper {
 
     public ResultActions deleteById(int id) throws Exception {
         return mockMvc.perform(delete(BooseController.BASE_URL + "/" + id));
+    }
+
+    public ResultActions getTimeTable(int id, String start, String end, TimeTableFilter filter) throws Exception {
+        String queryParams = String.format("?start=%s&end=%s%s", start, end, filter != null ? "&filter=" + filter : "");
+        return mockMvc.perform(get(BooseController.BASE_URL + "/"+ id + "/timetable" + queryParams));
     }
 }

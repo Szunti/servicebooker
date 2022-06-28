@@ -113,7 +113,7 @@ class CustomerControllerIT {
     }
 
     @Test
-    void testDelete() throws Exception {
+    void delete() throws Exception {
         int id = customer.saveAndGetId("John", "john@gmail.com");
 
         customer.deleteById(id)
