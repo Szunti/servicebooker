@@ -5,7 +5,6 @@ servicebooker:
   max-bookable-date: 3000-01-01T00:00:00
 
 spring:
-#  TODO h2 for testing, was not sure if it behaves the same as mysql with locking
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
     username: sa
@@ -16,3 +15,8 @@ spring:
     properties:
       hibernate:
         show_sql: true
+  web:
+    locale: en
+  mvc:
+    format:
+      date-time: iso

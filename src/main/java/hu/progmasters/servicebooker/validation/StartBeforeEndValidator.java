@@ -13,6 +13,9 @@ public class StartBeforeEndValidator implements ConstraintValidator<StartBeforeE
 
         LocalDateTime start = specificPeriodCreateCommand.getStart();
         LocalDateTime end = specificPeriodCreateCommand.getEnd();
+        if (start == null || end == null) {
+            return true;
+        }
         boolean valid = start.isBefore(end);
         if (!valid) {
             constraintValidatorContext.disableDefaultConstraintViolation();

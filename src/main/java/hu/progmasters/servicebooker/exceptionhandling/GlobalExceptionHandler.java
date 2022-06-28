@@ -83,7 +83,11 @@ public class GlobalExceptionHandler {
             WeeklyPeriodNotFoundException.class,
             SpecificPeriodNotFoundException.class,
             CustomerNotFoundException.class,
-            BookingNotFoundException.class
+            BookingNotFoundException.class,
+            WeeklyPeriodNotForBooseException.class,
+            SpecificPeriodNotForBooseException.class,
+            BookingNotForBooseException.class,
+            BookingNotByCustomerException.class,
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public List<SimpleError> handleNotFound(Exception exception) {
@@ -92,14 +96,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            WeeklyPeriodNotForBooseException.class,
-            SpecificPeriodNotForBooseException.class,
             OverlappingWeeklyPeriodException.class,
             OverlappingSpecificPeriodException.class,
             DateOutOfBookableBoundsException.class,
             IntervalOutOfBookableBoundsException.class,
-            BookingNotForBooseException.class,
-            BookingNotByCustomerException.class,
             BookingNotAvailablePeriodException.class,
             AlreadyBookedException.class,
             NoSuchBooseException.class
