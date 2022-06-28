@@ -3,7 +3,7 @@ package hu.progmasters.servicebooker.service;
 import hu.progmasters.servicebooker.ServicebookerApplication;
 import hu.progmasters.servicebooker.domain.TablePeriod;
 import hu.progmasters.servicebooker.domain.entity.*;
-import hu.progmasters.servicebooker.dto.booking.BookingInfo;
+import hu.progmasters.servicebooker.dto.boose.TablePeriodBookingInfo;
 import hu.progmasters.servicebooker.dto.boose.TablePeriodInfo;
 import hu.progmasters.servicebooker.service.examples.BooseExamples;
 import hu.progmasters.servicebooker.service.examples.CustomerExamples;
@@ -297,7 +297,7 @@ class TimeTableServiceTest {
                 comment, booking);
     }
 
-    TablePeriodInfo periodInfo(String start, String end, String comment, BookingInfo bookingInfo) {
+    TablePeriodInfo periodInfo(String start, String end, String comment, TablePeriodBookingInfo bookingInfo) {
         TablePeriodInfo info = new TablePeriodInfo();
         info.setStart(LocalDateTime.parse(start));
         info.setEnd(LocalDateTime.parse(end));
@@ -306,13 +306,10 @@ class TimeTableServiceTest {
         return info;
     }
 
-    BookingInfo bookingInfo(Booking booking) {
-        BookingInfo info = new BookingInfo();
+    TablePeriodBookingInfo bookingInfo(Booking booking) {
+        TablePeriodBookingInfo info = new TablePeriodBookingInfo();
         info.setId(booking.getId());
-        info.setStart(booking.getStart());
-        info.setEnd(booking.getEnd());
         info.setComment(booking.getComment());
-        info.setBoose(BooseExamples.hairdresserInfo());
         info.setCustomer(CustomerExamples.johnInfo());
         return info;
     }
