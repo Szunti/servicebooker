@@ -2,6 +2,7 @@ package hu.progmasters.servicebooker.repository;
 
 import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.domain.entity.SpecificPeriod;
+import hu.progmasters.servicebooker.domain.entity.SpecificPeriodType;
 import hu.progmasters.servicebooker.util.interval.Interval;
 import org.springframework.stereotype.Repository;
 
@@ -43,17 +44,17 @@ public class SpecificPeriodRepository {
 
     // TODO can we do better with the lock?
     public List<SpecificPeriod> findAllOrderedFor(Boose boose, Interval<LocalDateTime> interval,
-                                                  Boolean bookable, boolean lock) {
+                                                  SpecificPeriodType type, boolean lock) {
         TypedQuery<SpecificPeriod> query = entityManager.createQuery(
                         "SELECT sp FROM SpecificPeriod sp WHERE sp.boose = :boose " +
                                 "AND sp.start < :intervalEnd AND sp.end > :intervalStart " +
-                                "AND (:bookable IS NULL OR sp.bookable = :bookable) " +
+                                "AND (:type IS NULL OR sp.type = :type) " +
                                 "ORDER BY sp.start",
                         SpecificPeriod.class)
                 .setParameter("boose", boose)
                 .setParameter("intervalStart", interval.getStart())
                 .setParameter("intervalEnd", interval.getEnd())
-                .setParameter("bookable", bookable);
+                .setParameter("type", type);
         if (lock) {
             query.setLockMode(LockModeType.PESSIMISTIC_READ);
         }

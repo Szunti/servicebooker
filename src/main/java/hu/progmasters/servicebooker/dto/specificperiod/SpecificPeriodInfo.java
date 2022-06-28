@@ -1,5 +1,6 @@
 package hu.progmasters.servicebooker.dto.specificperiod;
 
+import hu.progmasters.servicebooker.domain.entity.SpecificPeriodType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,6 @@ public class SpecificPeriodInfo {
     @Schema(example = "Can work this day.")
     private String comment;
 
-    @Schema(example = "true")
-    private boolean bookable;
+    @Schema(example = "ADD_OR_REPLACE")
+    private SpecificPeriodType type;
 }

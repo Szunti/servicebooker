@@ -2,6 +2,7 @@ package hu.progmasters.servicebooker.service.examples;
 
 import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.domain.entity.SpecificPeriod;
+import hu.progmasters.servicebooker.domain.entity.SpecificPeriodType;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodInfo;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodUpdateCommand;
@@ -26,7 +27,7 @@ public class SpecificPeriodExamples {
         command.setStart(JUN22_START);
         command.setEnd(JUN22_END);
         command.setComment(JUN22_COMMENT);
-        command.setBookable(true);
+        command.setType(SpecificPeriodType.ADD_OR_REPLACE);
         return command;
     }
 
@@ -36,7 +37,7 @@ public class SpecificPeriodExamples {
         specificPeriod.setStart(JUN22_START);
         specificPeriod.setEnd(JUN22_END);
         specificPeriod.setComment(JUN22_COMMENT);
-        specificPeriod.setBookable(true);
+        specificPeriod.setType(SpecificPeriodType.ADD_OR_REPLACE);
         specificPeriod.setBoose(boose);
         return specificPeriod;
     }
@@ -53,7 +54,7 @@ public class SpecificPeriodExamples {
         info.setStart(JUN22_START);
         info.setEnd(JUN22_END);
         info.setComment(JUN22_COMMENT);
-        info.setBookable(true);
+        info.setType(SpecificPeriodType.ADD_OR_REPLACE);
         return info;
     }
 
@@ -63,7 +64,7 @@ public class SpecificPeriodExamples {
         specificPeriod.setStart(JUN21_START);
         specificPeriod.setEnd(JUN21_END);
         specificPeriod.setComment(JUN21_COMMENT);
-        specificPeriod.setBookable(false);
+        specificPeriod.setType(SpecificPeriodType.REMOVE);
         specificPeriod.setBoose(boose);
         return specificPeriod;
     }

@@ -2,6 +2,7 @@ package hu.progmasters.servicebooker.service;
 
 import hu.progmasters.servicebooker.domain.entity.Boose;
 import hu.progmasters.servicebooker.domain.entity.SpecificPeriod;
+import hu.progmasters.servicebooker.domain.entity.SpecificPeriodType;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodInfo;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodUpdateCommand;
@@ -59,18 +60,18 @@ public class SpecificPeriodService {
 
     @Transactional
     public List<SpecificPeriodInfo> findAllForBoose(int booseId, Interval<LocalDateTime> interval,
-                                                    Boolean bookable) {
+                                                    SpecificPeriodType type) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = booseService.getFromIdOrThrow(booseId);
-        return getAllForBoose(boose, constrainedInterval, bookable, false).stream()
+        return getAllForBoose(boose, constrainedInterval, type, false).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
     public List<SpecificPeriod> getAllForBoose(Boose boose, Interval<LocalDateTime> interval,
-                                               Boolean bookable, boolean lock) {
+                                               SpecificPeriodType type, boolean lock) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
-        return repository.findAllOrderedFor(boose, constrainedInterval, bookable, lock);
+        return repository.findAllOrderedFor(boose, constrainedInterval, type, lock);
     }
 
     @Transactional

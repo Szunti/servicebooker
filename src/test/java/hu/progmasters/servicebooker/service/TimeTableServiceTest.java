@@ -122,7 +122,8 @@ class TimeTableServiceTest {
 
     @Test
     void getTimeTableStreamForBoose_specificToAdd() {
-        addSpecificPeriod("2022-06-20T08:00:00", "2022-06-20T12:00:00", "specific", true);
+        addSpecificPeriod("2022-06-20T08:00:00", "2022-06-20T12:00:00",
+                "specific", SpecificPeriodType.ADD_OR_REPLACE);
         Interval<LocalDateTime> interval = interval(
                 LocalDateTime.parse("2022-06-20T09:00"), // Monday
                 LocalDateTime.parse("2022-06-20T14:00") // same Monday
@@ -138,7 +139,8 @@ class TimeTableServiceTest {
     @Test
     void getTimeTableStreamForBoose_weeklyOverriddenBySpecific() {
         addWeeklyPeriod("Mon 08:00", "Mon 12:00", "weekly");
-        addSpecificPeriod("2022-06-20T08:00:00", "2022-06-20T12:00:00", "specific", true);
+        addSpecificPeriod("2022-06-20T08:00:00", "2022-06-20T12:00:00",
+                "specific", SpecificPeriodType.ADD_OR_REPLACE);
         Interval<LocalDateTime> interval = interval(
                 LocalDateTime.parse("2022-06-20T09:00"), // Monday
                 LocalDateTime.parse("2022-06-28T14:00") // Tuesday on next week
@@ -154,7 +156,8 @@ class TimeTableServiceTest {
     @Test
     void getTimeTableStreamForBoose_weeklyOverlappingSpecific() {
         addWeeklyPeriod("Mon 08:00", "Mon 12:00", "weekly");
-        addSpecificPeriod("2022-06-20T10:00:00", "2022-06-20T13:00:00", "specific", true);
+        addSpecificPeriod("2022-06-20T10:00:00", "2022-06-20T13:00:00",
+                "specific", SpecificPeriodType.ADD_OR_REPLACE);
         Interval<LocalDateTime> interval = interval(
                 LocalDateTime.parse("2022-06-20T09:00"), // Monday
                 LocalDateTime.parse("2022-06-28T14:00") // Tuesday on next week
@@ -170,7 +173,8 @@ class TimeTableServiceTest {
     @Test
     void getTimeTableStreamForBoose_removeSpecific() {
         addWeeklyPeriod("Mon 08:00", "Mon 12:00", "weekly");
-        addSpecificPeriod("2022-06-20T10:00:00", "2022-06-20T13:00:00", "specific", false);
+        addSpecificPeriod("2022-06-20T10:00:00", "2022-06-20T13:00:00",
+                "specific", SpecificPeriodType.REMOVE);
         Interval<LocalDateTime> interval = interval(
                 LocalDateTime.parse("2022-06-20T09:00"), // Monday
                 LocalDateTime.parse("2022-06-28T14:00") // Tuesday on next week
@@ -185,7 +189,8 @@ class TimeTableServiceTest {
     @Test
     void getTimeTableStreamForBoose_withBooking() {
         addWeeklyPeriod("Sun 18:00", "Mon 12:00", "weekly");
-        addSpecificPeriod("2022-06-20T10:00:00", "2022-06-20T13:00:00", "specific", true);
+        addSpecificPeriod("2022-06-20T10:00:00", "2022-06-20T13:00:00",
+                "specific", SpecificPeriodType.ADD_OR_REPLACE);
         Booking first = addBooking("2022-06-20T10:00:00", "2022-06-20T13:00:00", "first");
         Interval<LocalDateTime> interval = interval(
                 LocalDateTime.parse("2022-06-18T08:00"), // Saturday
@@ -202,7 +207,8 @@ class TimeTableServiceTest {
     @Test
     void assembleTimeTableForBoose() {
         addWeeklyPeriod("Mon 08:00", "Mon 12:00", "weekly");
-        addSpecificPeriod("2022-06-20T10:00:00", "2022-06-20T13:00:00", "specific", true);
+        addSpecificPeriod("2022-06-20T10:00:00", "2022-06-20T13:00:00",
+                "specific", SpecificPeriodType.ADD_OR_REPLACE);
         Booking first = addBooking("2022-06-20T10:00:00", "2022-06-20T13:00:00", "first");
         Interval<LocalDateTime> interval = interval(
                 LocalDateTime.parse("2022-06-18T08:00"), // Saturday
@@ -222,7 +228,8 @@ class TimeTableServiceTest {
     @Test
     void assembleTimeTableForBoose_free() {
         addWeeklyPeriod("Mon 08:00", "Mon 12:00", "weekly");
-        addSpecificPeriod("2022-06-20T10:00:00", "2022-06-20T13:00:00", "specific", true);
+        addSpecificPeriod("2022-06-20T10:00:00", "2022-06-20T13:00:00",
+                "specific", SpecificPeriodType.ADD_OR_REPLACE);
         Booking first = addBooking("2022-06-20T10:00:00", "2022-06-20T13:00:00", "first");
         Interval<LocalDateTime> interval = interval(
                 LocalDateTime.parse("2022-06-18T08:00"), // Saturday
@@ -255,12 +262,12 @@ class TimeTableServiceTest {
         return toAdd;
     }
 
-    SpecificPeriod addSpecificPeriod(String start, String end, String comment, boolean bookable) {
+    SpecificPeriod addSpecificPeriod(String start, String end, String comment, SpecificPeriodType type) {
         SpecificPeriod toAdd = new SpecificPeriod();
         toAdd.setStart(LocalDateTime.parse(start));
         toAdd.setEnd(LocalDateTime.parse(end));
         toAdd.setComment(comment);
-        toAdd.setBookable(bookable);
+        toAdd.setType(type);
         toAdd.setBoose(boose);
         toAdd.setId(specificPeriods.size());
         specificPeriods.add(toAdd);

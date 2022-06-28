@@ -22,12 +22,12 @@ Az ügyfelek lefoglalhatnak időpontokat.
 
 ### API végpontok
 
-- **/services** [GET ✔, POST ✔]
-- **/services/{id}** [GET ✔, PUT ✔, DELETE ✔]
-- **/services/{id}/timetable?start=\<datetime\>&end=\<datetime\>&free** [GET ✔]
+- **/services** [GET, POST]
+- **/services/{id}** [GET, PUT, DELETE]
+- **/services/{id}/timetable?start=\<datetime\>&end=\<datetime\>&free** [GET]
 - **/services/{id}/weekly-periods** [GET, POST]
 - **/services/{id}/weekly-periods/{id}** [GET, PUT]
-- **/services/{id}/specific-periods?start=\<datetime\>&end=\<datetime\>&bookable** [GET, POST]
+- **/services/{id}/specific-periods?start=\<datetime\>&end=\<datetime\>[&type=ADD_OR_REPLACE]** [GET, POST]
 - **/services/{id}/specific-periods/{id}** [GET, PUT]
 - **/services/{id}/bookings?customer=\<customer-id\>&start=\<datetime\>&end=\<datetime\>** [GET]
 - **/services/{id}/bookings/{id}** [GET, PUT, DELETE]

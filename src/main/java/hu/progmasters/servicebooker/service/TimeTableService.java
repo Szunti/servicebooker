@@ -2,10 +2,7 @@ package hu.progmasters.servicebooker.service;
 
 import hu.progmasters.servicebooker.domain.PeriodInterval;
 import hu.progmasters.servicebooker.domain.TablePeriod;
-import hu.progmasters.servicebooker.domain.entity.Booking;
-import hu.progmasters.servicebooker.domain.entity.Boose;
-import hu.progmasters.servicebooker.domain.entity.SpecificPeriod;
-import hu.progmasters.servicebooker.domain.entity.WeeklyPeriod;
+import hu.progmasters.servicebooker.domain.entity.*;
 import hu.progmasters.servicebooker.dto.boose.TablePeriodInfo;
 import hu.progmasters.servicebooker.util.DayOfWeekTime;
 import hu.progmasters.servicebooker.util.interval.Interval;
@@ -79,7 +76,7 @@ public class TimeTableService {
 
         for (SpecificPeriod specificPeriod : specificPeriodList) {
             PeriodInterval periodInterval = periodInterval(specificPeriod);
-            if (specificPeriod.isBookable()) {
+            if (specificPeriod.getType() == SpecificPeriodType.ADD_OR_REPLACE) {
                 specificPeriodsToAdd.addWithoutChecks(periodInterval);
             }
             specificPeriodsToRemove.addWithoutChecks(periodInterval);

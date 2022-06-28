@@ -1,5 +1,6 @@
 package hu.progmasters.servicebooker.controller;
 
+import hu.progmasters.servicebooker.domain.entity.SpecificPeriodType;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodCreateCommand;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodInfo;
 import hu.progmasters.servicebooker.dto.specificperiod.SpecificPeriodUpdateCommand;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static hu.progmasters.servicebooker.controller.LogMessages.*;
 import static hu.progmasters.servicebooker.util.interval.Interval.interval;
@@ -67,12 +67,12 @@ public class SpecificPeriodController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificPeriodInfo> findAll(@PathVariable("booseId") int booseId,
-                                            @RequestParam(value = "start") LocalDateTime start,
-                                            @RequestParam(value = "end") LocalDateTime end,
-                                            @RequestParam Map<String, String> switches) {
-        Boolean bookable = switches.get("bookable") != null;
-        log.info(LOG_GET_SUB + "?start={}&end={}{}", BASE_URL, booseId, SUB_URL, start, end, bookable ? "&bookable" : "");
-        List<SpecificPeriodInfo> response = specificPeriodService.findAllForBoose(booseId, interval(start, end), bookable);
+                                            @RequestParam("start") LocalDateTime start,
+                                            @RequestParam("end") LocalDateTime end,
+                                            @RequestParam(value = "type", required = false) SpecificPeriodType type) {
+        log.info(LOG_GET_SUB + "?start={}&end={}{}", BASE_URL, booseId, SUB_URL,
+                start, end, type != null ? "&type=" + type : "");
+        List<SpecificPeriodInfo> response = specificPeriodService.findAllForBoose(booseId, interval(start, end), type);
         log.info(LOG_RESPONSE, HttpStatus.OK, response);
         return response;
     }
