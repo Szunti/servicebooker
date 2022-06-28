@@ -58,6 +58,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public List<ValidationError> handleGlobalBoundValidationError(DatesOutOfBookableBoundsException exception) {
+        log.info(LOG_EXCEPTION, exception);
+        return exception.getValidationErrors();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<SimpleError> handleMalformedRequestBody(HttpMessageNotReadableException exception) {
         log.info(LOG_EXCEPTION, exception);
         return List.of(new SimpleError("malformed request body"));
@@ -98,7 +105,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             OverlappingWeeklyPeriodException.class,
             OverlappingSpecificPeriodException.class,
-            DateOutOfBookableBoundsException.class,
             IntervalOutOfBookableBoundsException.class,
             BookingNotAvailablePeriodException.class,
             AlreadyBookedException.class,
