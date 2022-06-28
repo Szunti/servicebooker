@@ -1,0 +1,24 @@
+services:
+  servicebookerdb:
+    image: mysql
+    networks:
+      - servicebooker-network
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: servicebooker
+
+  servicebooker:
+    image: servicebooker
+    depends_on:
+      - servicebookerdb
+    networks:
+      - servicebooker-network
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://servicebookerdb/servicebooker
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+
+networks:
+  servicebooker-network:
