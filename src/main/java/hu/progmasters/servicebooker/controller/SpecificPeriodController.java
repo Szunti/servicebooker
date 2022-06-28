@@ -59,8 +59,7 @@ public class SpecificPeriodController {
     @Parameter(name = "booseId", example = "1")
     @Parameter(name = "start", example = "2022-06-20T08:00")
     @Parameter(name = "end", example = "2022-06-24T20:00")
-    @Parameter(name = "bookable", in = ParameterIn.QUERY, allowEmptyValue = true)
-    @Parameter(name = "switches", hidden = true)
+    @Parameter(name = "type", example = "ADD_OR_REPLACE")
     @ApiResponse(responseCode = "200", content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
             array = @ArraySchema(schema = @Schema(implementation = SpecificPeriodInfo.class))))

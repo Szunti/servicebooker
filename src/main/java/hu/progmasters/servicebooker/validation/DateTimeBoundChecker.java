@@ -47,7 +47,7 @@ public class DateTimeBoundChecker {
         Interval<LocalDateTime> constrained = boundingInterval.intersect(interval);
         if (constrained == null) {
             throw new IntervalOutOfBookableBoundsException(
-                    String.format("queried interval [%s, %s) does not have any point inside global bounds [%s, %s)",
+                    String.format("queried interval [%s, %s) does not have any points inside global bounds [%s, %s)",
                             interval.getStart(), interval.getEnd(),
                             boundingInterval.getStart(), boundingInterval.getEnd()));
         }
