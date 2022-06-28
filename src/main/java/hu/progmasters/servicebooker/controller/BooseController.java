@@ -5,6 +5,7 @@ import hu.progmasters.servicebooker.dto.boose.BooseInfo;
 import hu.progmasters.servicebooker.dto.boose.BooseUpdateCommand;
 import hu.progmasters.servicebooker.dto.boose.TablePeriodInfo;
 import hu.progmasters.servicebooker.service.BooseService;
+import hu.progmasters.servicebooker.service.TimeTableFilter;
 import hu.progmasters.servicebooker.service.TimeTableService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static hu.progmasters.servicebooker.controller.LogMessages.*;
 import static hu.progmasters.servicebooker.util.interval.Interval.interval;
@@ -87,7 +87,8 @@ public class BooseController {
     @Parameter(name = "id", example = "1")
     @ApiResponse(responseCode = "200", content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = BooseInfo.class))) @PutMapping("/{id}")
+            schema = @Schema(implementation = BooseInfo.class)))
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BooseInfo update(@PathVariable("id") int id, @Valid @RequestBody BooseUpdateCommand command) {
         log.info(LOG_UPDATE, BASE_URL, id, command);
@@ -100,7 +101,8 @@ public class BooseController {
     @Parameter(name = "id", example = "1")
     @ApiResponse(responseCode = "200", content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = BooseInfo.class))) @DeleteMapping("/{id}")
+            schema = @Schema(implementation = BooseInfo.class)))
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BooseInfo delete(@PathVariable("id") int id) {
         log.info(LOG_DELETE, BASE_URL, id);
@@ -113,19 +115,19 @@ public class BooseController {
     @Parameter(name = "id", example = "1")
     @Parameter(name = "start", example = "2022-06-20T08:00")
     @Parameter(name = "end", example = "2022-06-24T20:00")
-    @Parameter(name = "free", in = ParameterIn.QUERY, allowEmptyValue = true)
-    @Parameter(name = "switches", hidden = true)
+    @Parameter(name = "filter", example = "FREE")
     @ApiResponse(responseCode = "200", content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            array = @ArraySchema(schema = @Schema(implementation = TablePeriodInfo.class)))) @GetMapping("/{id}/timetable")
+            array = @ArraySchema(schema = @Schema(implementation = TablePeriodInfo.class))))
+    @GetMapping("/{id}/timetable")
     @ResponseStatus(HttpStatus.OK)
     public List<TablePeriodInfo> getTimeTable(@PathVariable("id") int id,
                                               @RequestParam("start") LocalDateTime start,
                                               @RequestParam("end") LocalDateTime end,
-                                              @RequestParam Map<String, String> switches) {
-        boolean free = switches.get("free") != null;
-        log.info(LOG_GET + "/{}/timetable?start={}&end={}{}", BASE_URL, id, start, end, free ? "&free" : "");
-        List<TablePeriodInfo> response = timeTableService.assembleTimeTableForBoose(id, interval(start, end), free);
+                                              @RequestParam(value = "filter", required = false) TimeTableFilter filter) {
+        log.info(LOG_GET + "/{}/timetable?start={}&end={}{}", BASE_URL,
+                id, start, end, filter != null ? "&filter=" + filter : "");
+        List<TablePeriodInfo> response = timeTableService.assembleTimeTableForBoose(id, interval(start, end), filter);
         log.info(LOG_RESPONSE, HttpStatus.OK, response);
         return response;
     }

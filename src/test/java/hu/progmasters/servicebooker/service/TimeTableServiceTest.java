@@ -218,7 +218,7 @@ class TimeTableServiceTest {
         when(dateTimeBoundChecker.constrain(interval)).thenReturn(interval);
 
         List<TablePeriodInfo> timeTableInfo =
-                timeTableService.assembleTimeTableForBoose(boose.getId(), interval, false);
+                timeTableService.assembleTimeTableForBoose(boose.getId(), interval, null);
 
         assertThat(timeTableInfo).containsExactly(
                 periodInfo("2022-06-20T10:00", "2022-06-20T13:00", "specific", bookingInfo(first)),
@@ -239,7 +239,7 @@ class TimeTableServiceTest {
         when(dateTimeBoundChecker.constrain(interval)).thenReturn(interval);
 
         List<TablePeriodInfo> timeTableInfo =
-                timeTableService.assembleTimeTableForBoose(boose.getId(), interval, true);
+                timeTableService.assembleTimeTableForBoose(boose.getId(), interval, TimeTableFilter.FREE);
 
         assertThat(timeTableInfo).containsExactly(
                 periodInfo("2022-06-27T08:00", "2022-06-27T12:00", "weekly", null));

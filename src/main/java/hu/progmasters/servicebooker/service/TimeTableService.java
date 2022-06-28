@@ -49,14 +49,23 @@ public class TimeTableService {
 
     @Transactional
     public List<TablePeriodInfo> assembleTimeTableForBoose(int booseId, Interval<LocalDateTime> interval,
-                                                           boolean free) {
+                                                           TimeTableFilter filter) {
         Interval<LocalDateTime> constrainedInterval = dateTimeBoundChecker.constrain(interval);
         Boose boose = booseService.getFromIdOrThrow(booseId);
         Stream<TablePeriod> timeTableStream = getTimeTableStreamForBoose(boose, constrainedInterval, false);
-        if (free) {
-            timeTableStream = timeTableStream.filter(
-                    period -> period.getBooking() == null
-            );
+        if (filter != null) {
+            switch (filter) {
+                case FREE:
+                    timeTableStream = timeTableStream.filter(
+                            period -> period.getBooking() == null
+                    );
+                    break;
+                case BOOKED:
+                    timeTableStream = timeTableStream.filter(
+                            period -> period.getBooking() != null
+                    );
+                    break;
+            }
         }
         return timeTableStream
                 .map(this::toDto)
