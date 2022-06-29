@@ -6,15 +6,18 @@ Backend egy olyan alkalmazáshoz, amivel különböző szolgáltatásokra lehet 
 
 ### Funkciók szolgáltatóknak
 
-A szolgáltatók meghirdetik a szolgáltatásaikat és beállítják mely időpontokban érhetőek el.
+A szolgáltatók meghirdetik a szolgáltatásaikat és beállítják, mely időpontokban érhetőek el.
 Az időpontokat kétféleképpen lehet megadni:
 
 1. Hetente ismétlődő periódusok
 2. Egyszeri alkalmak, ezek felülírják a heti menetrendet
 
-Pl, ha egy fodrászat hétfőnként 8-16-ig fogad vendégeket, de egyik nap délelőtt a fodrásznak más elfoglaltsága van,
+Pl, ha egy fodrászat hétfőnként 8-16-ig félóránként foglalható, de egyik nap délelőtt a fodrásznak más elfoglaltsága van,
 akkor a délelőtti órák egy egyszeri pár órás szünettel felülírhatóak. Ha ezt a fodrász később pótolná akkor hasonlóan
-egy egyszeri új periódussal meg lehet jelölni új időpontokat amikben vendégek fogadhatóak.
+egy egyszeri új periódussal meg lehet jelölni új időpontokat.
+
+Egy képpel talán egyszerűbb:
+![Időkezelés](doc/time-management.svg)
 
 ### Funkciók ügyfeleknek
 
