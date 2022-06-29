@@ -92,20 +92,20 @@ Tulajdonságok:
 
 ### API végpontok
 
-- **/services** [GET, POST]
-- **/services/{id}** [GET, PUT, DELETE]
-- **/services/{id}/timetable?start=\<datetime\>&end=\<datetime\>[&filter=FREE]** [GET]
-- **/services/{id}/weekly-periods** [GET, POST]
-- **/services/{id}/weekly-periods/{id}** [GET, PUT]
-- **/services/{id}/specific-periods?start=\<datetime\>&end=\<datetime\>[&type=ADD_OR_REPLACE]** [GET, POST]
-- **/services/{id}/specific-periods/{id}** [GET, PUT]
-- **/services/{id}/bookings?customer=\<customer-id\>&start=\<datetime\>&end=\<datetime\>** [GET]
-- **/services/{id}/bookings/{id}** [GET, PUT, DELETE]
-- **/customers** [GET, POST]
-- **/customers/{id}** [GET, PUT, DELETE]
-- **/customer/{id}/bookings** [POST]
-- **/customer/{id}/bookings?service=\<service-id\>&start=\<datetime\>&end=\<datetime\>** [GET]
-- **/customer/{id}/bookings/{id}** [GET, PUT, DELETE]
+- `/services` [GET, POST]
+- `/services/{id}` [GET, PUT, DELETE]
+- `/services/{id}/timetable?start=\<datetime\>&end=\<datetime\>[&filter=FREE]` [GET]
+- `/services/{id}/weekly-periods` [GET, POST]
+- `/services/{id}/weekly-periods/{id}` [GET, PUT]
+- `/services/{id}/specific-periods?start=\<datetime\>&end=\<datetime\>[&type=ADD_OR_REPLACE]` [GET, POST]
+- `/services/{id}/specific-periods/{id}` [GET, PUT]
+- `/services/{id}/bookings?customer=\<customer-id\>&start=\<datetime\>&end=\<datetime\>` [GET]
+- `/services/{id}/bookings/{id}` [GET, PUT, DELETE]
+- `/customers` [GET, POST]
+- `/customers/{id}` [GET, PUT, DELETE]
+- `/customer/{id}/bookings` [POST]
+- `/customer/{id}/bookings?service=\<service-id\>&start=\<datetime\>&end=\<datetime\>` [GET]
+- `/customer/{id}/bookings/{id}` [GET, PUT, DELETE]
 
 ### Alkalmazás elindítása
 Docker image (servicebooker:latest) készítése:
