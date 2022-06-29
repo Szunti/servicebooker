@@ -12,7 +12,7 @@ Az időpontokat kétféleképpen lehet megadni:
 1. Hetente ismétlődő periódusok (WeeklyPeriod)
 2. Egyszeri alkalmak, ezek felülírják a heti menetrendet (SpecificPeriod)
 
-A lenti ábra mutatja, hogy ez hogy működik:
+A lenti ábra mutatja, ez hogyan működik:
 - A heti menetrend van bal oldalon. A WeeklyPeriod csak a hét napjaihoz kötött. 
 - Foglalni viszont konkrét dátumokat lehet, ehhez a heti menetrendet le kell képezni ismétlésekkel az idővonalra. Ez a második oszlop. A heti menetrendből származó időpontok narancssárgák.
 - A SpecificPeriod már az idővonalat módosítja. Lehet új foglalható időpontokat hozzáadni (zöld), módosítani meglévőket (lila), vagy törölni (szürke).
@@ -141,6 +141,19 @@ Konténerek, hálózat és képfájl törlése:
 $ docker compose down
 $ docker image remove servicebooker
 ```
+
+### Példa egy foglalásra
+
+Az üres adatbázisból a következő lépésekkel lehet elértni egy foglalást, Swagger(http://localhost:8080/swagger-ui/index.html) segít:
+1. Mentsünk el egy Boose-t! (POST `/api/services`)
+2. Mentsünk el egy SpecificPeriod-ot a Boose-hoz! (POST `/api/services/<boose-id>/specific-periods`)
+
+   Így lesz egy foglalható időpontunk. Ezt akár ellenőrizhetjük is. (GET `/api/services/<boose-id>/timetable`) 
+3. Mentsünk el egy Customer-t! (POST `/api/customers`)
+4. Foglaljuk le a fenti időpontot! (POST `/api/customers/<customer-id>/bookings`)
+5. Meg is jelent a foglalás az időtáblában. (GET `/api/services/<boose-id>/timetable`)
+
+A 2-es pont helyett WeeklyPeriod-ot is menthetünk. (POST `/api/services/<boose-id>/weekly-periods`)
 
 ## Követelmények 
 
