@@ -14,9 +14,9 @@ Az időpontokat kétféleképpen lehet megadni:
 
 A lenti ábra mutatja, ez hogyan működik:
 - A heti menetrend van bal oldalon. A WeeklyPeriod csak a hét napjaihoz kötött. 
-- Foglalni viszont konkrét dátumokat lehet, ehhez a heti menetrendet le kell képezni ismétlésekkel az idővonalra. Ez a második oszlop. A heti menetrendből származó időpontok narancssárgák.
+- Foglalni viszont konkrét dátumokat lehet, ehhez a heti menetrendet le kell képezni ismétlésekkel az idővonalra. Ez a második oszlop. Az így kapott blokkokat narancssárgán jelöltem.
 - A SpecificPeriod már az idővonalat módosítja. Lehet új foglalható időpontokat hozzáadni (zöld), módosítani meglévőket (lila), vagy törölni (szürke).
-- Az utolsó oszlop az így létrejött idővonal. Az adatbázisban ez nem szerepel. A TimeTableService feladata, hogy ennek a megfelelő részletét létrehozza a foglalásokhoz.
+- Az utolsó oszlop a módosítások utáni idővonal. Az adatbázisban csak a WeeklyPeriod és a SpecificPeriod van mentve. A TimeTableService feladata ezekből kiszámolni az idővonalat. A teljes idővonalat nem lehet lekérni, mindig meg kell adni egy intervallumot.
 
 ![Időkezelés](doc/time-management.svg)
 
@@ -121,6 +121,8 @@ $ docker compose up -d
 
 A szerver a localhost:8080 -on elérhető.
 
+Az SQL szabványban nincs megkötés a minimálisan és maximálisan tárolható dátumokra és lekérdezni sem lehet a szélső értékeket. Ezért ezek külön beállításai az alkalmazásnak. Csak a `min-bookable-date` és `max-bookable-date`
+ közötti dátumok lesznek mentve az adatbázisba.
 ---
 
 #### Leállítás, a kontérek megtartásával:
