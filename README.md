@@ -136,7 +136,7 @@ A szerver a `localhost:8080` -on elérhető.
 Az SQL szabványban nincs megkötés a minimálisan és maximálisan tárolható dátumokra és lekérdezni sem lehet a szélső értékeket, ezért ezek külön beállításai az alkalmazásnak. Csak a `min-bookable-date` és `max-bookable-date` közötti dátumok lesznek mentve az adatbázisba.
 
 ---
-#### Leállítás, a kontérek megtartásával
+#### Leállítás a konténerek megtartásával
 ```shell
 $ docker compose stop
 ````
