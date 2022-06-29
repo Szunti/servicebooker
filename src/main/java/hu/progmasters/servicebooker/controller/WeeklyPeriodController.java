@@ -22,7 +22,7 @@ import java.util.List;
 
 import static hu.progmasters.servicebooker.controller.LogMessages.*;
 
-@Tag(name = "Specific Periods")
+@Tag(name = "Weekly Periods")
 @Slf4j
 @RestController
 @RequestMapping(WeeklyPeriodController.BASE_URL + "/{booseId}" + WeeklyPeriodController.SUB_URL)

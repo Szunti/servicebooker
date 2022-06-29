@@ -24,7 +24,7 @@ import java.util.List;
 import static hu.progmasters.servicebooker.controller.LogMessages.*;
 import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 
-@Tag(name = "Weekly Periods")
+@Tag(name = "Specific Periods")
 @Slf4j
 @RestController
 @RequestMapping(SpecificPeriodController.BASE_URL + "/{booseId}" + SpecificPeriodController.SUB_URL)
