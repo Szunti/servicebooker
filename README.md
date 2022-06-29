@@ -16,13 +16,15 @@ A lenti ábra mutatja, ez hogyan működik:
 - A heti menetrend van bal oldalon. A WeeklyPeriod csak a hét napjaihoz kötött. 
 - Foglalni viszont konkrét dátumokat lehet, ehhez a heti menetrendet le kell képezni ismétlésekkel az idővonalra. Ez a második oszlop. Az így kapott blokkokat narancssárgán jelöltem.
 - A SpecificPeriod már az idővonalat módosítja. Lehet új foglalható időpontokat hozzáadni (zöld), módosítani meglévőket (lila), vagy törölni (szürke).
-- Az utolsó oszlop a módosítások utáni idővonal. Az adatbázisban csak a WeeklyPeriod és a SpecificPeriod van mentve. A TimeTableService feladata ezekből kiszámolni az idővonalat. A teljes idővonalat nem lehet lekérni, mindig meg kell adni egy intervallumot.
+- Az utolsó oszlop a módosítások utáni idővonal. 
+ 
+Az adatbázisban csak a WeeklyPeriod és a SpecificPeriod van mentve. A TimeTableService feladata az ábrán látható leképezések elvégzése. A teljes idővonalat nem lehet lekérni, csak egy meghatározott darabját (például 2022. jún 1. 6 órától - 2022. aug 5. 18 óráig), hiszen végtelen sokszor ismétlődnek a hetek. 
 
 ![Időkezelés](doc/time-management.svg)
 
 ### Funkciók ügyfeleknek
 
-Az ügyfelek foglalhatnak időpontokat. Az ábrán jobboldalt létrehozott idővonalról választanak.
+Az ügyfelek foglalhatnak időpontokat. Az ábrán jobb oldalt létrehozott idővonalról választanak.
 
 ### Domain objektumok
 
@@ -32,12 +34,11 @@ Tulajdonságok:
 - név
 - leírás
 
-Például ha van egy fodrászat, akkor minden egyes fodrásznak lehet egy saját Boose-a. Ezekhez tartoznak az időpontok. Egy Boose-ra egy időpontban csak egy ügyfél foglalhat.
-
+Például ha van egy fodrászat, akkor minden egyes fodrásznak lehet egy saját Boose-a. Ezekhez tartoznak az időpontok, amiket foglalni lehet. Adott Boose adott időpontját nem foglalhatja le két különböző ügyfél.
 
 #### WeeklyPeriod
 
-Ez már feljebb szerepelt, a heti menetrendben egy időpont. pl Kedd 8:00-tól 8:30-ig. Mindig egy Boose-hoz tartozik.
+Ez már feljebb szerepelt, a heti menetrendben egy időpont. Például Kedd 8:00-tól 8:30-ig. Mindig egy Boose-hoz tartozik.
 
 Tulajdonságok:
 - kezdet
@@ -45,11 +46,11 @@ Tulajdonságok:
 - megjegyzés
 - Boose amihez tartozik
 
-Egy ilyen periódus átnyúlhat a következő hétre, például vasárnap-tól hétfőig.
+Egy ilyen periódus akár átnyúlhat a hét végén, például vasárnaptól hétfőig.
 
 #### SpecificPeriod
 
-Szintén volt feljebb. Ezek már konkrét dátumokhoz kötöttek, pl 2022. június 20. 8 órától 10 óráig. Ez is egy Boose-hoz tartozik
+Szintén volt feljebb. Ezek már konkrét dátumokhoz kötöttek. Például 2022. június 20. 8 órától 10 óráig. Ez is egy Boose-hoz tartozik.
 
 Tulajdonságok:
 - kezdet
@@ -57,7 +58,7 @@ Tulajdonságok:
 - megjegyzés
 - típus:
   - ADD_OR_REPLACE, ha felülírja a hetit és foglalható (zöld és lila volt az ábrán)
-  - REMOVE, ez is felülírja a hetit, csak nem foglalható
+  - REMOVE, ez is felülírja a hetit, csak nem foglalható (szürke)
 - Boose amihez tartozik
 
 #### Customer
@@ -90,25 +91,37 @@ Tulajdonságok:
 - megjegyzés
 - Booking, ha van foglalás
 
+Aszerint, hogy tartozik-e Booking a TablePeriod-hoz, mondhatjuk, hogy az állapota `FREE` vagy `BOOKED`.
+
 ### API végpontok
+
+#### Jelölés
+
+`{id}` : egy id, akár többször is lehet egy url-ben. Ilyenkor mindegyik előfordulás egymástól független id-ket jelöl. Például `/services/{id}/weekly-periods/{id}` -ben az első `{id}` a service-hez tartozik, a második a weekly-periods-hoz.
+
+`<datetime>` : tetszőleges dátum, ISO formátum, például 2022-06-12T08:00
+
+`[&param=value]` : elhagyható paraméter, alább mindkétszer szűrésre használható. Ha el van hagyva, akkor minden elemet visszaad a kérés.
+
+#### Végpontok
 
 - `/services` [GET, POST]
 - `/services/{id}` [GET, PUT, DELETE]
-- `/services/{id}/timetable?start=\<datetime\>&end=\<datetime\>[&filter=FREE]` [GET]
+- `/services/{id}/timetable?start=<datetime>&end=<datetime>[&filter=FREE]` [GET]
 - `/services/{id}/weekly-periods` [GET, POST]
 - `/services/{id}/weekly-periods/{id}` [GET, PUT]
-- `/services/{id}/specific-periods?start=\<datetime\>&end=\<datetime\>[&type=ADD_OR_REPLACE]` [GET, POST]
+- `/services/{id}/specific-periods?start=<datetime>&end=<datetime>[&type=ADD_OR_REPLACE]` [GET, POST]
 - `/services/{id}/specific-periods/{id}` [GET, PUT]
-- `/services/{id}/bookings?customer=\<customer-id\>&start=\<datetime\>&end=\<datetime\>` [GET]
+- `/services/{id}/bookings?start=<datetime>&end=<datetime>` [GET]
 - `/services/{id}/bookings/{id}` [GET, PUT, DELETE]
 - `/customers` [GET, POST]
 - `/customers/{id}` [GET, PUT, DELETE]
 - `/customer/{id}/bookings` [POST]
-- `/customer/{id}/bookings?service=\<service-id\>&start=\<datetime\>&end=\<datetime\>` [GET]
+- `/customer/{id}/bookings?start=<datetime>&end=<datetime>` [GET]
 - `/customer/{id}/bookings/{id}` [GET, PUT, DELETE]
 
 ### Alkalmazás elindítása
-Docker image (servicebooker:latest) készítése:
+Docker image (`servicebooker:latest`) készítése:
 ```shell
 $ ./docker-rebuild.sh 
 ```
@@ -118,27 +131,25 @@ Ezután docker compose-zal indítható a mysql szerver és az alkalmazás:
 $ docker compose up -d
 ```
 
+A szerver a `localhost:8080` -on elérhető.
 
-A szerver a localhost:8080 -on elérhető.
+Az SQL szabványban nincs megkötés a minimálisan és maximálisan tárolható dátumokra és lekérdezni sem lehet a szélső értékeket, ezért ezek külön beállításai az alkalmazásnak. Csak a `min-bookable-date` és `max-bookable-date` közötti dátumok lesznek mentve az adatbázisba.
 
-Az SQL szabványban nincs megkötés a minimálisan és maximálisan tárolható dátumokra és lekérdezni sem lehet a szélső értékeket. Ezért ezek külön beállításai az alkalmazásnak. Csak a `min-bookable-date` és `max-bookable-date`
- közötti dátumok lesznek mentve az adatbázisba.
 ---
-
-#### Leállítás, a kontérek megtartásával:
+#### Leállítás, a kontérek megtartásával
 ```shell
 $ docker compose stop
 ````
 
 
 ---
-#### Újraindítás:
+#### Újraindítás
 ```shell
 $ docker compose start
 ```
 ---
 
-#### Konténerek, hálózat és képfájl törlése:
+#### Konténerek, hálózat és képfájl törlése
 ```shell
 $ docker compose down
 $ docker image remove servicebooker
@@ -146,7 +157,7 @@ $ docker image remove servicebooker
 
 ### Példa egy foglalásra
 
-Az üres adatbázisból a következő lépésekkel lehet elértni egy foglalást, Swagger(http://localhost:8080/swagger-ui/index.html) segít:
+Az üres adatbázisból a következő lépésekkel lehet elérni egy foglalást, Swagger(http://localhost:8080/swagger-ui/index.html) segít:
 1. Mentsünk el egy Boose-t! (POST `/api/services`)
 2. Mentsünk el egy SpecificPeriod-ot a Boose-hoz! (POST `/api/services/<boose-id>/specific-periods`)
 
@@ -163,7 +174,7 @@ A követelményeket a [requirements.md](requirements.md) tartalmazza. Igyekeztem
 
 #### Swagger: http://localhost:8080/swagger-ui/index.html
 
-#### Teszlefedettség:
+#### Teszlefedettség
 - unit tesztek
   - service package `97%`
   - util package `94%`
@@ -174,7 +185,7 @@ A követelményeket a [requirements.md](requirements.md) tartalmazza. Igyekeztem
 
 - Vandrus Zoltán
 
-## Linkek:
+## Linkek
 
 - Diagramok: [diagrams.net](https://app.diagrams.net) webalkalmazással
   megnyitható [google drive link](https://drive.google.com/file/d/12AK1elUCa2w8mthzNqpbRXYZbONwvwBY/view?usp=sharing)
