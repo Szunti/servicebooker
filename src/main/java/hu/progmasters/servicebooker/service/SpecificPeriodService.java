@@ -53,7 +53,6 @@ public class SpecificPeriodService {
         if (!repository.findOverlappingPeriods(boose, toSave).isEmpty()) {
             throw new OverlappingSpecificPeriodException();
         }
-        // TODO return if weekly is replaced, partially covered or neither
         SpecificPeriod saved = repository.save(toSave);
         return toDto(saved);
     }
@@ -81,7 +80,6 @@ public class SpecificPeriodService {
     }
 
     private SpecificPeriod getForBooseByIdOrThrow(int booseId, int id) {
-        // TODO maybe getReference is enough
         Boose boose = booseService.getFromIdOrThrow(booseId);
         SpecificPeriod specificPeriod = repository.findById(id).orElseThrow(
                 () -> new SpecificPeriodNotFoundException(id)

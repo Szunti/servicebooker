@@ -19,6 +19,5 @@ public class WeeklyPeriodCreateCommand {
     private DayOfWeekTime end;
 
     @Schema(example = "Worst part of the week.")
-    //TODO null as empty string on view
     private String comment;
 }

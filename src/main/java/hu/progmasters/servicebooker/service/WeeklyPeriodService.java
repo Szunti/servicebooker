@@ -65,7 +65,6 @@ public class WeeklyPeriodService {
     }
 
     private WeeklyPeriod getForBooseByIdOrThrow(int booseId, int id) {
-        // TODO maybe getReference is enough
         Boose boose = booseService.getFromIdOrThrow(booseId);
         WeeklyPeriod weeklyPeriod = repository.findById(id).orElseThrow(
                 () -> new WeeklyPeriodNotFoundException(id)

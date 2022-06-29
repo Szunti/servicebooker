@@ -42,7 +42,6 @@ public class SpecificPeriodRepository {
         return Optional.ofNullable(entityManager.find(SpecificPeriod.class, id));
     }
 
-    // TODO can we do better with the lock?
     public List<SpecificPeriod> findAllOrderedFor(Boose boose, Interval<LocalDateTime> interval,
                                                   SpecificPeriodType type, boolean lock) {
         TypedQuery<SpecificPeriod> query = entityManager.createQuery(

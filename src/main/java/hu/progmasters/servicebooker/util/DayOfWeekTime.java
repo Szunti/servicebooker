@@ -66,7 +66,6 @@ public class DayOfWeekTime implements TemporalAccessor {
         return new DayOfWeekTime(dayOfWeek, time);
     }
 
-    // TODO use StdSerializer, @JsonComponent
     @JsonCreator
     public static DayOfWeekTime parse(CharSequence text) {
         return formatter.parse(text, DayOfWeekTime::from);

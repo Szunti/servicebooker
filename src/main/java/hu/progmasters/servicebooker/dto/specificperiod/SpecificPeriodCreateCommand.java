@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @StartBeforeEnd
 public class SpecificPeriodCreateCommand implements CommandWithStartAndEnd {
-    // TODO use interval instead of start and end
     @Schema(type = "string", example = "2022-06-22T08:00")
     @NotNull
     private LocalDateTime start;
