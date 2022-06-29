@@ -24,7 +24,7 @@ public class BookingRepository {
 
     public Optional<Booking> findById(int id) {
         TypedQuery<Booking> query = entityManager.createQuery("SELECT b FROM Booking b " +
-                "WHERE b.id = :id AND b.boose.deleted = FALSE and b.customer.deleted = FALSE", Booking.class)
+                        "WHERE b.id = :id AND b.boose.deleted = FALSE and b.customer.deleted = FALSE", Booking.class)
                 .setParameter("id", id);
         try {
             return Optional.of(query.getSingleResult());

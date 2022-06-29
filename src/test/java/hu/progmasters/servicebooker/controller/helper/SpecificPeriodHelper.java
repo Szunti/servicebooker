@@ -2,7 +2,6 @@ package hu.progmasters.servicebooker.controller.helper;
 
 import com.jayway.jsonpath.JsonPath;
 import hu.progmasters.servicebooker.controller.SpecificPeriodController;
-import hu.progmasters.servicebooker.controller.WeeklyPeriodController;
 import hu.progmasters.servicebooker.domain.entity.SpecificPeriodType;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

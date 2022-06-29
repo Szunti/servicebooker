@@ -1,6 +1,6 @@
 CREATE TABLE boose
 (
-    id          INT NOT NULL AUTO_INCREMENT,
+    id          INT          NOT NULL AUTO_INCREMENT,
     name        VARCHAR(255) NOT NULL,
     description VARCHAR(5000),
 

@@ -1,6 +1,6 @@
 servicebooker:
-#  these are needed because minimum and maximum values for date and time values
-#  are database specific, just make sure these values are within limits
+  #  these are needed because minimum and maximum values for date and time values
+  #  are database specific, just make sure these values are within limits
   min-bookable-date: 2000-01-01T00:00:00
   max-bookable-date: 3000-01-01T00:00:00
 

@@ -23,7 +23,7 @@ public class CustomerRepository {
 
     public Optional<Customer> findById(int id) {
         TypedQuery<Customer> query = entityManager.createQuery("SELECT c FROM Customer c " +
-                "WHERE c.id = :id AND c.deleted = FALSE", Customer.class)
+                        "WHERE c.id = :id AND c.deleted = FALSE", Customer.class)
                 .setParameter("id", id);
         try {
             return Optional.of(query.getSingleResult());

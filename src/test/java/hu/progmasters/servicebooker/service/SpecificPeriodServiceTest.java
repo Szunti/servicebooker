@@ -96,7 +96,7 @@ class SpecificPeriodServiceTest {
         );
         when(dateTimeBoundChecker.constrain(interval)).thenReturn(interval);
         when(booseService.getFromIdOrThrow(BooseExamples.HAIRDRESSER_ID)).thenReturn(boose);
-        when(specificPeriodRepository.findAllOrderedFor(boose, interval,null, false))
+        when(specificPeriodRepository.findAllOrderedFor(boose, interval, null, false))
                 .thenReturn(List.of(first, second));
 
         List<SpecificPeriodInfo> specificPeriodInfos =

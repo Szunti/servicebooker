@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static hu.progmasters.servicebooker.controller.matcher.ErrorResultMatchers.singleError;
 import static hu.progmasters.servicebooker.controller.matcher.ErrorResultMatchers.validationErrors;
 import static hu.progmasters.servicebooker.controller.matcher.ValidationErrorMatcher.validationError;
-import static hu.progmasters.servicebooker.domain.entity.SpecificPeriodType.ADD_OR_REPLACE;
-import static hu.progmasters.servicebooker.domain.entity.SpecificPeriodType.REMOVE;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -101,7 +99,7 @@ class BookingCustomerControllerIT {
     @Test
     void save_noPeriod() throws Exception {
         booking.save(customerId, booseId, "2022-06-20T08:00", "2022-06-20T10:00",
-                "a booking")
+                        "a booking")
                 .andExpectAll(
                         status().isBadRequest(),
                         singleError(containsString("no bookable period"))
@@ -111,7 +109,7 @@ class BookingCustomerControllerIT {
     @Test
     void save_noSuchBoose() throws Exception {
         booking.saveWithPeriod(customerId, 1000, "2022-06-20T08:00", "2022-06-20T10:00",
-                "a booking for non-existent boose")
+                        "a booking for non-existent boose")
                 .andExpectAll(
                         status().isBadRequest(),
                         singleError(containsString("not found"))
@@ -250,7 +248,7 @@ class BookingCustomerControllerIT {
 
     @Test
     void delete() throws Exception {
-        int id = booking.saveWithPeriodAndGetId(customerId, booseId,"2022-06-28T10:00", "2022-06-28T12:00",
+        int id = booking.saveWithPeriodAndGetId(customerId, booseId, "2022-06-28T10:00", "2022-06-28T12:00",
                 "saved");
 
         booking.deleteById(customerId, id);

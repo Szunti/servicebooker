@@ -61,6 +61,6 @@ public class BooseHelper {
 
     public ResultActions getTimeTable(int id, String start, String end, TimeTableFilter filter) throws Exception {
         String queryParams = String.format("?start=%s&end=%s%s", start, end, filter != null ? "&filter=" + filter : "");
-        return mockMvc.perform(get(BooseController.BASE_URL + "/"+ id + "/timetable" + queryParams));
+        return mockMvc.perform(get(BooseController.BASE_URL + "/" + id + "/timetable" + queryParams));
     }
 }

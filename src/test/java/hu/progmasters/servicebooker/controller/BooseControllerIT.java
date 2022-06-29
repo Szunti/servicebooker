@@ -1,6 +1,6 @@
 package hu.progmasters.servicebooker.controller;
 
-import hu.progmasters.servicebooker.controller.helper.*;
+import hu.progmasters.servicebooker.controller.helper.BooseHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static hu.progmasters.servicebooker.controller.matcher.ErrorResultMatchers.singleError;
 import static hu.progmasters.servicebooker.controller.matcher.ErrorResultMatchers.singleValidationError;
-import static hu.progmasters.servicebooker.domain.entity.SpecificPeriodType.ADD_OR_REPLACE;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

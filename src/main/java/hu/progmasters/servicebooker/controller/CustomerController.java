@@ -50,7 +50,8 @@ public class CustomerController {
     @Operation(summary = "List customers")
     @ApiResponse(responseCode = "200", content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            array = @ArraySchema(schema = @Schema(implementation = CustomerInfo.class)))) @GetMapping
+            array = @ArraySchema(schema = @Schema(implementation = CustomerInfo.class))))
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<CustomerInfo> findAll() {
         log.info(LOG_GET, BASE_URL);
@@ -63,7 +64,8 @@ public class CustomerController {
     @Parameter(name = "id", example = "2")
     @ApiResponse(responseCode = "200", content = @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CustomerInfo.class))) @GetMapping("/{id}")
+            schema = @Schema(implementation = CustomerInfo.class)))
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerInfo findById(@PathVariable("id") int id) {
         log.info(LOG_FINDBYID, BASE_URL, id);

@@ -11,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static hu.progmasters.servicebooker.controller.matcher.ErrorResultMatchers.singleError;
-import static hu.progmasters.servicebooker.domain.entity.SpecificPeriodType.ADD_OR_REPLACE;
-import static hu.progmasters.servicebooker.domain.entity.SpecificPeriodType.REMOVE;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -131,7 +129,7 @@ class BookingBooseControllerIT {
 
     @Test
     void update() throws Exception {
-        int id = booking.saveWithPeriodAndGetId(booseId, customerId,"2022-06-28T10:00", "2022-06-28T12:00",
+        int id = booking.saveWithPeriodAndGetId(booseId, customerId, "2022-06-28T10:00", "2022-06-28T12:00",
                 "saved");
 
         booking.update(booseId, id, "Updated comment")
@@ -150,7 +148,7 @@ class BookingBooseControllerIT {
 
     @Test
     void delete() throws Exception {
-        int id = booking.saveWithPeriodAndGetId(booseId, customerId,"2022-06-28T10:00", "2022-06-28T12:00",
+        int id = booking.saveWithPeriodAndGetId(booseId, customerId, "2022-06-28T10:00", "2022-06-28T12:00",
                 "saved");
 
         booking.deleteById(booseId, id);
@@ -163,7 +161,7 @@ class BookingBooseControllerIT {
 
     @Test
     void deletedWithCustomer() throws Exception {
-        int id = booking.saveWithPeriodAndGetId(booseId, customerId,"2022-06-28T10:00", "2022-06-28T12:00",
+        int id = booking.saveWithPeriodAndGetId(booseId, customerId, "2022-06-28T10:00", "2022-06-28T12:00",
                 "saved");
 
         customer.deleteById(customerId);

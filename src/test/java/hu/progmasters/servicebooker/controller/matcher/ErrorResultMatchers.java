@@ -5,8 +5,6 @@ import hu.progmasters.servicebooker.dto.error.ValidationError;
 import org.hamcrest.Matcher;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-import javax.xml.transform.Result;
-
 import static hu.progmasters.servicebooker.controller.matcher.SimpleErrorMatcher.simpleError;
 import static hu.progmasters.servicebooker.controller.matcher.ValidationErrorMatcher.validationError;
 

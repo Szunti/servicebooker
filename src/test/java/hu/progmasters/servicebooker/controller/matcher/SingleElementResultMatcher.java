@@ -9,7 +9,6 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 
 public class SingleElementResultMatcher<T> implements ResultMatcher {

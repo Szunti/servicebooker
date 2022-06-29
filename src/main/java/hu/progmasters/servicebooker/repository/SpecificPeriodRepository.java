@@ -29,8 +29,8 @@ public class SpecificPeriodRepository {
         // [s1, e1) intersects [s2, e2) when:
         // s1 < e2 AND s2 < e1
         return entityManager.createQuery("SELECT sp FROM SpecificPeriod sp " +
-                                "WHERE sp.boose = :boose " +
-                                "  AND :start < sp.end AND sp.start < :end", SpecificPeriod.class)
+                        "WHERE sp.boose = :boose " +
+                        "  AND :start < sp.end AND sp.start < :end", SpecificPeriod.class)
                 .setParameter("boose", boose)
                 .setParameter("start", specificPeriod.getStart())
                 .setParameter("end", specificPeriod.getEnd())
@@ -45,7 +45,7 @@ public class SpecificPeriodRepository {
     public List<SpecificPeriod> findAllOrderedFor(Boose boose, Interval<LocalDateTime> interval,
                                                   SpecificPeriodType type, boolean lock) {
         TypedQuery<SpecificPeriod> query = entityManager.createQuery(
-                        "SELECT sp FROM SpecificPeriod sp WHERE sp.boose = :boose " +
+                "SELECT sp FROM SpecificPeriod sp WHERE sp.boose = :boose " +
                                 "AND sp.start < :intervalEnd AND sp.end > :intervalStart " +
                                 "AND (:type IS NULL OR sp.type = :type) " +
                                 "ORDER BY sp.start",
