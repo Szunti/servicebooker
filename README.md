@@ -123,20 +123,20 @@ A szerver a localhost:8080 -on elérhető.
 
 ---
 
-Leállítás, a kontérek megtartásával:
+#### Leállítás, a kontérek megtartásával:
 ```shell
 $ docker compose stop
 ````
 
 
 ---
-Újraindítás:
+#### Újraindítás:
 ```shell
 $ docker compose start
 ```
 ---
 
-Konténerek, hálózat és képfájl törlése:
+#### Konténerek, hálózat és képfájl törlése:
 ```shell
 $ docker compose down
 $ docker image remove servicebooker
@@ -157,11 +157,11 @@ A 2-es pont helyett WeeklyPeriod-ot is menthetünk. (POST `/api/services/<boose-
 
 ## Követelmények 
 
-A követelményeket a [requirements.md](requirements.md) tartalmazza. Értelmezésem szerint mind telejesítve.
+A követelményeket a [requirements.md](requirements.md) tartalmazza. Igyekeztem mindet teljesíteni.
 
-Swagger: http://localhost:8080/swagger-ui/index.html
+#### Swagger: http://localhost:8080/swagger-ui/index.html
 
-Teszlefedettség:
+#### Teszlefedettség:
 - unit tesztek
   - service package `97%`
   - util package `94%`
