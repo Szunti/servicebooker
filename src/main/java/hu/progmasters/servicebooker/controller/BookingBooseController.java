@@ -22,7 +22,7 @@ import java.util.List;
 import static hu.progmasters.servicebooker.controller.LogMessages.*;
 import static hu.progmasters.servicebooker.util.interval.Interval.interval;
 
-@Tag(name = "Bookings")
+@Tag(name = "Bookings of Services")
 @Slf4j
 @RestController
 @RequestMapping(BookingBooseController.BASE_URL + "/{booseId}" + BookingBooseController.SUB_URL)
