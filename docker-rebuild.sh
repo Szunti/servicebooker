@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
 
-mvn clean package
-docker image rm servicebooker
+./mvnw clean package
+[[ $(docker image ls -q servicebooker) ]] && docker image rm servicebooker
 docker buildx build -t servicebooker .
