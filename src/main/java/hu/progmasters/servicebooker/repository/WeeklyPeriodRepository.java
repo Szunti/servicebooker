@@ -38,9 +38,6 @@ public class WeeklyPeriodRepository {
         // s <= x < e (if s and e is the same week)
         //  OR
         // e <= s AND (s <= x  OR  x < e)
-
-        // TODO optimize for using start index, only the last one can cross the week,
-        //  else the same as non-periodic. For non periodic the same as in IntervalSet
         return entityManager.createQuery("SELECT wp FROM WeeklyPeriod wp " +
                                 "WHERE wp.boose = :boose " +
                                 "AND (" +
