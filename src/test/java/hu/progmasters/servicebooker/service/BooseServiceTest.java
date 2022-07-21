@@ -48,8 +48,8 @@ class BooseServiceTest {
         BooseInfo booseInfo = booseService.save(command);
 
         verify(booseRepository).save(newBoose);
-        BooseInfo expectedBoseInfo = BooseExamples.hairdresserInfo();
-        assertThat(booseInfo).isEqualTo(expectedBoseInfo);
+        BooseInfo expectedBooseInfo = BooseExamples.hairdresserInfo();
+        assertThat(booseInfo).isEqualTo(expectedBooseInfo);
     }
 
     @Test
