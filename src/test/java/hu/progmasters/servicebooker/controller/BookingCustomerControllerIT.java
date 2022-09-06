@@ -122,7 +122,7 @@ class BookingCustomerControllerIT {
         int jackId = customer.saveAndGetId("Jack", "jack@gmail.com");
         booking.saveWithPeriod(jackId, booseId, "2022-06-20T08:00", "2022-06-20T10:00",
                 "a booking");
-        booking.saveWithPeriod(johnId, booseId, "2022-06-20T08:00", "2022-06-20T10:00",
+        booking.save(johnId, booseId, "2022-06-20T08:00", "2022-06-20T10:00",
                         "attempted booking")
                 .andExpectAll(
                         status().isBadRequest(),
