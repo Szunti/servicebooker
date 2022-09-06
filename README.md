@@ -189,4 +189,3 @@ A követelményeket a [requirements.md](requirements.md) tartalmazza. Igyekeztem
 
 - Diagramok: [diagrams.net](https://app.diagrams.net) webalkalmazással
   megnyitható [google drive link](https://drive.google.com/file/d/12AK1elUCa2w8mthzNqpbRXYZbONwvwBY/view?usp=sharing)
-- Github: [privát PROGmasters-es repó](https://github.com/PM-VallalatiBackend-SV2/vizsgaremek-Szunti)
